@@ -19,7 +19,7 @@ function parseDKK(val: string): number {
 
 function formatDKK(val: number): string {
   if (val === 0) return "";
-  return val.toLocaleString("da-DK");
+  return val.toLocaleString("da-DK") + ",-";
 }
 
 export function CalculatorForm({
@@ -96,7 +96,17 @@ export function CalculatorForm({
         : "border-border"
     }`;
 
-  const RENTE_VALG = [2, 2.5, 3, 3.5, 4, 4.5, 5];
+  const RENTE_VALG = [2, 2.5, 3, 4];
+
+  function formatRente(val: number): string {
+    return val.toFixed(2).replace(".", ",") + " %";
+  }
+
+  function parseRente(val: string): number {
+    const cleaned = val.replace(/%/g, "").replace(",", ".").trim();
+    const n = parseFloat(cleaned);
+    return isNaN(n) ? 0 : n;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
@@ -107,7 +117,7 @@ export function CalculatorForm({
             htmlFor="purchasePriceDKK"
             className="block text-label text-text-secondary mb-1.5"
           >
-            Boligens pris
+            Boligens pris (DKK)
           </label>
           <input
             id="purchasePriceDKK"
@@ -135,7 +145,7 @@ export function CalculatorForm({
             htmlFor="downPaymentDKK"
             className="block text-label text-text-secondary mb-1.5"
           >
-            Udbetaling
+            Udbetaling (DKK)
           </label>
           <input
             id="downPaymentDKK"
@@ -177,21 +187,45 @@ export function CalculatorForm({
           >
             Rente
           </label>
-          <select
+          <input
             id="interestRateAnnualPct"
-            value={interestRateAnnualPct}
+            type="text"
+            inputMode="decimal"
+            value={
+              interestRateAnnualPct === 0 ? "" : formatRente(interestRateAnnualPct)
+            }
             onChange={(e) =>
-              setInterestRateAnnualPct(parseFloat(e.target.value))
+              setInterestRateAnnualPct(parseRente(e.target.value))
             }
             className={inputClass("interestRateAnnualPct")}
+            placeholder="2,5 %"
             aria-invalid={!!validationErrors.interestRateAnnualPct}
-          >
+          />
+          <div className="flex gap-2 mt-1.5">
             {RENTE_VALG.map((r) => (
-              <option key={r} value={r}>
-                {r % 1 === 0 ? r : r.toFixed(1).replace(".", ",")} %
-              </option>
+              <button
+                key={r}
+                type="button"
+                onClick={() => setInterestRateAnnualPct(r)}
+                className={`px-3 py-1.5 text-small rounded hover:bg-border-strong ${
+                  interestRateAnnualPct === r
+                    ? "bg-brand-primary text-white"
+                    : "bg-border text-text-secondary"
+                }`}
+              >
+                {formatRente(r)}
+              </button>
             ))}
-          </select>
+          </div>
+          {validationErrors.interestRateAnnualPct && (
+            <p
+              id="interestRateAnnualPct-error"
+              className="mt-1.5 text-small text-status-danger"
+              role="alert"
+            >
+              {validationErrors.interestRateAnnualPct}
+            </p>
+          )}
         </div>
 
         <div>

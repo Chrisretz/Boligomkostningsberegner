@@ -3,7 +3,7 @@
 import type { CalcOutput } from "@/lib/types";
 
 function formatKr(val: number): string {
-  return val.toLocaleString("da-DK") + " kr";
+  return val.toLocaleString("da-DK") + ",-";
 }
 
 interface ResultsPanelProps {
@@ -12,34 +12,38 @@ interface ResultsPanelProps {
 
 export function ResultsPanel({ output }: ResultsPanelProps) {
   const { base, plus1, plus2 } = output;
+  const downPaymentDKK = Math.max(
+    0,
+    output.cashNeededAtCloseDKK - output.upfrontTotalDKK
+  );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      {/* Etableringsomkostninger */}
+      {/* Etableringsomkostninger – hvad du skal have op af lommen ved køb */}
       <div className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
         <h3 className="text-h3 text-text-primary mb-4">
           Etableringsomkostninger
         </h3>
-        <ul className="space-y-2 text-body text-text-secondary">
-          <li className="flex justify-between">
-            <span>Tinglysningsafgift</span>
-            <span>
+        <p className="text-small text-text-muted mb-4">
+          Det samlede beløb du skal have op af lommen ved køb
+        </p>
+        <ul className="space-y-3 text-body text-text-secondary">
+          <li className="flex justify-between gap-4">
+            <span className="min-w-0">Udbetaling</span>
+            <span className="shrink-0">{formatKr(downPaymentDKK)}</span>
+          </li>
+          <li className="flex justify-between gap-4">
+            <span className="min-w-0">Tinglysningsafgift</span>
+            <span className="shrink-0">
               {formatKr(output.upfrontDeedFeeDKK + output.upfrontMortgageFeeDKK)}
             </span>
           </li>
-          {output.upfrontOtherDKK > 0 ? (
-            <li className="flex justify-between gap-4">
-              <span className="min-w-0">Bank & gebyrer</span>
-              <span className="shrink-0">{formatKr(output.upfrontOtherDKK)}</span>
-            </li>
-          ) : (
-            <li className="flex justify-between gap-4">
-              <span className="min-w-0">Bank & gebyrer</span>
-              <span className="shrink-0">{formatKr(0)}</span>
-            </li>
-          )}
+          <li className="flex justify-between gap-4">
+            <span className="min-w-0">Bank & gebyrer</span>
+            <span className="shrink-0">{formatKr(output.upfrontOtherDKK)}</span>
+          </li>
           <li className="flex justify-between gap-4 pt-3 mt-3 border-t border-border font-semibold text-text-primary">
-            <span className="min-w-0">Samlet udbetaling</span>
+            <span className="min-w-0">Samlet kontantbehov ved køb</span>
             <span className="shrink-0">{formatKr(output.cashNeededAtCloseDKK)}</span>
           </li>
         </ul>
