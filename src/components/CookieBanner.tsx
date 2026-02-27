@@ -2,28 +2,39 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { trackConsentUpdate } from "@/lib/track";
 
-const STORAGE_KEY = "bolig_cookie_consent";
+const COOKIE_CONSENT_KEY = "cookie_consent";
+const COOKIE_CONSENT_TIMESTAMP_KEY = "cookie_consent_timestamp";
+
+function dispatchConsentChange(analytics: boolean) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent("cookie-consent-changed", { detail: { analytics } })
+  );
+}
 
 export function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!stored) setVisible(true);
   }, []);
 
   const handleAccept = () => {
-    localStorage.setItem(STORAGE_KEY, "accepted");
-    trackConsentUpdate({ analytics: true });
+    const now = new Date().toISOString();
+    localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+    localStorage.setItem(COOKIE_CONSENT_TIMESTAMP_KEY, now);
+    dispatchConsentChange(true);
     setVisible(false);
   };
 
   const handleReject = () => {
-    localStorage.setItem(STORAGE_KEY, "rejected");
-    trackConsentUpdate({ analytics: false });
+    const now = new Date().toISOString();
+    localStorage.setItem(COOKIE_CONSENT_KEY, "rejected");
+    localStorage.setItem(COOKIE_CONSENT_TIMESTAMP_KEY, now);
+    dispatchConsentChange(false);
     setVisible(false);
   };
 
@@ -53,7 +64,7 @@ export function CookieBanner() {
             onClick={handleAccept}
             className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover"
           >
-            Accepter
+            Acceptér statistik
           </button>
           <Link
             href="/cookies"

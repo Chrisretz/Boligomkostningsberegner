@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { trackConsentUpdate } from "@/lib/track";
 
-const STORAGE_KEY = "bolig_cookie_consent";
+const COOKIE_CONSENT_KEY = "cookie_consent";
+const COOKIE_CONSENT_TIMESTAMP_KEY = "cookie_consent_timestamp";
+
+function dispatchConsentChange(analytics: boolean) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent("cookie-consent-changed", { detail: { analytics } })
+  );
+}
 
 export function CookieSettings() {
   const [consent, setConsent] = useState<"accepted" | "rejected" | null>(null);
@@ -11,7 +18,7 @@ export function CookieSettings() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = localStorage.getItem(STORAGE_KEY) as
+    const stored = localStorage.getItem(COOKIE_CONSENT_KEY) as
       | "accepted"
       | "rejected"
       | null;
@@ -19,9 +26,11 @@ export function CookieSettings() {
   }, []);
 
   const handleSave = (value: "accepted" | "rejected") => {
-    localStorage.setItem(STORAGE_KEY, value);
+    const now = new Date().toISOString();
+    localStorage.setItem(COOKIE_CONSENT_KEY, value);
+    localStorage.setItem(COOKIE_CONSENT_TIMESTAMP_KEY, now);
     setConsent(value);
-    trackConsentUpdate({ analytics: value === "accepted" });
+    dispatchConsentChange(value === "accepted");
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
