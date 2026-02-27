@@ -6,13 +6,15 @@ import { ResultsPanel } from "@/components/ResultsPanel";
 import { AffiliateCta } from "@/components/AffiliateCta";
 import { calculate } from "@/lib/calc";
 import { validateCalcInput } from "@/lib/validation";
+import { generateBeregningPdf } from "@/lib/pdf";
 import type { CalcInput, CalcOutput } from "@/lib/types";
 import { trackCalcSubmit, trackCalcResultView } from "@/lib/track";
 
 export default function BeregnPage() {
   const [output, setOutput] = useState<CalcOutput | null>(null);
+  const [lastInput, setLastInput] = useState<CalcInput | null>(null);
   const [validationErrors, setValidationErrors] = useState<
-    Record<string, string>
+    Partial<Record<string, string>>
   >({});
   const [firstErrorId, setFirstErrorId] = useState<string | undefined>();
   const resultRef = useRef<HTMLDivElement>(null);
@@ -35,6 +37,7 @@ export default function BeregnPage() {
     }
     setValidationErrors({});
     setFirstErrorId(undefined);
+    setLastInput(validated.data);
     const result = calculate(validated.data);
     setOutput(result);
     trackCalcSubmit({
@@ -88,12 +91,39 @@ export default function BeregnPage() {
         </section>
 
         {/* Resultater */}
-        {output && (
+        {output && lastInput && (
           <section ref={resultRef}>
             <h2 className="text-h2 text-text-primary mb-6">
               Dine omkostninger
             </h2>
             <ResultsPanel output={output} />
+            <div className="flex justify-center mb-6">
+              <button
+                type="button"
+                onClick={() =>
+                  generateBeregningPdf(lastInput, output)
+                }
+                className="inline-flex items-center gap-2 px-6 py-3 text-body font-medium text-brand-primary border border-brand-primary rounded-md hover:bg-brand-primary hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Download PDF
+              </button>
+            </div>
             <p className="text-small text-text-muted text-center my-8">
               Bemærk: Beregningerne er vejledende og indeholder ikke skat.
             </p>

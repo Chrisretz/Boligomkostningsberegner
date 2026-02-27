@@ -158,7 +158,7 @@ export function CalculatorForm({
             aria-invalid={!!validationErrors.downPaymentDKK}
           />
           <div className="flex gap-2 mt-1.5">
-            {[5, 10, 20].map((pct) => (
+            {[5, 10, 15, 20, 25].map((pct) => (
               <button
                 key={pct}
                 type="button"

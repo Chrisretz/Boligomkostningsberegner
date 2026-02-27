@@ -25,6 +25,12 @@ export function Footer() {
               Ansvarsfraskrivelse
             </Link>
             <Link
+              href="/artikler"
+              className="text-body text-text-secondary hover:text-text-primary"
+            >
+              Artikler
+            </Link>
+            <Link
               href="/beregn"
               className="text-body text-text-secondary hover:text-text-primary"
             >
