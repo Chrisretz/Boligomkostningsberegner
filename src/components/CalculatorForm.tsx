@@ -30,7 +30,7 @@ export function CalculatorForm({
   const [purchasePriceDKK, setPurchasePriceDKK] = useState(3_500_000);
   const [downPaymentDKK, setDownPaymentDKK] = useState(300_000);
   const [interestRateAnnualPct, setInterestRateAnnualPct] = useState(2.5);
-  const [termYears, setTermYears] = useState(DEFAULTS.TERM_YEARS);
+  const [termYears, setTermYears] = useState<number>(DEFAULTS.TERM_YEARS);
   const [propertyType, setPropertyType] = useState<"house" | "apartment">(
     "house"
   );
