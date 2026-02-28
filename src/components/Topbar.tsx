@@ -13,7 +13,7 @@ export function Topbar() {
             <img
               src="/boligklarhed-logo.svg"
               alt="Boligklarhed logo"
-              className="h-7 md:h-10 w-auto object-contain"
+              className="h-9 md:h-12 w-auto object-contain"
             />
           </Link>
           <nav className="flex items-center gap-4 md:gap-6 flex-wrap">
