@@ -7,9 +7,14 @@ export function Topbar() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <Link
             href="/"
-            className="text-base sm:text-h3 text-text-primary font-semibold shrink-0 break-words"
+            className="flex items-center shrink-0"
+            aria-label="Boligklarhed – forsiden"
           >
-            Boligomkostningsberegner
+            <img
+              src="/boligklarhed-logo.svg"
+              alt="Boligklarhed logo"
+              className="h-7 md:h-10 w-auto object-contain"
+            />
           </Link>
           <nav className="flex items-center gap-4 md:gap-6 flex-wrap">
             <Link
