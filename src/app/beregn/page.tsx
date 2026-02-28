@@ -73,7 +73,7 @@ export default function BeregnPage() {
       <div className="container mx-auto max-w-5xl">
         {/* Centreret header */}
         <header className="text-center mb-10">
-          <h1 className="text-h1 text-text-primary mb-2">
+          <h1 className="text-xl sm:text-2xl md:text-h1 text-text-primary mb-2 break-words">
             Boligomkostningsberegner
           </h1>
           <p className="text-body text-text-secondary">

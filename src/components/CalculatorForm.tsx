@@ -19,7 +19,7 @@ function parseDKK(val: string): number {
 
 function formatDKK(val: number): string {
   if (val === 0) return "";
-  return val.toLocaleString("da-DK") + ",-";
+  return val.toLocaleString("da-DK");
 }
 
 export function CalculatorForm({
@@ -42,8 +42,47 @@ export function CalculatorForm({
     number | undefined
   >(undefined);
   const [otherUpfrontDKK, setOtherUpfrontDKK] = useState(0);
+  const [isRenteFocused, setIsRenteFocused] = useState(false);
+  const [renteInputValue, setRenteInputValue] = useState("");
+  const [editingDkkField, setEditingDkkField] = useState<string | null>(null);
+  const [editingDkkValue, setEditingDkkValue] = useState("");
 
   const loanPrincipal = Math.max(purchasePriceDKK - downPaymentDKK, 0);
+
+  function makeDkkInputProps(
+    field: string,
+    value: number,
+    setValue: (n: number) => void,
+    placeholder?: string
+  ) {
+    const isEditing = editingDkkField === field;
+    const parsed = parseDKK(editingDkkValue);
+    return {
+      value: isEditing
+        ? formatDKK(parsed)
+        : value === 0
+          ? ""
+          : formatDKK(value),
+      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+        setEditingDkkField(field);
+        setEditingDkkValue(value === 0 ? "" : String(value));
+        setTimeout(() => e.target.select(), 0);
+      },
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (isEditing) {
+          setEditingDkkValue(String(parseDKK(e.target.value)));
+        } else {
+          setValue(parseDKK(e.target.value));
+        }
+      },
+      onBlur: () => {
+        const parsedVal = parseDKK(editingDkkValue);
+        setValue(parsedVal);
+        setEditingDkkField(null);
+      },
+      placeholder,
+    };
+  }
 
   const setDownPaymentFromPct = useCallback(
     (pct: number) => {
@@ -98,8 +137,8 @@ export function CalculatorForm({
 
   const RENTE_VALG = [2, 2.5, 3, 4];
 
-  function formatRente(val: number): string {
-    return val.toFixed(2).replace(".", ",") + " %";
+  function formatRente(val: number, decimals = 2): string {
+    return val.toFixed(decimals).replace(".", ",") + " %";
   }
 
   function parseRente(val: string): number {
@@ -123,10 +162,13 @@ export function CalculatorForm({
             id="purchasePriceDKK"
             type="text"
             inputMode="numeric"
-            value={formatDKK(purchasePriceDKK)}
-            onChange={(e) => setPurchasePriceDKK(parseDKK(e.target.value))}
+            {...makeDkkInputProps(
+              "purchasePriceDKK",
+              purchasePriceDKK,
+              setPurchasePriceDKK,
+              "3.500.000"
+            )}
             className={inputClass("purchasePriceDKK")}
-            placeholder="3.500.000"
             aria-invalid={!!validationErrors.purchasePriceDKK}
           />
           {validationErrors.purchasePriceDKK && (
@@ -151,10 +193,13 @@ export function CalculatorForm({
             id="downPaymentDKK"
             type="text"
             inputMode="numeric"
-            value={formatDKK(downPaymentDKK)}
-            onChange={(e) => setDownPaymentDKK(parseDKK(e.target.value))}
+            {...makeDkkInputProps(
+              "downPaymentDKK",
+              downPaymentDKK,
+              setDownPaymentDKK,
+              "300.000"
+            )}
             className={inputClass("downPaymentDKK")}
-            placeholder="300.000"
             aria-invalid={!!validationErrors.downPaymentDKK}
           />
           <div className="flex gap-2 mt-1.5">
@@ -192,11 +237,35 @@ export function CalculatorForm({
             type="text"
             inputMode="decimal"
             value={
-              interestRateAnnualPct === 0 ? "" : formatRente(interestRateAnnualPct)
+              isRenteFocused
+                ? renteInputValue
+                : interestRateAnnualPct === 0
+                  ? ""
+                  : formatRente(interestRateAnnualPct)
             }
-            onChange={(e) =>
-              setInterestRateAnnualPct(parseRente(e.target.value))
-            }
+            onChange={(e) => {
+              if (isRenteFocused) {
+                setRenteInputValue(e.target.value);
+              } else {
+                setInterestRateAnnualPct(parseRente(e.target.value));
+              }
+            }}
+            onFocus={(e) => {
+              setIsRenteFocused(true);
+              const raw =
+                interestRateAnnualPct === 0
+                  ? ""
+                  : interestRateAnnualPct
+                      .toFixed(2)
+                      .replace(".", ",");
+              setRenteInputValue(raw);
+              setTimeout(() => e.target.select(), 0);
+            }}
+            onBlur={() => {
+              const parsed = parseRente(renteInputValue);
+              setInterestRateAnnualPct(parsed);
+              setIsRenteFocused(false);
+            }}
             className={inputClass("interestRateAnnualPct")}
             placeholder="2,5 %"
             aria-invalid={!!validationErrors.interestRateAnnualPct}
@@ -213,7 +282,7 @@ export function CalculatorForm({
                     : "bg-border text-text-secondary"
                 }`}
               >
-                {formatRente(r)}
+                {formatRente(r, 1)}
               </button>
             ))}
           </div>
@@ -297,12 +366,13 @@ export function CalculatorForm({
           id="ownerExpensesMonthlyDKK"
           type="text"
           inputMode="numeric"
-          value={formatDKK(ownerExpensesMonthlyDKK)}
-          onChange={(e) =>
-            setOwnerExpensesMonthlyDKK(parseDKK(e.target.value))
-          }
+          {...makeDkkInputProps(
+            "ownerExpensesMonthlyDKK",
+            ownerExpensesMonthlyDKK,
+            setOwnerExpensesMonthlyDKK,
+            "0"
+          )}
           className={inputClass("ownerExpensesMonthlyDKK")}
-          placeholder="0"
           aria-invalid={!!validationErrors.ownerExpensesMonthlyDKK}
         />
         {validationErrors.ownerExpensesMonthlyDKK && (
@@ -327,10 +397,13 @@ export function CalculatorForm({
           id="otherMonthlyDKK"
           type="text"
           inputMode="numeric"
-          value={formatDKK(otherMonthlyDKK)}
-          onChange={(e) => setOtherMonthlyDKK(parseDKK(e.target.value))}
+          {...makeDkkInputProps(
+            "otherMonthlyDKK",
+            otherMonthlyDKK,
+            setOtherMonthlyDKK,
+            "0"
+          )}
           className={inputClass("otherMonthlyDKK")}
-          placeholder="0"
         />
       </div>
 
@@ -365,13 +438,30 @@ export function CalculatorForm({
             type="text"
             inputMode="numeric"
             value={
-              mortgagePrincipalDKK === undefined
-                ? formatDKK(loanPrincipal)
-                : formatDKK(mortgagePrincipalDKK)
+              editingDkkField === "mortgagePrincipalDKK"
+                ? formatDKK(parseDKK(editingDkkValue))
+                : (mortgagePrincipalDKK ?? loanPrincipal) === 0
+                  ? ""
+                  : formatDKK(mortgagePrincipalDKK ?? loanPrincipal)
             }
+            onFocus={(e) => {
+              setEditingDkkField("mortgagePrincipalDKK");
+              const v = mortgagePrincipalDKK ?? loanPrincipal;
+              setEditingDkkValue(v === 0 ? "" : String(v));
+              setTimeout(() => e.target.select(), 0);
+            }}
             onChange={(e) => {
-              const v = parseDKK(e.target.value);
+              if (editingDkkField === "mortgagePrincipalDKK") {
+                setEditingDkkValue(String(parseDKK(e.target.value)));
+              } else {
+                const v = parseDKK(e.target.value);
+                setMortgagePrincipalDKK(v || undefined);
+              }
+            }}
+            onBlur={() => {
+              const v = parseDKK(editingDkkValue);
               setMortgagePrincipalDKK(v || undefined);
+              setEditingDkkField(null);
             }}
             className={inputClass("mortgagePrincipalDKK")}
             placeholder={formatDKK(loanPrincipal)}
@@ -400,10 +490,13 @@ export function CalculatorForm({
           id="otherUpfrontDKK"
           type="text"
           inputMode="numeric"
-          value={formatDKK(otherUpfrontDKK)}
-          onChange={(e) => setOtherUpfrontDKK(parseDKK(e.target.value))}
+          {...makeDkkInputProps(
+            "otherUpfrontDKK",
+            otherUpfrontDKK,
+            setOtherUpfrontDKK,
+            "0"
+          )}
           className={inputClass("otherUpfrontDKK")}
-          placeholder="0"
         />
       </div>
 

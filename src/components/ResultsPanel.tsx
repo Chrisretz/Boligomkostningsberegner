@@ -3,7 +3,7 @@
 import type { CalcOutput } from "@/lib/types";
 
 function formatKr(val: number): string {
-  return val.toLocaleString("da-DK") + ",-";
+  return val.toLocaleString("da-DK");
 }
 
 interface ResultsPanelProps {

@@ -7,7 +7,7 @@ export function Topbar() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <Link
             href="/"
-            className="text-h3 text-text-primary font-semibold shrink-0"
+            className="text-base sm:text-h3 text-text-primary font-semibold shrink-0 break-words"
           >
             Boligomkostningsberegner
           </Link>

@@ -2,7 +2,7 @@ import { jsPDF } from "jspdf";
 import type { CalcInput, CalcOutput } from "./types";
 
 function formatKr(val: number): string {
-  return val.toLocaleString("da-DK") + ",-";
+  return val.toLocaleString("da-DK");
 }
 
 function addSection(
