@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { canonicalUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Artikler | Boligomkostningsberegner",
-  description: "Lær mere om boligkøb – tinglysning, realkreditlån, ejerskifteforsikring og andre vigtige emner.",
+  title: "Artikler",
+  description:
+    "Lær mere om boligkøb – tinglysning, realkreditlån, ejerskifteforsikring og andre vigtige emner.",
+  alternates: { canonical: canonicalUrl("/artikler") },
 };
 
 const articles = [

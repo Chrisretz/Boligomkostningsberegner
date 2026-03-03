@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { canonicalUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Hvad er tinglysning? | Boligomkostningsberegner",
+  title: "Hvad er tinglysning?",
   description:
     "Tinglysning er den juridiske registrering af rettigheder over en fast ejendom. Læs mere om processen, afgifter og hvorfor det er vigtigt.",
+  alternates: { canonical: canonicalUrl("/artikler/tinglysning") },
 };
 
 export default function TinglysningPage() {

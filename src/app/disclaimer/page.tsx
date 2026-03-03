@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { canonicalUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Ansvarsfraskrivelse | Boligomkostningsberegner",
-  description: "Ansvarsfraskrivelse for Boligomkostningsberegner.",
+  title: "Ansvarsfraskrivelse",
+  description: "Ansvarsfraskrivelse for Boligklarhed.",
+  alternates: { canonical: canonicalUrl("/disclaimer") },
 };
 
 export default function DisclaimerPage() {

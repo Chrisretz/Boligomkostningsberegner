@@ -1,8 +1,30 @@
 import Link from "next/link";
+import { canonicalUrl } from "@/lib/site";
+import {
+  softwareApplicationSchema,
+  faqSchema,
+} from "@/lib/structured-data";
+import { FAQ_ITEMS } from "@/lib/faq";
+
+export const metadata = {
+  alternates: { canonical: canonicalUrl("/") },
+};
 
 export default function HomePage() {
   return (
     <main className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(softwareApplicationSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
       <section className="py-16 px-4 md:py-24">
         <div className="container mx-auto max-w-4xl text-center">
           <h1 className="text-h1 text-text-primary mb-4">
@@ -98,6 +120,30 @@ export default function HomePage() {
               Vejledende beregning – ikke finansiel rådgivning.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section
+        className="py-12 px-4 border-t border-border"
+        aria-labelledby="faq-heading"
+      >
+        <div className="container mx-auto max-w-2xl">
+          <h2
+            id="faq-heading"
+            className="text-h2 text-text-primary mb-6 text-center"
+          >
+            Ofte stillede spørgsmål
+          </h2>
+          <ul className="space-y-6">
+            {FAQ_ITEMS.map((item, index) => (
+              <li key={index}>
+                <h3 className="text-h3 text-text-primary mb-2">
+                  {item.question}
+                </h3>
+                <p className="text-body text-text-secondary">{item.answer}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </main>

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { canonicalUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privatlivspolitik | Boligomkostningsberegner",
-  description: "Privatlivspolitik for Boligomkostningsberegner.",
+  title: "Privatlivspolitik",
+  description: "Privatlivspolitik for Boligklarhed.",
+  alternates: { canonical: canonicalUrl("/privacy") },
 };
 
 export default function PrivacyPage() {

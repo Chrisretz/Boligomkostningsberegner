@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { canonicalUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Hvad er en ejerskifteforsikring? | Boligomkostningsberegner",
+  title: "Hvad er en ejerskifteforsikring?",
   description:
     "En ejerskifteforsikring dækker skjulte fejl og mangler ved boligkøb. Læs mere om dækning, pris og om den er nødvendig for dig.",
+  alternates: { canonical: canonicalUrl("/artikler/ejerskifteforsikring") },
 };
 
 export default function EjerskifteforsikringPage() {
