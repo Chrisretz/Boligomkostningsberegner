@@ -7,7 +7,7 @@ Boligklarhed hjælper med **klarhed over boligøkonomi**. Artiklerne bør forkla
 ## Allerede på plads
 
 | Slug | Titel | Status |
-|------|--------|--------|
+| ---- | ----- | ------ |
 | `tinglysning` | Hvad er tinglysning? | ✅ Finnes |
 | `ejerskifteforsikring` | Hvad er en ejerskifteforsikring? | ✅ Finnes |
 
@@ -18,7 +18,7 @@ Boligklarhed hjælper med **klarhed over boligøkonomi**. Artiklerne bør forkla
 Disse emner matcher præcis det beregneren viser og styrker tillid + SEO.
 
 | # | Foreslået slug | Foreslået titel | Kort formål |
-|---|----------------|------------------|-------------|
+| -- | -------------- | --------------- | ----------- |
 | 1 | `skøde-og-tinglysning` | Hvad koster tinglysning af skøde? | Forklare den faste + variable afgift (1.850 kr + 0,6 %), hvornår man betaler, evt. link til beregneren. |
 | 2 | `pant-og-pantebrev` | Hvad er pant og pantebrev? Hvad koster det? | Forklare tinglysning af pant (1.825 kr + 1,25 %), pantebrev, prioritet, hvorfor det hænger sammen med lånet. |
 | 3 | `realkreditlån` | Realkreditlån: Sådan fungerer det | Kort om realkredit vs. banklån, annuitetslån, F1/F3/F5, bidrag – så tallene i beregneren giver mening. |
@@ -31,7 +31,7 @@ Disse emner matcher præcis det beregneren viser og styrker tillid + SEO.
 Brugeren har brug for at forstå det store billede og hvordan man bruger beregneren.
 
 | # | Foreslået slug | Foreslået titel | Kort formål |
-|---|----------------|------------------|-------------|
+| -- | -------------- | --------------- | ----------- |
 | 5 | `omkostninger-boligkoeb` | Alle omkostninger ved boligkøb: Overblik | Samlet liste: skøde, pant, ejerskifteforsikring, evt. mægler/målere, med link til beregner og til de enkelte artikler. |
 | 6 | `rentestest` | Hvad er en rentestest – og hvorfor er den vigtig? | Forklare +1 % / +2 % rentestest, hvorfor den er med i beregneren, og hvordan man bruger den til at vurdere rådighed. |
 | 7 | `hvad-skal-jeg-have-sparet` | Hvor meget skal jeg have sparet til boligkøb? | Udbetaling, omkostninger til tinglysning/pant, buffer – med reference til at beregneren viser de konkrete beløb. |
@@ -43,7 +43,7 @@ Brugeren har brug for at forstå det store billede og hvordan man bruger beregne
 Ekstra artikler der styrker autoritet og søgeord.
 
 | # | Foreslået slug | Foreslået titel | Kort formål |
-|---|----------------|------------------|-------------|
+| -- | -------------- | --------------- | ----------- |
 | 8 | `ejerudgifter` | Ejerudgifter: Hvad betaler jeg som boligejer? | Grundskyld, ejendomsskat, forsikring, vand/varme – hvad beregneren evt. inkluderer vs. hvad man selv skal lægge oveni. |
 | 9 | `realkredit-f1-f3-f5` | F1, F3 og F5 lån: Forskelle og hvad passer til dig | Kort sammenligning, risiko vs. forudsigelighed – supplerer realkredit-artiklen. |
 | 10 | `boligkoeb-foerste-gang` | Boligkøb første gang: Sådan gør du | Checkliste og trin (sparing, søgning, beregning, advokat, forsikring) med link til beregner og artikler. |

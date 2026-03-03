@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import Link from "next/link";
 import type { CalcInput } from "@/lib/types";
 import type { ValidationErrors } from "@/lib/validation";
 import { DEFAULTS } from "@/lib/constants";
@@ -20,6 +21,38 @@ function parseDKK(val: string): number {
 function formatDKK(val: number): string {
   if (val === 0) return "";
   return val.toLocaleString("da-DK");
+}
+
+function LabelWithTooltip({
+  htmlFor,
+  children,
+  tooltip,
+  className = "",
+}: {
+  htmlFor?: string;
+  children: React.ReactNode;
+  tooltip: string;
+  className?: string;
+}) {
+  const content = (
+    <span className="group relative inline-block cursor-help border-b border-dotted border-current">
+      {children}
+      <span
+        role="tooltip"
+        className="absolute left-0 bottom-full mb-1.5 hidden w-72 max-w-[calc(100vw-2rem)] p-2.5 text-left text-small leading-snug text-white bg-gray-800 rounded shadow-lg group-hover:block z-20"
+      >
+        {tooltip}
+      </span>
+    </span>
+  );
+  if (htmlFor) {
+    return (
+      <label htmlFor={htmlFor} className={className}>
+        {content}
+      </label>
+    );
+  }
+  return <span className={className}>{content}</span>;
 }
 
 export function CalculatorForm({
@@ -45,7 +78,7 @@ export function CalculatorForm({
   const [otherUpfrontDKK, setOtherUpfrontDKK] = useState(0);
   const [realkreditAmountDKK, setRealkreditAmountDKK] = useState(2_800_000);
   const [bankLoanInterestRatePct, setBankLoanInterestRatePct] = useState(4);
-  const [bankLoanTermYears, setBankLoanTermYears] = useState<number | undefined>(undefined);
+  const [bankLoanTermYears, setBankLoanTermYears] = useState(10);
   const [bankLoanInterestOnly, setBankLoanInterestOnly] = useState(false);
   const [isRenteFocused, setIsRenteFocused] = useState(false);
   const [renteInputValue, setRenteInputValue] = useState("");
@@ -171,7 +204,7 @@ export function CalculatorForm({
         realkreditPrincipalDKK: realkreditAmountDKK,
         bankLoanAmountDKK: bankLoanAmountDKK,
         bankLoanInterestRatePct: bankLoanAmountDKK > 0 ? bankLoanInterestRatePct : undefined,
-        bankLoanTermYears: bankLoanAmountDKK > 0 ? (bankLoanTermYears ?? termYears) : undefined,
+        bankLoanTermYears: bankLoanAmountDKK > 0 ? bankLoanTermYears : undefined,
         bankLoanInterestOnly: bankLoanAmountDKK > 0 ? bankLoanInterestOnly : undefined,
       };
       onSubmit(input);
@@ -220,18 +253,19 @@ export function CalculatorForm({
   const sectionTitle = "text-sm font-semibold text-text-primary uppercase tracking-wide mb-3";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-16" noValidate>
       {/* Købspris og udbetaling */}
       <section className="space-y-4">
         <h2 className={sectionTitle}>Købspris og udbetaling</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="purchasePriceDKK"
+              tooltip="Boligens pris er den aftalte købspris for ejendommen (hus eller lejlighed), som du indtaster her. Beløbet bruges som udgangspunkt for udbetaling, realkreditlån, evt. banklån og vedligehold."
               className="block text-label text-text-secondary mb-1.5"
             >
               Boligens pris (DKK)
-            </label>
+            </LabelWithTooltip>
             <input
               id="purchasePriceDKK"
               type="text"
@@ -256,12 +290,13 @@ export function CalculatorForm({
             )}
           </div>
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="downPaymentDKK"
+              tooltip="Udbetaling er det beløb, du selv lægger ved køb af boligen (egenkapital). Resten finansieres typisk med realkreditlån og evt. banklån. Udbetalingen skal som minimum være 5 % af købsprisen."
               className="block text-label text-text-secondary mb-1.5"
             >
               Udbetaling (DKK)
-            </label>
+            </LabelWithTooltip>
             <input
               id="downPaymentDKK"
               type="text"
@@ -307,16 +342,29 @@ export function CalculatorForm({
 
       {/* Finansiering (Realkreditlån) */}
       <section className="space-y-4">
-        <h2 className={sectionTitle}>Finansiering (Realkreditlån)</h2>
+        <div className="flex flex-col gap-1">
+          <h2 className={sectionTitle}>Finansiering (Realkreditlån)</h2>
+          <p className="text-small text-text-secondary">
+            <Link
+              href="/artikler/realkreditlan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-1 rounded"
+            >
+              Læs mere om realkreditlån her
+            </Link>
+          </p>
+        </div>
         {/* Række 1: Lånebeløb og Afdragsfrihed */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="loanAmountDKK"
+              tooltip="Det beløb, du ønsker at låne som realkreditlån. Må højst udgøre 80 % af købsprisen. Resten af finansieringen (købspris minus udbetaling minus dette beløb) beregnes som banklån."
               className="block text-label text-text-secondary mb-1.5"
             >
               Lånebeløb (DKK)
-            </label>
+            </LabelWithTooltip>
             <input
               id="loanAmountDKK"
               type="text"
@@ -358,12 +406,13 @@ export function CalculatorForm({
             )}
           </div>
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="interestOnly"
+              tooltip="Ved afdragsfrihed betaler du i en periode kun renter af lånet; der afdrages ikke på hovedstolen. Ydelsen bliver derfor lavere i den periode, men gælden forbliver uændret indtil afdragsfriheden udløber."
               className="block text-label text-text-secondary mb-1.5"
             >
               Afdragsfrihed
-            </label>
+            </LabelWithTooltip>
             <select
               id="interestOnly"
               value={interestOnly ? "ja" : "nej"}
@@ -378,12 +427,13 @@ export function CalculatorForm({
         {/* Række 2: Rente og Løbetid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="interestRateAnnualPct"
+              tooltip="Den årlige rente på realkreditlånet (f.eks. F1, F3 eller F5). Renten bruges til at beregne din månedlige ydelse. Brug den rente, du forventer eller har tilbudt fra banken."
               className="block text-label text-text-secondary mb-1.5"
             >
               Rente
-            </label>
+            </LabelWithTooltip>
             <input
               id="interestRateAnnualPct"
               type="text"
@@ -449,12 +499,13 @@ export function CalculatorForm({
             )}
           </div>
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="termYears"
               className="block text-label text-text-secondary mb-1.5"
+              tooltip="Løbetiden er den periode, lånet er beregnet over (typisk 30 år). Jo længere løbetid, jo lavere månedlig ydelse, men flere renter i alt. Ved afdragsfrihed påvirker løbetiden ikke den månedlige ydelse i afdragsfrihedsperioden."
             >
               Løbetid
-            </label>
+            </LabelWithTooltip>
             <select
               id="termYears"
               value={termYears}
@@ -492,9 +543,12 @@ export function CalculatorForm({
         {/* Række 1: Lånebeløb (beregnet) og Afdragsfrihed */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div>
-            <label className="block text-label text-text-secondary mb-1.5">
+            <LabelWithTooltip
+              tooltip="Banklånet er den del af finansieringen, der ikke dækkes af realkreditlån. Beløbet beregnes automatisk som: købspris minus udbetaling minus realkreditlån. Når dette beløb er over 0, bruges rente og løbetid herunder til at beregne den månedlige ydelse til banklånet."
+              className="block text-label text-text-secondary mb-1.5"
+            >
               Lånebeløb (DKK)
-            </label>
+            </LabelWithTooltip>
             <div className="px-3 py-2.5 bg-brand-background border border-border rounded-md text-body text-text-primary">
               {formatDKK(bankLoanAmountDKK) || "0"}
             </div>
@@ -503,12 +557,13 @@ export function CalculatorForm({
             </p>
           </div>
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="bankLoanInterestOnly"
+              tooltip="Ved afdragsfrihed på banklånet betaler du kun renter i en periode; der afdrages ikke på hovedstolen. Banklån har ofte kortere løbetid end realkredit (fx 10 år) og kan have afdragsfrihed de første år."
               className="block text-label text-text-secondary mb-1.5"
             >
               Afdragsfrihed
-            </label>
+            </LabelWithTooltip>
             <select
               id="bankLoanInterestOnly"
               value={bankLoanInterestOnly ? "ja" : "nej"}
@@ -523,12 +578,13 @@ export function CalculatorForm({
         {/* Række 2: Rente og Løbetid (identisk med realkredit) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="bankLoanInterestRatePct"
+              tooltip="Renten på banklånet er typisk højere end på realkreditlån, fordi lånet ikke er obligationssikret. Indtast den rente, du forventer eller har tilbudt fra banken."
               className="block text-label text-text-secondary mb-1.5"
             >
               Rente
-            </label>
+            </LabelWithTooltip>
             <input
               id="bankLoanInterestRatePct"
               type="text"
@@ -579,23 +635,19 @@ export function CalculatorForm({
             </div>
           </div>
           <div>
-            <label
+            <LabelWithTooltip
               htmlFor="bankLoanTermYears"
+              tooltip="Løbetiden på banklånet er ofte kortere end på realkreditlån (fx 10 eller 20 år). Standard er sat til 10 år. Løbetiden bruges til at beregne den månedlige ydelse."
               className="block text-label text-text-secondary mb-1.5"
             >
               Løbetid
-            </label>
+            </LabelWithTooltip>
             <select
               id="bankLoanTermYears"
-              value={bankLoanTermYears === undefined ? "" : String(bankLoanTermYears)}
-              onChange={(e) =>
-                setBankLoanTermYears(
-                  e.target.value === "" ? undefined : Number(e.target.value)
-                )
-              }
+              value={bankLoanTermYears}
+              onChange={(e) => setBankLoanTermYears(Number(e.target.value))}
               className={inputClass("bankLoanTermYears")}
             >
-              <option value="">Samme som realkredit ({termYears} år)</option>
               {TERM_OPTIONS.map((y) => (
                 <option key={y} value={y}>
                   {y} år
@@ -615,12 +667,13 @@ export function CalculatorForm({
       <section className="space-y-4">
         <h2 className={sectionTitle}>Boligtype</h2>
         <div className="max-w-xs">
-          <label
+          <LabelWithTooltip
             htmlFor="propertyType"
+            tooltip="Vælg om boligen er et hus eller en ejerlejlighed. Det påvirker vedligeholdelsesberegningen: hus bruger 1,5 % af købsprisen pr. år, lejlighed 1,0 %, som gennemsnitlig reserve til vedligehold."
             className="block text-label text-text-secondary mb-1.5"
           >
             Type bolig
-          </label>
+          </LabelWithTooltip>
           <select
             id="propertyType"
             value={propertyType}
@@ -642,12 +695,13 @@ export function CalculatorForm({
       <section className="space-y-4">
         <h2 className={sectionTitle}>El, varme og vand</h2>
         <div className="max-w-xs">
-          <label
+          <LabelWithTooltip
             htmlFor="ownerExpensesMonthlyDKK"
+            tooltip="Månedlige faste udgifter som ejer: fællesudgifter (for lejlighed), varme, vand, forsikring, grundskyld, ejendomsskat m.m. Indtast et gennemsnitligt beløb pr. måned, så det indgår i den samlede omkostningsberegning."
             className="block text-label text-text-secondary mb-1.5"
           >
             Ejerudgifter pr. måned (DKK)
-          </label>
+          </LabelWithTooltip>
           <input
             id="ownerExpensesMonthlyDKK"
             type="text"
@@ -681,12 +735,13 @@ export function CalculatorForm({
         <h2 className={sectionTitle}>Andre omkostninger</h2>
         <div className="space-y-4">
           <div className="max-w-xs">
-            <label
+            <LabelWithTooltip
               htmlFor="otherMonthlyDKK"
+              tooltip="Andre månedlige omkostninger du vil medregne, f.eks. el, bredbånd, havearbejde eller budget til renovering. Valgfrit felt – indtast 0, hvis du ikke vil inkludere noget."
               className="block text-label text-text-secondary mb-1.5"
             >
               Øvrige månedlige (DKK) <span className="text-text-muted">– valgfrit</span>
-            </label>
+            </LabelWithTooltip>
             <input
               id="otherMonthlyDKK"
               type="text"
@@ -710,21 +765,23 @@ export function CalculatorForm({
               }
               className="w-4 h-4 rounded border-border text-brand-primary focus:ring-brand-primary"
             />
-            <label
+            <LabelWithTooltip
               htmlFor="includeMortgageRegistrationFee"
+              tooltip="Tinglysningsafgift betales til Tinglysningsretten når du optager pant i boligen (realkredit og evt. banklån). Afgiften afhænger af det pantsikrede beløb. Kryds af for at medregne den i de samlede engangsomkostninger."
               className="text-body text-text-secondary"
             >
               Medtag tinglysningsafgift for pant (lån)
-            </label>
+            </LabelWithTooltip>
           </div>
           {includeMortgageRegistrationFee && loanPrincipal > 0 && (
             <div className="max-w-xs">
-              <label
+              <LabelWithTooltip
                 htmlFor="mortgagePrincipalDKK"
+                tooltip="Det beløb, der skal tinglyses som pant (typisk det samlede lån: realkredit + banklån). Tinglysningsafgiften beregnes ud fra dette beløb. Standard er sat til det samlede lånebeløb."
                 className="block text-label text-text-secondary mb-1.5"
               >
                 Pantsikret beløb (DKK)
-              </label>
+              </LabelWithTooltip>
               <input
                 id="mortgagePrincipalDKK"
                 type="text"
@@ -771,12 +828,13 @@ export function CalculatorForm({
             </div>
           )}
           <div className="max-w-xs">
-            <label
+            <LabelWithTooltip
               htmlFor="otherUpfrontDKK"
+              tooltip="Engangsudgifter ved køb, som ikke allerede er medregnet: fx mæglerhonorar, flytning, nye møbler eller mindre renovering. Valgfrit – indtast 0, hvis du ikke vil tilføje noget."
               className="block text-label text-text-secondary mb-1.5"
             >
               Øvrige engangsomkostninger (DKK) <span className="text-text-muted">– valgfrit</span>
-            </label>
+            </LabelWithTooltip>
             <input
               id="otherUpfrontDKK"
               type="text"
