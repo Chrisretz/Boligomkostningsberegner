@@ -85,6 +85,10 @@ export function generateBeregningPdf(
     { label: "Rente", value: `${input.interestRateAnnualPct} %` },
     { label: "Løbetid", value: `${input.termYears} år` },
     {
+      label: "Afdragsfrihed",
+      value: input.interestOnly ? "Ja" : "Nej",
+    },
+    {
       label: "Boligtype",
       value: input.propertyType === "house" ? "Hus" : "Lejlighed",
     },
@@ -120,12 +124,30 @@ export function generateBeregningPdf(
   );
 
   // Månedlige udgifter
+  const monthlyLoanLines =
+    output.breakdownMonthly.bankLoanMonthlyDKK > 0
+      ? [
+          {
+            label: "Realkreditlån",
+            value: formatKr(output.breakdownMonthly.realkreditMonthlyDKK),
+          },
+          {
+            label: "Bolig- / banklån",
+            value: formatKr(output.breakdownMonthly.bankLoanMonthlyDKK),
+          },
+        ]
+      : [
+          {
+            label: "Boliglån",
+            value: formatKr(output.base.monthlyPaymentDKK),
+          },
+        ];
   y = addSection(
     doc,
     y,
     "Månedlige udgifter",
     [
-      { label: "Boliglån", value: formatKr(output.base.monthlyPaymentDKK) },
+      ...monthlyLoanLines,
       {
         label: "Ejerudgifter",
         value: formatKr(

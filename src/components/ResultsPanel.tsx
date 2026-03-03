@@ -55,10 +55,23 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
           Månedlige udgifter
         </h3>
         <ul className="space-y-3 text-body text-text-secondary">
-          <li className="flex justify-between gap-4">
-            <span className="min-w-0">Boliglån</span>
-            <span className="shrink-0">{formatKr(base.monthlyPaymentDKK)}</span>
-          </li>
+          {output.breakdownMonthly.bankLoanMonthlyDKK > 0 ? (
+            <>
+              <li className="flex justify-between gap-4">
+                <span className="min-w-0">Realkreditlån</span>
+                <span className="shrink-0">{formatKr(output.breakdownMonthly.realkreditMonthlyDKK)}</span>
+              </li>
+              <li className="flex justify-between gap-4">
+                <span className="min-w-0">Bolig- / banklån</span>
+                <span className="shrink-0">{formatKr(output.breakdownMonthly.bankLoanMonthlyDKK)}</span>
+              </li>
+            </>
+          ) : (
+            <li className="flex justify-between gap-4">
+              <span className="min-w-0">Boliglån</span>
+              <span className="shrink-0">{formatKr(base.monthlyPaymentDKK)}</span>
+            </li>
+          )}
           <li className="flex justify-between gap-4">
             <span className="min-w-0">Ejerudgifter</span>
             <span className="shrink-0">{formatKr(output.breakdownMonthly.ownerExpensesMonthlyDKK)}</span>

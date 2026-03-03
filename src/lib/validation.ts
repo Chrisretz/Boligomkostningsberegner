@@ -33,10 +33,42 @@ export const calcInputSchema = z
       .max(50_000_000)
       .optional(),
     otherUpfrontDKK: z.number().min(0).max(5_000_000).optional().default(0),
+    interestOnly: z.boolean().optional().default(false),
+    bankLoanAmountDKK: z.number().min(0).max(50_000_000).optional().default(0),
+    bankLoanInterestRatePct: z.number().min(0).max(25).optional().default(0),
+    bankLoanTermYears: z.number().int().min(1).max(40).optional(),
+    bankLoanInterestOnly: z.boolean().optional().default(false),
+    realkreditPrincipalDKK: z.number().min(0).max(50_000_000).optional(),
   })
+  .refine(
+    (data) => {
+      const totalFinance = data.purchasePriceDKK - data.downPaymentDKK;
+      const realkredit = data.realkreditPrincipalDKK ?? totalFinance;
+      return realkredit <= totalFinance;
+    },
+    {
+      message: "Realkreditlånet kan ikke overstige den samlede finansiering (købspris minus udbetaling).",
+      path: ["realkreditPrincipalDKK"],
+    }
+  )
+  .refine(
+    (data) => {
+      const realkredit = data.realkreditPrincipalDKK ?? (data.purchasePriceDKK - data.downPaymentDKK);
+      const maxRealkredit = Math.round((data.purchasePriceDKK * 80) / 100);
+      return data.purchasePriceDKK <= 0 || realkredit <= maxRealkredit;
+    },
+    {
+      message: "Realkreditlånet må højst udgøre 80 % af købsprisen.",
+      path: ["realkreditPrincipalDKK"],
+    }
+  )
   .refine(
     (data) => data.downPaymentDKK <= data.purchasePriceDKK,
     { message: "Udbetaling kan ikke være større end købsprisen.", path: ["downPaymentDKK"] }
+  )
+  .refine(
+    (data) => data.purchasePriceDKK <= 0 || data.downPaymentDKK >= Math.round((data.purchasePriceDKK * 5) / 100),
+    { message: "Udbetaling skal være mindst 5 % af købsprisen.", path: ["downPaymentDKK"] }
   );
 
 export type CalcInputSchema = z.infer<typeof calcInputSchema>;

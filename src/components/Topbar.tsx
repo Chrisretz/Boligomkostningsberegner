@@ -86,7 +86,7 @@ export function Topbar() {
             <img
               src="/boligklarhed-logo.svg"
               alt="Boligklarhed logo"
-              className="h-9 md:h-12 w-auto object-contain"
+              className="h-10 md:h-14 w-auto object-contain"
             />
           </Link>
 

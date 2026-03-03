@@ -20,6 +20,21 @@ const articles = [
     title: "Hvad er en ejerskifteforsikring?",
     description: "Få overblik over hvad ejerskifteforsikring dækker, hvad den koster og om den er nødvendig for dig.",
   },
+  {
+    slug: "realkreditlan",
+    title: "Realkreditlån: Sådan fungerer det",
+    description: "Få overblik over realkreditlån, annuitetslån, F1/F3/F5 og hvordan din månedlige ydelse beregnes.",
+  },
+  {
+    slug: "vedligehold",
+    title: "Vedligehold af bolig: Hvor meget skal jeg sætte af?",
+    description: "Lær tommelfingerreglen for vedligehold (1 % lejlighed, 1,5 % hus) og hvad pengene dækker over tid.",
+  },
+  {
+    slug: "eksisterende-pantebrev",
+    title: "Spar på tinglysning: Udnyt eksisterende pantebrev",
+    description: "Lær hvordan du reducerer omkostningerne til tinglysning af pant ved at overtage eller genbruge allerede tinglyste pantebreve.",
+  },
 ] as const;
 
 export default function ArtiklerPage() {

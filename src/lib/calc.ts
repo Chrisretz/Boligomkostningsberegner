@@ -16,9 +16,13 @@ function roundDKK(x: number): number {
 function calcMonthlyPayment(
   principal: number,
   annualRatePct: number,
-  termYears: number
+  termYears: number,
+  interestOnly: boolean
 ): number {
   if (principal <= 0) return 0;
+  if (interestOnly) {
+    return (principal * (annualRatePct / 100)) / 12;
+  }
   const n = termYears * 12;
   const r = (annualRatePct / 100) / 12;
   if (r === 0) return principal / n;
@@ -53,15 +57,32 @@ function scenario(
   input: CalcInput,
   annualRatePct: number
 ): ScenarioOutput {
-  const loanPrincipal = Math.max(
+  const totalFinance = Math.max(
     input.purchasePriceDKK - input.downPaymentDKK,
     0
   );
-  const payment = calcMonthlyPayment(
-    loanPrincipal,
+  const realkreditPrincipal =
+    input.realkreditPrincipalDKK != null
+      ? Math.min(
+          input.realkreditPrincipalDKK,
+          totalFinance
+        )
+      : Math.max(totalFinance - (input.bankLoanAmountDKK ?? 0), 0);
+  const bankAmount = totalFinance - realkreditPrincipal;
+  const realkreditPayment = calcMonthlyPayment(
+    realkreditPrincipal,
     annualRatePct,
-    input.termYears
+    input.termYears,
+    input.interestOnly ?? false
   );
+  const bankRate = input.bankLoanInterestRatePct ?? 0;
+  const bankTerm = input.bankLoanTermYears ?? input.termYears;
+  const bankInterestOnly = input.bankLoanInterestOnly ?? false;
+  const bankPayment =
+    bankAmount > 0
+      ? calcMonthlyPayment(bankAmount, bankRate, bankTerm, bankInterestOnly)
+      : 0;
+  const payment = roundDKK(realkreditPayment + bankPayment);
   const otherMonthly = input.otherMonthlyDKK ?? 0;
   const maintenance = calcMaintenanceMonthly(
     input.purchasePriceDKK,
@@ -74,8 +95,10 @@ function scenario(
     otherMonthly;
   return {
     interestRateAnnualPct: annualRatePct,
-    monthlyPaymentDKK: roundDKK(payment),
+    monthlyPaymentDKK: payment,
     monthlyTotalDKK: roundDKK(monthlyTotal),
+    realkreditMonthlyDKK: roundDKK(realkreditPayment),
+    bankLoanMonthlyDKK: roundDKK(bankPayment),
   };
 }
 
@@ -120,9 +143,13 @@ export function calculate(input: CalcInput): CalcOutput {
       ownerExpensesMonthlyDKK: roundDKK(input.ownerExpensesMonthlyDKK),
       otherMonthlyDKK: roundDKK(input.otherMonthlyDKK ?? 0),
       maintenanceMonthlyDKK: roundDKK(maintenanceMonthly),
+      realkreditMonthlyDKK: base.realkreditMonthlyDKK,
+      bankLoanMonthlyDKK: base.bankLoanMonthlyDKK,
     },
     assumptions: [
-      "Låneydelse beregnes som én annuitet (forenkling).",
+      input.interestOnly
+        ? "Låneydelsen er kun rente (afdragsfrihed); der afdrages ikke på hovedstolen."
+        : "Låneydelse beregnes som én annuitet (forenkling).",
       "Vedligehold estimeres som en fast procent af købspris pr. år (vejledende).",
       "Pantafgift beregnes af pantsikret beløb (default: lånebeløb).",
     ],
