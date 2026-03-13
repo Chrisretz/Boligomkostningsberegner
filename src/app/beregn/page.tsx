@@ -74,10 +74,11 @@ export default function BeregnPage() {
         {/* Centreret header */}
         <header className="text-center mb-10">
           <h1 className="text-xl sm:text-2xl md:text-h1 text-text-primary mb-2 break-words">
-            Boligomkostningsberegner
+            Beregn dine boligomkostninger
           </h1>
           <p className="text-body text-text-secondary">
-            Beregn hvad det reelt koster at købe og eje din bolig.
+            Brug boligomkostningsberegneren til at se, hvad det reelt koster at
+            købe og eje din bolig.
           </p>
         </header>
 

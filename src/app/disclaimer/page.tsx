@@ -4,7 +4,8 @@ import { canonicalUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Ansvarsfraskrivelse",
-  description: "Ansvarsfraskrivelse for Boligklarhed.",
+  description:
+    "Ansvarsfraskrivelse for Boligklarhed: Beregningerne i boligomkostningsberegneren er vejledende og erstatter ikke finansiel eller juridisk rådgivning.",
   alternates: { canonical: canonicalUrl("/disclaimer") },
 };
 

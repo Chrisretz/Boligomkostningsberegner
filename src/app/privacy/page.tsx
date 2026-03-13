@@ -4,7 +4,8 @@ import { canonicalUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Privatlivspolitik",
-  description: "Privatlivspolitik for Boligklarhed.",
+  description:
+    "Privatlivspolitik for Boligklarhed: Læs hvordan vi behandler personoplysninger og cookies, når du bruger boligomkostningsberegneren på boligklarhed.dk.",
   alternates: { canonical: canonicalUrl("/privacy") },
 };
 

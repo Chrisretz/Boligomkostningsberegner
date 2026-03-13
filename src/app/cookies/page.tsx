@@ -5,7 +5,8 @@ import { canonicalUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Cookies",
-  description: "Information om cookies på Boligklarhed.",
+  description:
+    "Cookiepolitik for Boligklarhed: Få overblik over nødvendige cookies og statistikcookies, og se hvordan du kan ændre dine cookie-indstillinger.",
   alternates: { canonical: canonicalUrl("/cookies") },
 };
 

@@ -28,10 +28,10 @@ export default function HomePage() {
       <section className="py-16 px-4 md:py-24">
         <div className="container mx-auto max-w-4xl text-center">
           <h1 className="text-h1 text-text-primary mb-4">
-            Hvad koster boligen reelt?
+            Boligomkostningsberegner – hvad koster boligen reelt?
           </h1>
           <p className="text-body text-text-secondary mb-8 max-w-2xl mx-auto">
-            Engangsomkostninger + månedlig total + stress test.
+            Online boligomkostningsberegner til danske boligkøbere. Beregn alle vigtige omkostninger ved boligkøb – tinglysning, pant, engangsomkostninger, ejerudgifter, vedligehold og månedlig ydelse på realkreditlån og evt. banklån – samlet ét sted. Få samtidig en rentestest (+1% og +2%), så du kan se, om dit boligbudget også holder, hvis renten stiger.
           </p>
           <Link
             href="/beregn"
@@ -47,13 +47,16 @@ export default function HomePage() {
           <h2 className="text-h2 text-text-primary mb-6 text-center">
             Hvad inkluderer vi?
           </h2>
+          <p className="text-body text-text-secondary mb-8 max-w-3xl mx-auto text-center">
+            Boligklarhed samler de vigtigste omkostninger ved boligkøb i én beregning, så du slipper for at regne i regneark eller gætte dig frem. Beregneren følger de officielle satser og typiske tommelfingerregler, så du får et realistisk billede af, hvad det koster at købe og eje din bolig – både ved overtagelse og hver måned.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">
               <h3 className="text-h3 text-text-primary mb-2">
                 Tinglysning
               </h3>
               <p className="text-body text-text-secondary">
-                Skøde- og pantafgifter jf. Skattestyrelsens satser
+                Skøde- og pantafgifter beregnes efter Skattestyrelsens gældende satser, så du kan se, hvad tinglysning af skøde og pant reelt koster. Vi medregner både de faste og de variable beløb, så du får styr på denne ofte oversete del af omkostningerne ved boligkøb.
               </p>
             </div>
             <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">
@@ -61,7 +64,7 @@ export default function HomePage() {
                 Vedligehold
               </h3>
               <p className="text-body text-text-secondary">
-                Estimeret vedligeholdelse baseret på boligtype
+                Estimeret vedligeholdelse baseret på boligtype, så du afsætter et realistisk beløb til løbende forbedringer og reparationer. For huse beregner vi et højere niveau end for ejerlejligheder, da vedligeholdelsesbehovet typisk er større.
               </p>
             </div>
             <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">
@@ -69,7 +72,7 @@ export default function HomePage() {
                 Ejerudgifter
               </h3>
               <p className="text-body text-text-secondary">
-                Skat, forsikring og andre faste ejeromkostninger
+                Skat, forsikring og andre faste ejeromkostninger samles i én oversigt, så du kan se din samlede månedlige boligudgift. Du kan selv tilpasse beløbene til din konkrete bolig og dermed bruge beregneren som et praktisk værktøj til at teste dit boligbudget.
               </p>
             </div>
           </div>
@@ -81,6 +84,9 @@ export default function HomePage() {
           <h2 className="text-h2 text-text-primary mb-6 text-center">
             Sådan virker det
           </h2>
+          <p className="text-body text-text-secondary mb-8 max-w-3xl mx-auto text-center">
+            Boligklarhed er bygget til at være enkel nok til at bruge på få minutter, men detaljeret nok til at give dig et solidt beslutningsgrundlag. Du indtaster få nøgletal, hvorefter boligomkostningsberegneren regner engangsomkostninger, månedlig total og rentestest ud for dig – uden at du behøver forstå alle formler bag.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-primary text-white font-semibold mb-3">
@@ -88,7 +94,7 @@ export default function HomePage() {
               </span>
               <h3 className="text-h3 text-text-primary mb-2">Indtast tal</h3>
               <p className="text-body text-text-secondary">
-                Købspris, udbetaling, rente og boligtype
+                Indtast købspris, udbetaling, rente, løbetid, boligtype og dine forventede ejerudgifter. Du kan også justere afdragsfrihed, andre lån og engangsomkostninger, så beregningen passer til netop dit boligkøb.
               </p>
             </div>
             <div className="text-center">
@@ -97,7 +103,7 @@ export default function HomePage() {
               </span>
               <h3 className="text-h3 text-text-primary mb-2">Beregn</h3>
               <p className="text-body text-text-secondary">
-                Få overblik over engangsomkostninger og månedlig total
+                Beregneren samler alle boligomkostninger ét sted og viser både engangsomkostninger ved overtagelse og din samlede månedlige boligudgift. Du får et hurtigt overblik over, hvor meget boligen koster dig her og nu – og på sigt.
               </p>
             </div>
             <div className="text-center">
@@ -106,9 +112,36 @@ export default function HomePage() {
               </span>
               <h3 className="text-h3 text-text-primary mb-2">Sammenlign</h3>
               <p className="text-body text-text-secondary">
-                Se stress test med +1% og +2% rente
+                Se stress test med +1% og +2% rente, så du kan vurdere, hvordan ændringer i renten påvirker din samlede boligøkonomi. Brug resultatet til at sammenligne forskellige lån, boliger og prisniveauer, før du siger ja til et boligkøb.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 px-4 border-t border-border">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-h2 text-text-primary mb-6 text-center">
+            Hvad er Boligklarhed – og hvem er det til?
+          </h2>
+          <div className="space-y-4 text-body text-text-secondary max-w-3xl mx-auto">
+            <p>
+              Boligklarhed er et uafhængigt værktøj til dig, der står over for et boligkøb og gerne vil forstå
+              alle omkostninger ved boligkøbet, før du skriver under. I stedet for at sidde med et kompliceret
+              regneark eller løse noter, kan du bruge boligomkostningsberegneren til hurtigt at se, hvad boligen
+              reelt koster dig hver måned og ved overtagelse.
+            </p>
+            <p>
+              Beregneren er særligt relevant for førstegangskøbere, men også for erfarne boligkøbere, der vil have
+              et opdateret billede af deres boligbudget. Du kan teste forskellige scenarier – for eksempel højere
+              eller lavere udbetaling, forskellig rente, kortere eller længere løbetid og om du skal vælge
+              afdragsfrihed på realkreditlånet eller et ekstra banklån.
+            </p>
+            <p>
+              Resultatet kan du bruge i dialogen med bank eller realkreditinstitut, når du skal diskutere lån,
+              boligbudget og hvor meget du kan købe bolig for. Boligklarhed erstatter ikke personlig rådgivning,
+              men giver dig et bedre udgangspunkt og de tal, du har brug for, samlet ét sted.
+            </p>
           </div>
         </div>
       </section>
@@ -134,13 +167,25 @@ export default function HomePage() {
           >
             Ofte stillede spørgsmål
           </h2>
-          <ul className="space-y-6">
+          <ul className="space-y-4">
             {FAQ_ITEMS.map((item, index) => (
               <li key={index}>
-                <h3 className="text-h3 text-text-primary mb-2">
-                  {item.question}
-                </h3>
-                <p className="text-body text-text-secondary">{item.answer}</p>
+                <details className="group rounded-md border border-border bg-brand-surface px-4 py-3 shadow-soft">
+                  <summary className="flex items-center justify-between cursor-pointer list-none">
+                    <span className="text-h3 text-text-primary">
+                      {item.question}
+                    </span>
+                    <span className="ml-3 text-xl text-text-muted group-open:hidden">
+                      +
+                    </span>
+                    <span className="ml-3 text-xl text-text-muted hidden group-open:inline">
+                      −
+                    </span>
+                  </summary>
+                  <p className="mt-2 text-body text-text-secondary">
+                    {item.answer}
+                  </p>
+                </details>
               </li>
             ))}
           </ul>

@@ -13,15 +13,18 @@ import {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Boligklarhed – Beregn boligomkostninger",
+    default: "Boligklarhed – boligomkostningsberegner til danske boligkøbere",
     template: "%s | Boligklarhed",
   },
   description:
-    "Beregn hvad det reelt koster at købe og eje din bolig. Engangsomkostninger, månedlig total og stress test.",
+    "Boligklarhed er en gratis boligomkostningsberegner til danske boligkøbere. Beregn alle vigtige omkostninger ved boligkøb – tinglysning, pant, engangsomkostninger, ejerudgifter, vedligehold og månedlig ydelse inkl. rentestest (+1% og +2%).",
   openGraph: {
     type: "website",
     locale: "da_DK",
     url: SITE_URL,
+    title: "Boligklarhed – beregn omkostninger ved boligkøb online",
+    description:
+      "Få overblik over, hvad din bolig reelt koster. Boligklarhed samler engangsomkostninger, månedlige udgifter til lån, ejerudgifter, vedligehold og rentestest ét sted.",
   },
 };
 
