@@ -37,6 +37,32 @@ const articles = [
   },
 ] as const;
 
+/** Kategorier til artikler – SEO-venlige overskrifter med tilhørende artikel-slugs */
+const categories = [
+  {
+    id: "engangsomkostninger",
+    title: "Engangsomkostninger ved boligkøb",
+    description: "Tinglysning, pant, forsikring og andre omkostninger ved overtagelse.",
+    slugs: ["tinglysning", "ejerskifteforsikring", "eksisterende-pantebrev"] as const,
+  },
+  {
+    id: "finansiering",
+    title: "Finansiering og lån",
+    description: "Realkreditlån, banklån og hvordan din boligydelse beregnes.",
+    slugs: ["realkreditlan"] as const,
+  },
+  {
+    id: "loebende",
+    title: "Løbende omkostninger",
+    description: "Vedligehold, ejerudgifter og månedlige boligomkostninger.",
+    slugs: ["vedligehold"] as const,
+  },
+] as const;
+
+function getArticlesBySlugs(slugs: readonly string[]) {
+  return articles.filter((a) => slugs.includes(a.slug));
+}
+
 export default function ArtiklerPage() {
   return (
     <main className="min-h-screen py-12 px-4">
@@ -67,23 +93,51 @@ export default function ArtiklerPage() {
           </p>
         </div>
 
-        <ul className="space-y-4">
-          {articles.map((article) => (
-            <li key={article.slug}>
-              <Link
-                href={`/artikler/${article.slug}`}
-                className="block p-4 rounded-lg border border-border bg-brand-surface hover:border-border-strong transition-colors group"
+        <div className="space-y-4" role="list">
+          {categories.map((category) => {
+            const categoryArticles = getArticlesBySlugs(category.slugs);
+            return (
+              <details
+                key={category.id}
+                className="group rounded-md border border-border bg-brand-surface shadow-soft overflow-hidden"
               >
-                <h2 className="text-h3 text-text-primary group-hover:text-brand-primary transition-colors">
-                  {article.title}
-                </h2>
-                <p className="mt-2 text-body text-text-secondary">
-                  {article.description}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 text-left hover:bg-border/30 transition-colors">
+                  <div>
+                    <h2 className="text-h3 text-text-primary">
+                      {category.title}
+                    </h2>
+                    <p className="mt-1 text-small text-text-secondary">
+                      {category.description}
+                    </p>
+                  </div>
+                  <span className="text-xl text-text-muted shrink-0 group-open:hidden">
+                    +
+                  </span>
+                  <span className="text-xl text-text-muted shrink-0 hidden group-open:inline">
+                    −
+                  </span>
+                </summary>
+                <ul className="border-t border-border px-4 pb-4 pt-2 space-y-3">
+                  {categoryArticles.map((article) => (
+                    <li key={article.slug}>
+                      <Link
+                        href={`/artikler/${article.slug}`}
+                        className="block p-3 rounded-lg border border-border bg-brand-background hover:border-border-strong hover:bg-border/20 transition-colors group"
+                      >
+                        <h3 className="text-body font-semibold text-text-primary group-hover:text-brand-primary transition-colors">
+                          {article.title}
+                        </h3>
+                        <p className="mt-1 text-small text-text-secondary">
+                          {article.description}
+                        </p>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            );
+          })}
+        </div>
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-4 mt-10">
           <h2 className="text-h3 text-text-primary">

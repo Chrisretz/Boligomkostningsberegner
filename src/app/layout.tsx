@@ -18,6 +18,14 @@ export const metadata: Metadata = {
   },
   description:
     "Boligklarhed er en gratis boligomkostningsberegner til danske boligkøbere. Beregn omkostninger ved boligkøb – tinglysning, pant og månedlig ydelse.",
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "da_DK",

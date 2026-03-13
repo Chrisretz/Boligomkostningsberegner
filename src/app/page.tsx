@@ -56,7 +56,16 @@ export default function HomePage() {
                 Tinglysning
               </h3>
               <p className="text-body text-text-secondary">
-                Skøde- og pantafgifter beregnes efter Skattestyrelsens gældende satser, så du kan se, hvad tinglysning af skøde og pant reelt koster. Vi medregner både de faste og de variable beløb, så du får styr på denne ofte oversete del af omkostningerne ved boligkøb.
+                Skøde- og pantafgifter beregnes efter Skattestyrelsens gældende satser, så du kan se, hvad tinglysning af skøde og pant reelt koster. Vi medregner både de faste og de variable beløb, så du får styr på denne ofte oversete del af omkostningerne ved boligkøb. Du kan læse mere om de aktuelle satser hos{" "}
+                <a
+                  href="https://skat.dk/erhverv/afgifter-paa-varer-og-ydelser-punktafgifter/nyhedsbrev-afgifter/tinglysningsafgift-ny-afgiftssats-pr-1-januar-2026"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-primary underline hover:no-underline"
+                >
+                  Skattestyrelsen
+                </a>
+                .
               </p>
             </div>
             <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">
