@@ -4,6 +4,9 @@
 
 export type PropertyType = "house" | "apartment";
 
+/** Antal personer i husstanden (5 = 5 eller flere). Bruges til el-estimat. */
+export type HouseholdSize = 1 | 2 | 3 | 4 | 5;
+
 export interface CalcInput {
   purchasePriceDKK: number;
   downPaymentDKK: number;
@@ -11,6 +14,10 @@ export interface CalcInput {
   termYears: number;
   interestOnly?: boolean;
   propertyType: PropertyType;
+  /** Valgfrit: boligens størrelse i m² */
+  squareMeters?: number;
+  /** Valgfrit: antal personer – bruges til at estimere månedlig eludgift */
+  householdSize?: HouseholdSize;
   ownerExpensesMonthlyDKK: number;
   otherMonthlyDKK?: number;
   includeMortgageRegistrationFee: boolean;
@@ -46,6 +53,8 @@ export interface CalcOutput {
   plus2: ScenarioOutput;
   breakdownMonthly: {
     ownerExpensesMonthlyDKK: number;
+    /** Estimeret el pr. måned (fra husstandsstørrelse + boligtype), 0 hvis ikke valgt */
+    estimatedElMonthlyDKK: number;
     otherMonthlyDKK: number;
     maintenanceMonthlyDKK: number;
     realkreditMonthlyDKK: number;

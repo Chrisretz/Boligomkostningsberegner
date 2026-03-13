@@ -78,19 +78,53 @@ export function generateBeregningPdf(
 
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  const inputLines = [
-    { label: "Købspris", value: formatKr(input.purchasePriceDKK) },
-    { label: "Udbetaling", value: formatKr(input.downPaymentDKK) },
-    { label: "Realkreditlån", value: formatKr(output.loanPrincipalDKK) },
-    { label: "Rente", value: `${input.interestRateAnnualPct} %` },
-    { label: "Løbetid", value: `${input.termYears} år` },
-    {
-      label: "Afdragsfrihed",
-      value: input.interestOnly ? "Ja" : "Nej",
-    },
+  const realkreditDKK = input.realkreditPrincipalDKK ?? output.loanPrincipalDKK;
+  const bankLoanDKK = output.loanPrincipalDKK - realkreditDKK;
+  const hasBankLoan = bankLoanDKK > 0;
+  const fmt = (realkredit: string, bank: string) =>
+    hasBankLoan ? `${realkredit} / ${bank}` : realkredit;
+  const inputLines: { label: string; value: string }[] = [
     {
       label: "Boligtype",
       value: input.propertyType === "house" ? "Hus" : "Lejlighed",
+    },
+    ...(input.squareMeters != null && input.squareMeters > 0
+      ? [{ label: "Antal kvadratmeter (m²)", value: String(input.squareMeters) }]
+      : []),
+    { label: "Købspris", value: formatKr(input.purchasePriceDKK) },
+    { label: "Udbetaling", value: formatKr(input.downPaymentDKK) },
+    {
+      label: "Lånebeløb (realkredit / bank)",
+      value: fmt(formatKr(realkreditDKK), hasBankLoan ? formatKr(bankLoanDKK) : "–"),
+    },
+    {
+      label: "Rente (realkredit / bank)",
+      value: fmt(
+        `${input.interestRateAnnualPct} %`,
+        hasBankLoan && input.bankLoanInterestRatePct != null
+          ? `${input.bankLoanInterestRatePct} %`
+          : "–"
+      ),
+    },
+    {
+      label: "Løbetid (realkredit / bank)",
+      value: fmt(
+        `${input.termYears} år`,
+        hasBankLoan && input.bankLoanTermYears != null
+          ? `${input.bankLoanTermYears} år`
+          : "–"
+      ),
+    },
+    {
+      label: "Afdragsfrihed (realkredit / bank)",
+      value: fmt(
+        input.interestOnly ? "Ja" : "Nej",
+        hasBankLoan && input.bankLoanInterestOnly != null
+          ? input.bankLoanInterestOnly
+            ? "Ja"
+            : "Nej"
+          : "–"
+      ),
     },
   ];
   for (const { label, value } of inputLines) {
@@ -154,6 +188,14 @@ export function generateBeregningPdf(
           output.breakdownMonthly.ownerExpensesMonthlyDKK
         ),
       },
+      ...(output.breakdownMonthly.estimatedElMonthlyDKK > 0
+        ? [
+            {
+              label: "Estimeret el",
+              value: formatKr(output.breakdownMonthly.estimatedElMonthlyDKK),
+            },
+          ]
+        : []),
       {
         label: "Vedligeholdelse",
         value: formatKr(output.breakdownMonthly.maintenanceMonthlyDKK),

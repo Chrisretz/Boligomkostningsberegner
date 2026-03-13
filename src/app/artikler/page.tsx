@@ -65,6 +65,11 @@ const articles = [
     title: "Hvad er en indboforsikring?",
     description: "Lær hvad indboforsikring dækker, hvorfor boligejere bør have den og hvordan den indgår i dine ejerudgifter.",
   },
+  {
+    slug: "elforbrug-husstand",
+    title: "Hvad bruger en husstand i strøm?",
+    description: "Gennemsnitligt elforbrug for lejlighed og hus – efter antal personer. Kildehenvisninger til Energistyrelsen, EWII og elberegner.dk.",
+  },
 ] as const;
 
 /** Kategorier til artikler – SEO-venlige overskrifter med tilhørende artikel-slugs */
@@ -84,8 +89,8 @@ const categories = [
   {
     id: "loebende",
     title: "Løbende omkostninger",
-    description: "Vedligehold, ejerudgifter, grundskyld, skat og forsikring.",
-    slugs: ["vedligehold", "ejerudgifter", "grundskyld-og-ejendomsskat", "indboforsikring"] as const,
+    description: "Vedligehold, ejerudgifter, el, grundskyld, skat og forsikring.",
+    slugs: ["vedligehold", "ejerudgifter", "elforbrug-husstand", "grundskyld-og-ejendomsskat", "indboforsikring"] as const,
   },
   {
     id: "overblik",

@@ -16,6 +16,7 @@ const staticPaths = [
   "/artikler/boligkoeb-foerste-gang",
   "/artikler/grundskyld-og-ejendomsskat",
   "/artikler/indboforsikring",
+  "/artikler/elforbrug-husstand",
   "/privacy",
   "/cookies",
   "/disclaimer",

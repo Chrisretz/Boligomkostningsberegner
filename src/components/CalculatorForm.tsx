@@ -2,9 +2,10 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
-import type { CalcInput } from "@/lib/types";
+import type { CalcInput, HouseholdSize } from "@/lib/types";
 import type { ValidationErrors } from "@/lib/validation";
 import { DEFAULTS } from "@/lib/constants";
+import { estimateMonthlyElDKK, getEstimatedYearlyKWh } from "@/lib/electricity";
 
 interface CalculatorFormProps {
   onSubmit: (input: CalcInput) => void;
@@ -60,12 +61,16 @@ export function CalculatorForm({
   validationErrors = {},
   firstErrorId,
 }: CalculatorFormProps) {
-  const [purchasePriceDKK, setPurchasePriceDKK] = useState(3_500_000);
-  const [downPaymentDKK, setDownPaymentDKK] = useState(300_000);
+  const [purchasePriceDKK, setPurchasePriceDKK] = useState(5_000_000);
+  const [downPaymentDKK, setDownPaymentDKK] = useState(250_000);
   const [interestRateAnnualPct, setInterestRateAnnualPct] = useState(2.5);
   const [termYears, setTermYears] = useState<number>(DEFAULTS.TERM_YEARS);
   const [propertyType, setPropertyType] = useState<"house" | "apartment">(
     "house"
+  );
+  const [squareMeters, setSquareMeters] = useState<number>(0);
+  const [householdSize, setHouseholdSize] = useState<HouseholdSize | undefined>(
+    undefined
   );
   const [ownerExpensesMonthlyDKK, setOwnerExpensesMonthlyDKK] = useState(0);
   const [otherMonthlyDKK, setOtherMonthlyDKK] = useState(0);
@@ -76,7 +81,7 @@ export function CalculatorForm({
     number | undefined
   >(undefined);
   const [otherUpfrontDKK, setOtherUpfrontDKK] = useState(0);
-  const [realkreditAmountDKK, setRealkreditAmountDKK] = useState(2_800_000);
+  const [realkreditAmountDKK, setRealkreditAmountDKK] = useState(4_000_000);
   const [bankLoanInterestRatePct, setBankLoanInterestRatePct] = useState(4);
   const [bankLoanTermYears, setBankLoanTermYears] = useState(10);
   const [bankLoanInterestOnly, setBankLoanInterestOnly] = useState(false);
@@ -193,6 +198,8 @@ export function CalculatorForm({
         termYears,
         interestOnly,
         propertyType,
+        squareMeters: squareMeters > 0 ? squareMeters : undefined,
+        householdSize: householdSize ?? undefined,
         ownerExpensesMonthlyDKK,
         otherMonthlyDKK: otherMonthlyDKK || 0,
         includeMortgageRegistrationFee,
@@ -216,6 +223,8 @@ export function CalculatorForm({
       termYears,
       interestOnly,
       propertyType,
+      squareMeters,
+      householdSize,
       ownerExpensesMonthlyDKK,
       otherMonthlyDKK,
       includeMortgageRegistrationFee,
@@ -254,6 +263,89 @@ export function CalculatorForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-16" noValidate>
+      {/* Generel information */}
+      <section className="space-y-4">
+        <h2 className={sectionTitle}>Generel information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+          <div>
+            <LabelWithTooltip
+              htmlFor="propertyType"
+              tooltip="Vælg om boligen er et hus eller en ejerlejlighed. Det påvirker vedligeholdelsesberegningen: hus bruger 1,5 % af købsprisen pr. år, lejlighed 1,0 %, som gennemsnitlig reserve til vedligehold."
+              className="block text-label text-text-secondary mb-1.5"
+            >
+              Type bolig
+            </LabelWithTooltip>
+            <select
+              id="propertyType"
+              value={propertyType}
+              onChange={(e) =>
+                setPropertyType(e.target.value as "house" | "apartment")
+              }
+              className={inputClass("propertyType")}
+            >
+              <option value="house">Hus</option>
+              <option value="apartment">Lejlighed</option>
+            </select>
+            <p className="mt-1.5 text-small text-text-muted">
+              Vedligehold beregnes automatisk (1,5 % hus / 1 % lejlighed af købspris pr. år).
+            </p>
+          </div>
+          <div>
+            <LabelWithTooltip
+              htmlFor="squareMeters"
+              tooltip="Boligens størrelse i kvadratmeter. Valgfrit felt – bruges til at give et bedre overblik over din bolig."
+              className="block text-label text-text-secondary mb-1.5"
+            >
+              Antal kvadratmeter (m²) <span className="text-text-muted">– valgfrit</span>
+            </LabelWithTooltip>
+            <input
+              id="squareMeters"
+              type="text"
+              inputMode="numeric"
+              value={squareMeters > 0 ? squareMeters : ""}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, "");
+                setSquareMeters(v === "" ? 0 : Math.min(9999, Number(v)));
+              }}
+              placeholder="fx 120"
+              className={inputClass("squareMeters")}
+            />
+          </div>
+        </div>
+        <div className="max-w-xs">
+          <LabelWithTooltip
+            htmlFor="householdSize"
+            tooltip="Vælg antal personer for at få et vejledende estimat af månedlig eludgift baseret på gennemsnitligt forbrug (Energistyrelsen/EWII). Estimatet gælder typisk lejlighed på ca. 80 m² eller hus på ca. 160 m² uden elvarme/elbil. Du kan lade feltet stå tom, hvis du selv vil indtaste el i Øvrige månedlige."
+            className="block text-label text-text-secondary mb-1.5"
+          >
+            Antal personer i husstanden <span className="text-text-muted">– valgfrit (til el-estimat)</span>
+          </LabelWithTooltip>
+          <select
+            id="householdSize"
+            value={householdSize ?? ""}
+            onChange={(e) => {
+              const v = e.target.value;
+              setHouseholdSize(v === "" ? undefined : (Number(v) as HouseholdSize));
+            }}
+            className={inputClass("householdSize")}
+          >
+            <option value="">Vælg …</option>
+            <option value={1}>1 person</option>
+            <option value={2}>2 personer</option>
+            <option value={3}>3 personer</option>
+            <option value={4}>4 personer</option>
+            <option value={5}>5 eller flere</option>
+          </select>
+          {householdSize != null && (
+            <p className="mt-1.5 text-small text-text-muted">
+              Estimeret el: ca. {getEstimatedYearlyKWh(propertyType, householdSize).toLocaleString("da-DK")} kWh/år →{" "}
+              {formatDKK(estimateMonthlyElDKK(propertyType, householdSize, DEFAULTS.EL_PRICE_KR_PER_KWH))} kr/md.
+              (vejledende pris {DEFAULTS.EL_PRICE_KR_PER_KWH} kr/kWh)
+            </p>
+          )}
+        </div>
+      </section>
+
       {/* Købspris og udbetaling */}
       <section className="space-y-4">
         <h2 className={sectionTitle}>Købspris og udbetaling</h2>
@@ -274,7 +366,7 @@ export function CalculatorForm({
                 "purchasePriceDKK",
                 purchasePriceDKK,
                 setPurchasePriceDKK,
-                "3.500.000"
+                "5.000.000"
               )}
               className={inputClass("purchasePriceDKK")}
               aria-invalid={!!validationErrors.purchasePriceDKK}
@@ -663,45 +755,18 @@ export function CalculatorForm({
         )}
       </section>
 
-      {/* Boligtype */}
-      <section className="space-y-4">
-        <h2 className={sectionTitle}>Boligtype</h2>
-        <div className="max-w-xs">
-          <LabelWithTooltip
-            htmlFor="propertyType"
-            tooltip="Vælg om boligen er et hus eller en ejerlejlighed. Det påvirker vedligeholdelsesberegningen: hus bruger 1,5 % af købsprisen pr. år, lejlighed 1,0 %, som gennemsnitlig reserve til vedligehold."
-            className="block text-label text-text-secondary mb-1.5"
-          >
-            Type bolig
-          </LabelWithTooltip>
-          <select
-            id="propertyType"
-            value={propertyType}
-            onChange={(e) =>
-              setPropertyType(e.target.value as "house" | "apartment")
-            }
-            className={inputClass("propertyType")}
-          >
-            <option value="house">Hus</option>
-            <option value="apartment">Lejlighed</option>
-          </select>
-          <p className="mt-1.5 text-small text-text-muted">
-            Vedligehold beregnes automatisk (1,5 % hus / 1 % lejlighed af købspris pr. år).
-          </p>
-        </div>
-      </section>
-
       {/* El, varme og vand */}
       <section className="space-y-4">
         <h2 className={sectionTitle}>El, varme og vand</h2>
-        <div className="max-w-xs">
-          <LabelWithTooltip
-            htmlFor="ownerExpensesMonthlyDKK"
-            tooltip="Månedlige faste udgifter som ejer: fællesudgifter (for lejlighed), varme, vand, forsikring, grundskyld, ejendomsskat m.m. Indtast et gennemsnitligt beløb pr. måned, så det indgår i den samlede omkostningsberegning."
-            className="block text-label text-text-secondary mb-1.5"
-          >
-            Ejerudgifter pr. måned (DKK)
-          </LabelWithTooltip>
+        <div className="space-y-4">
+          <div className="max-w-xs">
+            <LabelWithTooltip
+              htmlFor="ownerExpensesMonthlyDKK"
+              tooltip="Månedlige faste udgifter som ejer: fællesudgifter (for lejlighed), varme, vand, forsikring, grundskyld, ejendomsskat m.m. Indtast et gennemsnitligt beløb pr. måned, så det indgår i den samlede omkostningsberegning."
+              className="block text-label text-text-secondary mb-1.5"
+            >
+              Ejerudgifter pr. måned (DKK)
+            </LabelWithTooltip>
           <input
             id="ownerExpensesMonthlyDKK"
             type="text"
@@ -727,6 +792,7 @@ export function CalculatorForm({
           <p className="mt-1.5 text-small text-text-muted">
             Fx fællesudgifter, varme, vand, forsikring, grundskyld.
           </p>
+          </div>
         </div>
       </section>
 

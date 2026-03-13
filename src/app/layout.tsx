@@ -44,6 +44,12 @@ export default function RootLayout({
   return (
     <html lang="da">
       <head>
+        <link
+          rel="sitemap"
+          type="application/xml"
+          title="Sitemap"
+          href={`${SITE_URL}/sitemap.xml`}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

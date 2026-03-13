@@ -20,6 +20,8 @@ export const DEFAULTS = {
   MAINT_HOUSE_RATE: 0.015,
   /** Lejlighed: 1,0% af købspris pr. år (antagelse) */
   MAINT_APT_RATE: 0.01,
+  /** Gennemsnitlig elpris inkl. tariffer (vejledende) – bruges til el-estimat */
+  EL_PRICE_KR_PER_KWH: 2.5,
   CTA_ID: "loan_offers_v1",
   REDIRECT_ROUTE: "/go/loan",
 } as const;

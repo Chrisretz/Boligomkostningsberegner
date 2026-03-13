@@ -21,6 +21,8 @@ export const calcInputSchema = z
       .min(1, "Løbetid skal være et helt tal mellem 1 og 40 år.")
       .max(40, "Løbetid skal være et helt tal mellem 1 og 40 år."),
     propertyType: z.enum(["house", "apartment"]),
+    householdSize: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional(),
+    squareMeters: z.number().int().min(1).max(9999).optional(),
     ownerExpensesMonthlyDKK: z
       .number()
       .min(0, "Ejerudgifter skal være 0 kr eller derover.")

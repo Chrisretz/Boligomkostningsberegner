@@ -76,6 +76,12 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
             <span className="min-w-0">Ejerudgifter</span>
             <span className="shrink-0">{formatKr(output.breakdownMonthly.ownerExpensesMonthlyDKK)}</span>
           </li>
+          {output.breakdownMonthly.estimatedElMonthlyDKK > 0 && (
+            <li className="flex justify-between gap-4">
+              <span className="min-w-0">Estimeret el</span>
+              <span className="shrink-0">{formatKr(output.breakdownMonthly.estimatedElMonthlyDKK)}</span>
+            </li>
+          )}
           <li className="flex justify-between gap-4">
             <span className="min-w-0">Vedligeholdelse</span>
             <span className="shrink-0">{formatKr(output.breakdownMonthly.maintenanceMonthlyDKK)}</span>

@@ -4,6 +4,7 @@
 
 import type { CalcInput, CalcOutput, ScenarioOutput } from "./types";
 import { CONSTANTS, DEFAULTS } from "./constants";
+import { estimateMonthlyElDKK } from "./electricity";
 
 function ceilToNearest100(x: number): number {
   return Math.ceil(x / 100) * 100;
@@ -88,9 +89,18 @@ function scenario(
     input.purchasePriceDKK,
     input.propertyType
   );
+  const estimatedEl =
+    input.householdSize != null
+      ? estimateMonthlyElDKK(
+          input.propertyType,
+          input.householdSize,
+          DEFAULTS.EL_PRICE_KR_PER_KWH
+        )
+      : 0;
   const monthlyTotal =
     payment +
     input.ownerExpensesMonthlyDKK +
+    estimatedEl +
     maintenance +
     otherMonthly;
   return {
@@ -123,6 +133,14 @@ export function calculate(input: CalcInput): CalcOutput {
     input.purchasePriceDKK,
     input.propertyType
   );
+  const estimatedElMonthly =
+    input.householdSize != null
+      ? estimateMonthlyElDKK(
+          input.propertyType,
+          input.householdSize,
+          DEFAULTS.EL_PRICE_KR_PER_KWH
+        )
+      : 0;
 
   const base = scenario(input, input.interestRateAnnualPct);
   const plus1 = scenario(input, input.interestRateAnnualPct + 1);
@@ -141,6 +159,7 @@ export function calculate(input: CalcInput): CalcOutput {
     plus2,
     breakdownMonthly: {
       ownerExpensesMonthlyDKK: roundDKK(input.ownerExpensesMonthlyDKK),
+      estimatedElMonthlyDKK: roundDKK(estimatedElMonthly),
       otherMonthlyDKK: roundDKK(input.otherMonthlyDKK ?? 0),
       maintenanceMonthlyDKK: roundDKK(maintenanceMonthly),
       realkreditMonthlyDKK: base.realkreditMonthlyDKK,
@@ -152,11 +171,18 @@ export function calculate(input: CalcInput): CalcOutput {
         : "Låneydelse beregnes som én annuitet (forenkling).",
       "Vedligehold estimeres som en fast procent af købspris pr. år (vejledende).",
       "Pantafgift beregnes af pantsikret beløb (default: lånebeløb).",
+      ...(input.householdSize != null
+        ? [
+            `El-estimat baseret på gennemsnitligt forbrug (Energistyrelsen/EWII) for ${input.propertyType === "apartment" ? "lejlighed" : "hus"} med ${input.householdSize === 5 ? "5+" : input.householdSize} person(er) og vejledende elpris. Elvarme og elbil er ikke inkluderet.`,
+          ]
+        : []),
     ],
     exclusions: [
       "Skattefradrag og individuelle skatteforhold er ikke medregnet.",
       "Ejendomsskatter (grundskyld/ejendomsværdiskat) beregnes ikke automatisk i MVP.",
-      "Forsyning (el/vand/varme) er kun med, hvis du indtaster det i Øvrige månedlige omkostninger.",
+      input.householdSize == null
+        ? "Forsyning (el/vand/varme) er kun med, hvis du indtaster det i Øvrige månedlige omkostninger eller vælger antal personer til el-estimat."
+        : "El-estimat er vejledende; elvarme og elbil kan give højere forbrug.",
     ],
   };
 }
