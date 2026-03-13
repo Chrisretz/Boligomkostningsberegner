@@ -98,6 +98,28 @@ export default function TinglysningPage() {
           </section>
 
           <section>
+            <h2 className="text-h3 text-text-primary">
+              Tinglysning og dine samlede boligomkostninger
+            </h2>
+            <p>
+              Tinglysningsafgifterne er en af de større engangsomkostninger ved
+              boligkøb og kan let løbe op i titusindvis af kroner, især hvis der
+              både skal tinglyses skøde og nye lån. I Boligklarheds
+              boligomkostningsberegner indgår tinglysning som en del af
+              engangsomkostningerne, så du kan se, hvordan afgifterne påvirker
+              det samlede beløb, du skal have klar ved overtagelsen.
+            </p>
+            <p>
+              Ved at indtaste købspris og pantsikret beløb i beregneren kan du
+              hurtigt få et estimat af, hvad du skal betale i tinglysningsafgift
+              til staten. Det gør det nemmere at planlægge din udbetaling og
+              sikre, at du har sat penge nok af til både omkostninger ved
+              tinglysning, omkostninger til lån og øvrige udgifter forbundet med
+              boligkøbet.
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-h3 text-text-primary">Opsummering</h2>
             <p>
               Tinglysning er den officielle registrering af ejerskab og
