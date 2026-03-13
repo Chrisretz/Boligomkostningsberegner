@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
+import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Hvad er tinglysning?",
@@ -10,8 +11,18 @@ export const metadata: Metadata = {
 };
 
 export default function TinglysningPage() {
+  const articleSchema = getArticleSchema({
+    title: "Hvad er tinglysning?",
+    description:
+      "Tinglysning er den juridiske registrering af rettigheder over en fast ejendom. Læs mere om processen, afgifter og hvorfor det er vigtigt.",
+    path: "/artikler/tinglysning",
+  });
   return (
     <main className="min-h-screen py-12 px-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
           <Link

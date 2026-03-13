@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
+import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Hvad er en ejerskifteforsikring?",
@@ -10,8 +11,18 @@ export const metadata: Metadata = {
 };
 
 export default function EjerskifteforsikringPage() {
+  const articleSchema = getArticleSchema({
+    title: "Hvad er en ejerskifteforsikring?",
+    description:
+      "En ejerskifteforsikring dækker skjulte fejl og mangler ved boligkøb. Læs mere om dækning, pris og om den er nødvendig for dig.",
+    path: "/artikler/ejerskifteforsikring",
+  });
   return (
     <main className="min-h-screen py-12 px-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
           <Link

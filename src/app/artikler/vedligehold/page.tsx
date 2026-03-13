@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
+import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Vedligehold af bolig: Hvor meget skal jeg sætte af? | Boligklarhed",
@@ -16,8 +17,18 @@ export const metadata: Metadata = {
 };
 
 export default function VedligeholdPage() {
+  const articleSchema = getArticleSchema({
+    title: "Vedligehold af bolig: Hvor meget skal jeg sætte af?",
+    description:
+      "Lær hvor meget du bør sætte af til vedligehold af hus eller lejlighed pr. år – og hvad pengene dækker. Få et overblik over vedligeholdelsesreserve og brug vores beregner til dine samlede boligomkostninger.",
+    path: "/artikler/vedligehold",
+  });
   return (
     <main className="min-h-screen py-12 px-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
           <Link

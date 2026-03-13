@@ -35,6 +35,36 @@ const articles = [
     title: "Spar på tinglysning: Udnyt eksisterende pantebrev",
     description: "Lær hvordan du reducerer omkostningerne til tinglysning af pant ved at overtage eller genbruge allerede tinglyste pantebreve.",
   },
+  {
+    slug: "hvad-kan-jeg-koebe-bolig-for",
+    title: "Hvad kan jeg købe bolig for?",
+    description: "Få overblik over rådighedsbeløb, gældsfaktor og den reelle månedlige boligudgift – så du finder ud af, hvor meget bolig du har råd til.",
+  },
+  {
+    slug: "ejerudgifter",
+    title: "Hvad er ejerudgifter?",
+    description: "Grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter – lær hvad du betaler som boligejer.",
+  },
+  {
+    slug: "ejerlejlighed",
+    title: "Hvad er en ejerlejlighed?",
+    description: "Få overblik over ejerskab, fællesudgifter og hvordan ejerlejlighed adskiller sig fra hus og andelsbolig.",
+  },
+  {
+    slug: "boligkoeb-foerste-gang",
+    title: "Boligkøb første gang: Sådan gør du",
+    description: "Guide til førstegangskøbere: spar op, beregn omkostninger, forstå tinglysning og træf et trygt valg.",
+  },
+  {
+    slug: "grundskyld-og-ejendomsskat",
+    title: "Hvad er grundskyld og ejendomsskat?",
+    description: "Få overblik over grundskyld og ejendomsskat – hvad du betaler som boligejer og hvordan det indgår i dine ejerudgifter.",
+  },
+  {
+    slug: "indboforsikring",
+    title: "Hvad er en indboforsikring?",
+    description: "Lær hvad indboforsikring dækker, hvorfor boligejere bør have den og hvordan den indgår i dine ejerudgifter.",
+  },
 ] as const;
 
 /** Kategorier til artikler – SEO-venlige overskrifter med tilhørende artikel-slugs */
@@ -48,14 +78,20 @@ const categories = [
   {
     id: "finansiering",
     title: "Finansiering og lån",
-    description: "Realkreditlån, banklån og hvordan din boligydelse beregnes.",
-    slugs: ["realkreditlan"] as const,
+    description: "Realkreditlån, banklån og hvad du har råd til at købe for.",
+    slugs: ["realkreditlan", "hvad-kan-jeg-koebe-bolig-for"] as const,
   },
   {
     id: "loebende",
     title: "Løbende omkostninger",
-    description: "Vedligehold, ejerudgifter og månedlige boligomkostninger.",
-    slugs: ["vedligehold"] as const,
+    description: "Vedligehold, ejerudgifter, grundskyld, skat og forsikring.",
+    slugs: ["vedligehold", "ejerudgifter", "grundskyld-og-ejendomsskat", "indboforsikring"] as const,
+  },
+  {
+    id: "overblik",
+    title: "Overblik og vejledning",
+    description: "Boligtyper, førstegangskøb og generel guide til boligkøb.",
+    slugs: ["ejerlejlighed", "boligkoeb-foerste-gang"] as const,
   },
 ] as const;
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
+import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Realkreditlån: Sådan fungerer det | Boligklarhed",
@@ -16,8 +17,18 @@ export const metadata: Metadata = {
 };
 
 export default function RealkreditlanPage() {
+  const articleSchema = getArticleSchema({
+    title: "Realkreditlån: Sådan fungerer det",
+    description:
+      "Få et overblik over realkreditlån i Danmark: annuitetslån, F1/F3/F5, bidrag og månedlig ydelse. Lær hvordan dit boliglån beregnes og brug vores beregner til at finde dine omkostninger.",
+    path: "/artikler/realkreditlan",
+  });
   return (
     <main className="min-h-screen py-12 px-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
           <Link

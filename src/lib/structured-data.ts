@@ -62,3 +62,44 @@ export const faqSchema = {
     },
   })),
 };
+
+/** Article JSON-LD for artikelsider. Bruges til SEO og mulige rich results. */
+export function getArticleSchema({
+  title,
+  description,
+  path,
+  datePublished = "2024-06-01",
+  dateModified,
+}: {
+  title: string;
+  description: string;
+  path: string;
+  datePublished?: string;
+  dateModified?: string;
+}) {
+  const url = `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    datePublished,
+    dateModified: dateModified ?? datePublished,
+    author: {
+      "@type": "Organization",
+      name: "Boligklarhed",
+      url: SITE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Boligklarhed",
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/boligklarhed-logo.svg`,
+      },
+    },
+    inLanguage: "da-DK",
+  } as const;
+}
