@@ -76,9 +76,12 @@ export default function BeregnPage() {
           <h1 className="text-xl sm:text-2xl md:text-h1 text-text-primary mb-2 break-words">
             Beregn dine boligomkostninger
           </h1>
-          <p className="text-body text-text-secondary">
+          <p className="text-body text-text-secondary max-w-2xl mx-auto">
             Brug boligomkostningsberegneren til at se, hvad det reelt koster at
-            købe og eje din bolig.
+            købe og eje din bolig. Du kan teste forskellige scenarier for
+            købspris, udbetaling, rente og løbetid, så du får et bedre billede
+            af, hvor robust din boligøkonomi er – både her og nu og hvis
+            forudsætningerne ændrer sig.
           </p>
         </header>
 

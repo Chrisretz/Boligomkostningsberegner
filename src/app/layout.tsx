@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s | Boligklarhed",
   },
   description:
-    "Boligklarhed er en gratis boligomkostningsberegner til danske boligkøbere. Beregn alle vigtige omkostninger ved boligkøb – tinglysning, pant, engangsomkostninger, ejerudgifter, vedligehold og månedlig ydelse inkl. rentestest (+1% og +2%).",
+    "Boligklarhed er en gratis boligomkostningsberegner til danske boligkøbere. Beregn omkostninger ved boligkøb – tinglysning, pant, engangsomkostninger, ejerudgifter, vedligehold og månedlig ydelse.",
   openGraph: {
     type: "website",
     locale: "da_DK",
