@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 const navLinks = [
   { href: "/", label: "Forside" },
   { href: "/artikler", label: "Artikler" },
+  { href: "/om-os", label: "Om os" },
   { href: "/beregn", label: "Beregn" },
 ] as const;
 
@@ -103,6 +104,12 @@ export function Topbar() {
               className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors"
             >
               Artikler
+            </Link>
+            <Link
+              href="/om-os"
+              className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors"
+            >
+              Om os
             </Link>
             <Link
               href="/beregn"

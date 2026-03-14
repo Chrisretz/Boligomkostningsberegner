@@ -20,6 +20,7 @@ const staticPaths = [
   "/privacy",
   "/cookies",
   "/disclaimer",
+  "/om-os",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

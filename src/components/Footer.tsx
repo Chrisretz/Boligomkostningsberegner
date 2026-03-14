@@ -25,6 +25,12 @@ export function Footer() {
               Ansvarsfraskrivelse
             </Link>
             <Link
+              href="/om-os"
+              className="text-body text-text-secondary hover:text-text-primary"
+            >
+              Om os
+            </Link>
+            <Link
               href="/artikler"
               className="text-body text-text-secondary hover:text-text-primary"
             >

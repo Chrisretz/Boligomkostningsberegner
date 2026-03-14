@@ -13,7 +13,7 @@ import {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Boligklarhed – boligomkostningsberegner til danske boligkøbere",
+    default: "Beregn boligomkostninger – Hvad koster det reelt at købe bolig?",
     template: "%s | Boligklarhed",
   },
   description:
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "da_DK",
     url: SITE_URL,
-    title: "Boligklarhed – beregn omkostninger ved boligkøb online",
+    title: "Beregn boligomkostninger – Hvad koster det reelt at købe bolig?",
     description:
       "Få overblik over, hvad din bolig reelt koster. Boligklarhed samler engangsomkostninger, månedlige udgifter til lån, ejerudgifter, vedligehold og rentestest ét sted.",
   },
