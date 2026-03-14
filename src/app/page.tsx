@@ -28,7 +28,7 @@ export default function HomePage() {
       <section className="py-16 px-4 md:py-24">
         <div className="container mx-auto max-w-4xl text-center">
           <h1 className="text-h1 text-text-primary mb-4">
-            Boligomkostningsberegner – hvad koster boligen reelt?
+            Boligberegner – hvad koster boligen reelt?
           </h1>
           <p className="text-body text-text-secondary mb-8 max-w-2xl mx-auto">
             Online boligomkostningsberegner til danske boligkøbere. Beregn alle vigtige omkostninger ved boligkøb – tinglysning, pant, engangsomkostninger, ejerudgifter, vedligehold og månedlig ydelse på realkreditlån og evt. banklån – samlet ét sted. Få samtidig en rentestest (+1% og +2%), så du kan se, om dit boligbudget også holder, hvis renten stiger.
