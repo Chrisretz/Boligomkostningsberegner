@@ -33,6 +33,14 @@ export const metadata: Metadata = {
     title: "Beregn boligomkostninger – Hvad koster det reelt at købe bolig?",
     description:
       "Få overblik over, hvad din bolig reelt koster. Boligklarhed samler engangsomkostninger, månedlige udgifter til lån, ejerudgifter, vedligehold og rentestest ét sted.",
+    images: [
+      {
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "Boligklarhed – boligomkostningsberegner",
+      },
+    ],
   },
 };
 

@@ -3,3 +3,15 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Range slider – ens udseende på tværs af browsere */
+input[type="range"].range-slider {
+  @apply h-2 w-full rounded-full bg-gray-200 appearance-none cursor-pointer;
+  accent-color: theme("colors.brand.primary");
+}
+input[type="range"].range-slider::-webkit-slider-thumb {
+  @apply appearance-none w-5 h-5 rounded-full border-0 cursor-pointer bg-brand-primary shadow-soft;
+}
+input[type="range"].range-slider::-moz-range-thumb {
+  @apply w-5 h-5 rounded-full border-0 cursor-pointer bg-brand-primary shadow-soft;
+}

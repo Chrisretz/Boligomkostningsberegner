@@ -86,7 +86,7 @@ export default function BeregnPage() {
         </header>
 
         {/* Input-kort */}
-        <section className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 mb-spacing-section">
+        <section className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 mb-16">
           <CalculatorForm
             onSubmit={handleSubmit}
             validationErrors={validationErrors}
@@ -96,7 +96,7 @@ export default function BeregnPage() {
 
         {/* Resultater */}
         {output && lastInput && (
-          <section ref={resultRef}>
+          <section ref={resultRef} className="mt-16">
             <h2 className="text-h2 text-text-primary mb-6">
               Dine omkostninger
             </h2>

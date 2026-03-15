@@ -14,6 +14,9 @@ interface CalculatorFormProps {
 }
 
 const TERM_OPTIONS = Array.from({ length: 40 }, (_, i) => i + 1);
+const PURCHASE_PRICE_SLIDER_MIN = 1_000_000;
+const PURCHASE_PRICE_SLIDER_MAX = 20_000_000;
+const PURCHASE_PRICE_SLIDER_STEP = 250_000;
 
 function parseDKK(val: string): number {
   return Number(val.replace(/\D/g, "")) || 0;
@@ -380,6 +383,34 @@ export function CalculatorForm({
                 {validationErrors.purchasePriceDKK}
               </p>
             )}
+            <div className="mt-4">
+              <p className="text-small text-text-muted mb-2">
+                Juster købspris med skyderen
+              </p>
+              <div className="flex items-center gap-3">
+                <span className="text-small text-text-muted shrink-0 w-14">
+                  {formatDKK(PURCHASE_PRICE_SLIDER_MIN)}
+                </span>
+                <input
+                  type="range"
+                  min={PURCHASE_PRICE_SLIDER_MIN}
+                  max={PURCHASE_PRICE_SLIDER_MAX}
+                  step={PURCHASE_PRICE_SLIDER_STEP}
+                  value={Math.min(
+                    PURCHASE_PRICE_SLIDER_MAX,
+                    Math.max(PURCHASE_PRICE_SLIDER_MIN, purchasePriceDKK)
+                  )}
+                  onChange={(e) =>
+                    setPurchasePriceDKK(Number(e.target.value))
+                  }
+                  className="range-slider flex-1"
+                  aria-label="Juster boligens pris"
+                />
+                <span className="text-small text-text-muted shrink-0 w-16 text-right">
+                  {formatDKK(PURCHASE_PRICE_SLIDER_MAX)}
+                </span>
+              </div>
+            </div>
           </div>
           <div>
             <LabelWithTooltip

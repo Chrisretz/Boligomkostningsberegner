@@ -37,10 +37,10 @@ export function Footer() {
               Artikler
             </Link>
             <Link
-              href="/beregn"
+              href="/beregnere"
               className="text-body text-text-secondary hover:text-text-primary"
             >
-              Beregn
+              Beregnere
             </Link>
           </nav>
           <p className="text-small text-text-muted">

@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { articleCategories, getArticlesBySlugs } from "@/lib/articles";
+import { calculators } from "@/lib/calculators";
 
 const navLinks = [
   { href: "/", label: "Forside" },
-  { href: "/artikler", label: "Artikler" },
   { href: "/om-os", label: "Om os" },
-  { href: "/beregn", label: "Beregn" },
+  { href: "/beregnere", label: "Beregnere" },
 ] as const;
 
 function MenuIcon() {
@@ -53,6 +54,10 @@ function CloseIcon() {
 
 export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [artiklerOpen, setArtiklerOpen] = useState(false);
+  const [beregnereOpen, setBeregnereOpen] = useState(false);
+  const [expandedCategoryId, setExpandedCategoryId] = useState<string | null>(null);
+  const artiklerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (menuOpen) {
@@ -99,24 +104,117 @@ export function Topbar() {
             >
               Forside
             </Link>
-            <Link
-              href="/artikler"
-              className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors"
+            <div
+              ref={artiklerRef}
+              className="relative"
+              onMouseEnter={() => setArtiklerOpen(true)}
+              onMouseLeave={() => {
+                setArtiklerOpen(false);
+                setExpandedCategoryId(null);
+              }}
             >
-              Artikler
-            </Link>
+              <span
+                className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors cursor-default"
+                aria-haspopup="true"
+                aria-expanded={artiklerOpen}
+              >
+                Artikler
+              </span>
+              {artiklerOpen && (
+                <div className="absolute left-0 top-full pt-2 z-50 min-w-[280px]">
+                  <div className="bg-brand-surface border border-border rounded-md shadow-card py-2">
+                    <Link
+                      href="/artikler"
+                      className="block px-4 py-2 text-body text-brand-primary hover:bg-border/50 font-medium"
+                    >
+                      Alle artikler →
+                    </Link>
+                    <div className="border-t border-border mt-2 pt-2">
+                      {articleCategories.map((category) => {
+                        const isExpanded = expandedCategoryId === category.id;
+                        const categoryArticles = getArticlesBySlugs([...category.slugs]);
+                        return (
+                          <div key={category.id} className="px-2 pb-1 last:pb-0">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpandedCategoryId(isExpanded ? null : category.id)
+                              }
+                              className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-body font-medium text-text-primary hover:bg-border/50 rounded-md"
+                            >
+                              <span>{category.title}</span>
+                              <span
+                                className={`text-text-muted transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                                aria-hidden
+                              >
+                                ▼
+                              </span>
+                            </button>
+                            {isExpanded && (
+                              <ul className="ml-3 mt-1 space-y-0.5 border-l-2 border-border pl-3">
+                                {categoryArticles.map((article) => (
+                                  <li key={article.slug}>
+                                    <Link
+                                      href={`/artikler/${article.slug}`}
+                                      className="block py-1.5 text-small text-text-secondary hover:text-brand-primary"
+                                    >
+                                      {article.title}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
             <Link
               href="/om-os"
               className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors"
             >
               Om os
             </Link>
-            <Link
-              href="/beregn"
-              className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors"
+            <div
+              className="relative"
+              onMouseEnter={() => setBeregnereOpen(true)}
+              onMouseLeave={() => setBeregnereOpen(false)}
             >
-              Beregn
-            </Link>
+              <Link
+                href="/beregnere"
+                className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors inline-block"
+                aria-haspopup="true"
+                aria-expanded={beregnereOpen}
+              >
+                Beregnere
+              </Link>
+              {beregnereOpen && (
+                <div className="absolute right-0 top-full pt-2 z-50 min-w-[260px]">
+                  <div className="bg-brand-surface border border-border rounded-md shadow-card py-2">
+                    <Link
+                      href="/beregnere"
+                      className="block px-4 py-2 text-body text-brand-primary hover:bg-border/50 font-medium"
+                    >
+                      Alle beregnere →
+                    </Link>
+                    <div className="border-t border-border mt-2 pt-2">
+                      {calculators.map((calc) => (
+                        <Link
+                          key={calc.id}
+                          href={calc.href}
+                          className="block px-4 py-2 text-body text-text-primary hover:bg-border/50"
+                        >
+                          {calc.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Mobile/tablet: menu button */}
@@ -163,20 +261,34 @@ export function Topbar() {
               </button>
             </div>
             <nav className="flex flex-col p-4 gap-1">
-              {navLinks.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMenuOpen(false)}
-                  className={
-                    href === "/beregn"
-                      ? "px-4 py-3 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover text-center"
-                      : "px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
-                  }
-                >
-                  {label}
-                </Link>
-              ))}
+              <Link
+                href="/"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
+              >
+                Forside
+              </Link>
+              <Link
+                href="/artikler"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
+              >
+                Artikler
+              </Link>
+              <Link
+                href="/om-os"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
+              >
+                Om os
+              </Link>
+              <Link
+                href="/beregnere"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover text-center"
+              >
+                Beregnere
+              </Link>
             </nav>
           </aside>
         </>

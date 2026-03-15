@@ -1,0 +1,24 @@
+/**
+ * Fælles data for beregnere – bruges af /beregnere-siden og Topbar-dropdown.
+ */
+
+export const calculators = [
+  {
+    id: "boligomkostninger",
+    slug: "boligomkostninger",
+    href: "/beregn",
+    title: "Boligomkostningsberegner",
+    description:
+      "Beregn engangsomkostninger, månedlig ydelse og rentestest. Indtast købspris, udbetaling, lån og ejerudgifter.",
+  },
+  {
+    id: "hvad-kan-jeg-koebe-bolig-for",
+    slug: "hvad-kan-jeg-koebe-bolig-for",
+    href: "/beregnere/hvad-kan-jeg-koebe-bolig-for",
+    title: "Hvad kan jeg købe bolig for?",
+    description:
+      "Beregn dit lånerum ud fra indtægt og gearing. Se hvor meget du kan låne og hvilken købspris du typisk har råd til.",
+  },
+] as const;
+
+export type CalculatorId = (typeof calculators)[number]["id"];

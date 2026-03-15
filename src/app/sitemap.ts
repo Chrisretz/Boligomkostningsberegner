@@ -4,6 +4,8 @@ import { SITE_URL } from "@/lib/site";
 const staticPaths = [
   "",
   "/beregn",
+  "/beregnere",
+  "/beregnere/hvad-kan-jeg-koebe-bolig-for",
   "/artikler",
   "/artikler/tinglysning",
   "/artikler/ejerskifteforsikring",
