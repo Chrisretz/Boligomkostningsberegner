@@ -15,3 +15,18 @@ input[type="range"].range-slider::-webkit-slider-thumb {
 input[type="range"].range-slider::-moz-range-thumb {
   @apply w-5 h-5 rounded-full border-0 cursor-pointer bg-brand-primary shadow-soft;
 }
+
+/* Større touch-target til slider på mobil (WCAG/anbefaling ~44px) */
+@media (max-width: 768px) {
+  input[type="range"].range-slider {
+    @apply py-2;
+  }
+  input[type="range"].range-slider::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  input[type="range"].range-slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+}

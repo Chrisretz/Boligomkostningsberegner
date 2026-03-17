@@ -33,22 +33,70 @@ export default function HomePage() {
           <p className="text-body text-text-secondary mb-8 max-w-2xl mx-auto">
             Online boligomkostningsberegner til danske boligkøbere. Beregn alle vigtige omkostninger ved boligkøb – tinglysning, pant, engangsomkostninger, ejerudgifter, vedligehold og månedlig ydelse på realkreditlån og evt. banklån – samlet ét sted. Få samtidig en rentestest (+1% og +2%), så du kan se, om dit boligbudget også holder, hvis renten stiger.
           </p>
-          <Link
-            href="/beregn"
-            className="inline-block px-8 py-4 text-body font-semibold text-white bg-brand-primary rounded-md shadow-soft hover:bg-brand-primaryHover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors"
-          >
-            Beregn på 60 sek
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/beregn"
+              className="inline-flex items-center justify-center min-h-[48px] px-8 py-4 text-body font-semibold text-white bg-brand-primary rounded-md shadow-soft hover:bg-brand-primaryHover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors w-full sm:w-auto"
+            >
+              Beregn boligomkostninger
+            </Link>
+            <Link
+              href="/beregnere/hvad-kan-jeg-koebe-bolig-for"
+              className="inline-flex items-center justify-center min-h-[48px] px-8 py-4 text-body font-semibold text-brand-primary border-2 border-brand-primary bg-transparent rounded-md hover:bg-brand-surface focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors w-full sm:w-auto"
+            >
+              Hvad kan jeg købe bolig for?
+            </Link>
+          </div>
+          <p className="text-small text-text-muted mt-4 max-w-md mx-auto">
+            Vælg den beregner, der passer til dit spørgsmål – du kan bruge begge til at få det fulde billede.
+          </p>
         </div>
       </section>
 
       <section className="py-12 px-4 border-t border-border">
         <div className="container mx-auto max-w-4xl">
           <h2 className="text-h2 text-text-primary mb-6 text-center">
+            Vælg din beregner
+          </h2>
+          <p className="text-body text-text-secondary mb-8 max-w-3xl mx-auto text-center">
+            Boligklarhed tilbyder to værktøjer: én der viser, hvad en given bolig koster at købe og eje, og én der viser, hvor meget du typisk kan låne og hvilken købspris det svarer til. Brug begge for at få det fulde billede.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <Link
+              href="/beregn"
+              className="block bg-brand-surface rounded-md border border-border shadow-soft p-6 hover:border-brand-primary hover:shadow-md transition-colors text-left group"
+            >
+              <h3 className="text-h3 text-text-primary mb-2 group-hover:text-brand-primary">
+                Boligomkostningsberegner
+              </h3>
+              <p className="text-body text-text-secondary mb-4">
+                Indtast købspris, udbetaling, rente og løbetid. Få engangsomkostninger, månedlig ydelse og rentestest – så du ved, hvad boligen reelt koster at købe og eje.
+              </p>
+              <span className="text-body font-medium text-brand-primary">
+                Gå til beregneren →
+              </span>
+            </Link>
+            <Link
+              href="/beregnere/hvad-kan-jeg-koebe-bolig-for"
+              className="block bg-brand-surface rounded-md border border-border shadow-soft p-6 hover:border-brand-primary hover:shadow-md transition-colors text-left group"
+            >
+              <h3 className="text-h3 text-text-primary mb-2 group-hover:text-brand-primary">
+                Hvad kan jeg købe bolig for?
+              </h3>
+              <p className="text-body text-text-secondary mb-4">
+                Indtast din indtægt og evt. gæld. Få et vejledende lånerum og et skøn over maksimal købspris – ud fra gældsfaktor og typisk 80 % finansiering.
+              </p>
+              <span className="text-body font-medium text-brand-primary">
+                Gå til beregneren →
+              </span>
+            </Link>
+          </div>
+
+          <h2 className="text-h2 text-text-primary mb-6 text-center">
             Hvad inkluderer vi?
           </h2>
           <p className="text-body text-text-secondary mb-8 max-w-3xl mx-auto text-center">
-            Boligklarhed samler de vigtigste omkostninger ved boligkøb i én beregning, så du slipper for at regne i regneark eller gætte dig frem. Beregneren følger de officielle satser og typiske tommelfingerregler, så du får et realistisk billede af, hvad det koster at købe og eje din bolig – både ved overtagelse og hver måned.
+            Boligklarhed samler de vigtigste omkostninger ved boligkøb i én beregning, så du slipper for at regne i regneark eller gætte dig frem. Beregnerne følger de officielle satser og typiske tommelfingerregler, så du får et realistisk billede af, hvad det koster at købe og eje din bolig – både ved overtagelse og hver måned.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">

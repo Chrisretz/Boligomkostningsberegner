@@ -951,7 +951,7 @@ export function CalculatorForm({
       <div className="flex justify-center pt-2" id={firstErrorId}>
         <button
           type="submit"
-          className="px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-opacity"
+          className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-opacity touch-manipulation"
         >
           Beregn omkostninger
         </button>

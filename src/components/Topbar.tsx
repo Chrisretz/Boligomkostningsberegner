@@ -144,10 +144,10 @@ export function Topbar() {
                             >
                               <span>{category.title}</span>
                               <span
-                                className={`text-text-muted transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                                className="text-text-muted font-medium tabular-nums"
                                 aria-hidden
                               >
-                                ▼
+                                {isExpanded ? "−" : "+"}
                               </span>
                             </button>
                             {isExpanded && (

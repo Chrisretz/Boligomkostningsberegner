@@ -83,8 +83,8 @@ export default function HvadKanJegKoebeBoligForPage() {
   };
 
   return (
-    <main className="min-h-screen py-12 px-4">
-      <div className="container mx-auto max-w-5xl">
+    <main className="min-h-screen py-12 px-4 overflow-x-hidden">
+      <div className="container mx-auto max-w-5xl min-w-0">
         <header className="text-center mb-10">
           <h1 className="text-xl sm:text-2xl md:text-h1 text-text-primary mb-2 break-words">
             Hvad kan jeg købe bolig for?
@@ -232,7 +232,7 @@ export default function HvadKanJegKoebeBoligForPage() {
             </div>
             <button
               type="submit"
-              className="px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+              className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
             >
               Beregn lånerum
             </button>

@@ -69,8 +69,8 @@ export default function BeregnPage() {
   }, []);
 
   return (
-    <main className="min-h-screen py-12 px-4">
-      <div className="container mx-auto max-w-5xl">
+    <main className="min-h-screen py-12 px-4 overflow-x-hidden">
+      <div className="container mx-auto max-w-5xl min-w-0">
         {/* Centreret header */}
         <header className="text-center mb-10">
           <h1 className="text-xl sm:text-2xl md:text-h1 text-text-primary mb-2 break-words">
@@ -107,7 +107,7 @@ export default function BeregnPage() {
                 onClick={() =>
                   generateBeregningPdf(lastInput, output)
                 }
-                className="inline-flex items-center gap-2 px-6 py-3 text-body font-medium text-brand-primary border border-brand-primary rounded-md hover:bg-brand-primary hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+                className="inline-flex items-center justify-center min-h-[48px] gap-2 px-6 py-3 text-body font-medium text-brand-primary border border-brand-primary rounded-md hover:bg-brand-primary hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

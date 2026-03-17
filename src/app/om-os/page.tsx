@@ -27,13 +27,19 @@ export default function OmOsPage() {
             <p>
               Boligklarhed er et uafhængigt online værktøj til dig, der står over
               for et boligkøb og gerne vil forstå, hvad det reelt koster at købe
-              og eje en bolig. Vi tilbyder en gratis{" "}
+              og eje en bolig. Vi tilbyder to gratis beregnere: en{" "}
               <Link href="/beregn" className="text-brand-primary hover:underline">
                 boligomkostningsberegner
               </Link>
-              , der samler de vigtigste omkostninger ét sted: engangsudgifter ved
-              køb, månedlige udgifter til lån og ejerudgifter samt en rentestest,
-              så du kan vurdere din boligøkonomi – også hvis renten stiger.
+              , der samler engangsudgifter, månedlig ydelse og rentestest for en
+              given bolig – og en beregner{" "}
+              <Link href="/beregnere/hvad-kan-jeg-koebe-bolig-for" className="text-brand-primary hover:underline">
+                Hvad kan jeg købe bolig for?
+              </Link>
+              , der ud fra din indtægt og gæld giver et vejledende lånerum og
+              skøn over maksimal købspris. Begge værktøjer er beregnet til at
+              give dig et bedre udgangspunkt, når du taler med bank eller mægler
+              – ikke som erstatning for personlig rådgivning.
             </p>
           </section>
 
@@ -54,14 +60,15 @@ export default function OmOsPage() {
           <section>
             <h2 className="text-h3 text-text-primary">Hvad kan du beregne?</h2>
             <p>
-              I beregneren kan du indtaste købspris, udbetaling, realkreditlån
-              og evt. banklån, rente og løbetid. Du får derefter et skøn over
-              engangsomkostninger (bl.a. tinglysning og pantafgift), den
+              I <strong>boligomkostningsberegneren</strong> indtaster du købspris,
+              udbetaling, realkreditlån og evt. banklån, rente og løbetid. Du
+              får engangsomkostninger (bl.a. tinglysning og pantafgift), den
               månedlige ydelse og en rentestest med +1 % og +2 % rente.
-              Ejerudgifter, vedligehold og et valgfrit el-estimat (baseret på
-              antal personer) kan også medtages, så du får et samlet billede af
-              den reelle månedlige boligudgift. Du kan læse mere om begreberne i
-              vores{" "}
+              Ejerudgifter, vedligehold og et valgfrit el-estimat kan medtages.
+              I beregneren <strong>Hvad kan jeg købe bolig for?</strong> indtaster
+              du din bruttoindtægt og evt. eksisterende gæld og får et
+              vejledende lånerum og et skøn over maksimal købspris ved forskellig
+              gearing. Du kan læse mere om begreberne i vores{" "}
               <Link href="/artikler" className="text-brand-primary hover:underline">
                 artikler
               </Link>
@@ -82,15 +89,17 @@ export default function OmOsPage() {
           </section>
 
           <section>
-            <h2 className="text-h3 text-text-primary">Vejledende tal</h2>
+            <h2 className="text-h3 text-text-primary">Vejledende tal – ikke finansiel rådgivning</h2>
             <p>
-              Alle tal i beregneren er vejledende. De bygger på officielle
-              satser og typiske tommelfingerregler, men dine konkrete
-              omkostninger afhænger af din situation, aftaler med bank og
-              realkreditinstitut samt evt. særlige vilkår. Vi anbefaler derfor,
-              at du bruger resultaterne som et beslutningsstøtteværktøj og
-              supplerer med rådgivning fra bank, mægler eller advokat, når du
-              skal træffe endelige valg. Læs mere i vores{" "}
+              Alle tal i vores beregnere er <strong>vejledende</strong>. De
+              bygger på officielle satser og typiske tommelfingerregler, men dine
+              konkrete omkostninger og dit reelle lånerum afhænger af din
+              situation, aftaler med bank og realkreditinstitut samt evt. særlige
+              vilkår. Boligklarhed er ikke en bank eller en rådgiver – vi giver
+              dig et værktøj til at blive klogere, så du kan indgå dialogen med
+              de rigtige spørgsmål. Brug resultaterne som beslutningsstøtte og
+              suppler med rådgivning fra bank, mægler eller advokat, når du
+              træffer endelige valg. Læs mere i vores{" "}
               <Link href="/disclaimer" className="text-brand-primary hover:underline">
                 ansvarsfraskrivelse
               </Link>
@@ -111,7 +120,14 @@ export default function OmOsPage() {
             href="/beregn"
             className="text-body text-brand-primary hover:underline"
           >
-            Gå til beregneren
+            Boligomkostningsberegner
+          </Link>
+          {" · "}
+          <Link
+            href="/beregnere/hvad-kan-jeg-koebe-bolig-for"
+            className="text-body text-brand-primary hover:underline"
+          >
+            Hvad kan jeg købe bolig for?
           </Link>
         </p>
       </div>
