@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/", label: "Forside" },
   { href: "/om-os", label: "Om os" },
   { href: "/beregnere", label: "Beregnere" },
+  { href: "/boligbegreber", label: "Boligbegreber" },
 ] as const;
 
 function MenuIcon() {
@@ -52,12 +53,33 @@ function CloseIcon() {
   );
 }
 
+function ChevronDownIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
 export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [artiklerOpen, setArtiklerOpen] = useState(false);
   const [beregnereOpen, setBeregnereOpen] = useState(false);
   const [expandedCategoryId, setExpandedCategoryId] = useState<string | null>(null);
   const artiklerRef = useRef<HTMLDivElement>(null);
+  const beregnereRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (menuOpen) {
@@ -69,6 +91,47 @@ export function Topbar() {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
+
+  // Luk dropdowns ved klik udenfor (desktop)
+  useEffect(() => {
+    if (!artiklerOpen && !beregnereOpen) return;
+
+    function onMouseDown(e: MouseEvent) {
+      const target = e.target as Node | null;
+      if (!target) return;
+
+      if (artiklerOpen && artiklerRef.current && !artiklerRef.current.contains(target)) {
+        setArtiklerOpen(false);
+        setExpandedCategoryId(null);
+      }
+      if (
+        beregnereOpen &&
+        beregnereRef.current &&
+        !beregnereRef.current.contains(target)
+      ) {
+        setBeregnereOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, [artiklerOpen, beregnereOpen]);
+
+  useEffect(() => {
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      if (artiklerOpen) {
+        setArtiklerOpen(false);
+        setExpandedCategoryId(null);
+      }
+      if (beregnereOpen) {
+        setBeregnereOpen(false);
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [artiklerOpen, beregnereOpen]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -105,21 +168,74 @@ export function Topbar() {
               Forside
             </Link>
             <div
+              className="relative"
+              ref={beregnereRef}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setBeregnereOpen((prev) => !prev);
+                  setArtiklerOpen(false);
+                }}
+                className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors inline-flex items-center gap-2"
+                aria-haspopup="true"
+                aria-expanded={beregnereOpen}
+              >
+                Beregnere
+                <ChevronDownIcon
+                  className={`transition-transform ${beregnereOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+              {beregnereOpen && (
+                <div className="absolute right-0 top-full pt-2 z-50 min-w-[260px]">
+                  <div className="bg-brand-surface border border-border rounded-md shadow-card py-2">
+                    <Link
+                      href="/beregnere"
+                      className="block px-4 py-2 text-body text-brand-primary hover:bg-border/50 font-medium"
+                    >
+                      Alle beregnere →
+                    </Link>
+                    <div className="border-t border-border mt-2 pt-2">
+                      {calculators.map((calc) => (
+                        <Link
+                          key={calc.id}
+                          href={calc.href}
+                          className="block px-4 py-2 text-body text-text-primary hover:bg-border/50"
+                        >
+                          {calc.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <Link
+              href="/boligbegreber"
+              className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors"
+            >
+              Boligbegreber
+            </Link>
+            <div
               ref={artiklerRef}
               className="relative"
-              onMouseEnter={() => setArtiklerOpen(true)}
-              onMouseLeave={() => {
-                setArtiklerOpen(false);
-                setExpandedCategoryId(null);
-              }}
             >
-              <span
-                className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors cursor-default"
+              <button
+                type="button"
+                onClick={() => {
+                  setArtiklerOpen((prev) => !prev);
+                  setBeregnereOpen(false);
+                  if (!artiklerOpen) setExpandedCategoryId(null);
+                }}
+                className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors cursor-pointer inline-flex items-center gap-2"
                 aria-haspopup="true"
                 aria-expanded={artiklerOpen}
               >
-                Artikler
-              </span>
+                <span>Artikler</span>
+                <ChevronDownIcon
+                  className={`transition-transform ${artiklerOpen ? "rotate-180" : ""}`}
+                />
+              </button>
               {artiklerOpen && (
                 <div className="absolute left-0 top-full pt-2 z-50 min-w-[280px]">
                   <div className="bg-brand-surface border border-border rounded-md shadow-card py-2">
@@ -178,43 +294,6 @@ export function Topbar() {
             >
               Om os
             </Link>
-            <div
-              className="relative"
-              onMouseEnter={() => setBeregnereOpen(true)}
-              onMouseLeave={() => setBeregnereOpen(false)}
-            >
-              <Link
-                href="/beregnere"
-                className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors inline-block"
-                aria-haspopup="true"
-                aria-expanded={beregnereOpen}
-              >
-                Beregnere
-              </Link>
-              {beregnereOpen && (
-                <div className="absolute right-0 top-full pt-2 z-50 min-w-[260px]">
-                  <div className="bg-brand-surface border border-border rounded-md shadow-card py-2">
-                    <Link
-                      href="/beregnere"
-                      className="block px-4 py-2 text-body text-brand-primary hover:bg-border/50 font-medium"
-                    >
-                      Alle beregnere →
-                    </Link>
-                    <div className="border-t border-border mt-2 pt-2">
-                      {calculators.map((calc) => (
-                        <Link
-                          key={calc.id}
-                          href={calc.href}
-                          className="block px-4 py-2 text-body text-text-primary hover:bg-border/50"
-                        >
-                          {calc.title}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
           </nav>
 
           {/* Mobile/tablet: menu button */}
@@ -269,6 +348,20 @@ export function Topbar() {
                 Forside
               </Link>
               <Link
+                href="/beregnere"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover text-center"
+              >
+                Beregnere
+              </Link>
+              <Link
+                href="/boligbegreber"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
+              >
+                Boligbegreber
+              </Link>
+              <Link
                 href="/artikler"
                 onClick={() => setMenuOpen(false)}
                 className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
@@ -281,13 +374,6 @@ export function Topbar() {
                 className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
               >
                 Om os
-              </Link>
-              <Link
-                href="/beregnere"
-                onClick={() => setMenuOpen(false)}
-                className="px-4 py-3 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover text-center"
-              >
-                Beregnere
               </Link>
             </nav>
           </aside>
