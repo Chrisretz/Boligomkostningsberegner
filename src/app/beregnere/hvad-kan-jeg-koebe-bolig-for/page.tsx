@@ -242,30 +242,30 @@ export default function HvadKanJegKoebeBoligForPage() {
 
         <div ref={resultRef} className="mt-16">
           <h2 className="text-h2 text-text-primary mb-6">Dit lånerum</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8">
-              <h3 className="text-h3 text-text-primary mb-2">
+          <div className="grid items-stretch grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mb-8">
+            <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
+              <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-2 break-words">
                 Ved gearing 4 (vejledende)
               </h3>
               <ul className="space-y-3 text-body text-text-secondary">
                 {existingDebt > 0 && (
                   <li className="flex justify-between gap-4 text-text-muted">
-                    <span>Samlet gældsrum (4 × indtægt)</span>
-                    <span>{formatKr(maxLoanCapacityDefault)} kr</span>
+                    <span className="min-w-0 break-words">Samlet gældsrum (4 × indtægt)</span>
+                    <span className="shrink-0 text-right">{formatKr(maxLoanCapacityDefault)} kr</span>
                   </li>
                 )}
                 <li className="flex justify-between gap-4">
-                  <span>
+                  <span className="min-w-0 break-words">
                     Maks. boliglån
                     {existingDebt > 0 ? " (efter fradrag af eksisterende gæld)" : ""}
                   </span>
-                  <span className="font-semibold text-text-primary">
+                  <span className="font-semibold text-text-primary shrink-0 text-right">
                     {formatKr(maxLoanDefault)} kr
                   </span>
                 </li>
                 <li className="flex justify-between gap-4">
-                  <span>Estimeret max. købspris (ca. 80 % finansiering)</span>
-                  <span className="font-semibold text-text-primary">
+                  <span className="min-w-0 break-words">Estimeret max. købspris (ca. 80 % finansiering)</span>
+                  <span className="font-semibold text-text-primary shrink-0 text-right">
                     {formatKr(estimatedPurchaseDefault)} kr
                   </span>
                 </li>
@@ -283,17 +283,17 @@ export default function HvadKanJegKoebeBoligForPage() {
               </p>
             </div>
 
-            <div className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8">
+            <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
               <LabelWithTooltip
                 tooltip="Tabellen viser, hvor meget du kan optage i boliglån ved hver gearing, når eventuel eksisterende gæld er trukket fra. Det er det &quot;nye&quot; lån til bolig – ikke din samlede gæld. Banken vurderer også rådighedsbeløb; gearing er kun én af flere krav."
                 className="block"
               >
-                <h3 className="text-h3 text-text-primary mb-4">
+                <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-4 break-words">
                   Følsomhedsanalyse (gearing)
                 </h3>
               </LabelWithTooltip>
               <div className="overflow-x-auto">
-                <table className="w-full text-body text-text-secondary">
+                <table className="w-full min-w-[360px] text-small md:text-body text-text-secondary">
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-2 font-semibold text-text-primary">
@@ -347,6 +347,38 @@ export default function HvadKanJegKoebeBoligForPage() {
               </p>
             </div>
           </div>
+          <details className="group rounded-md border border-border bg-brand-surface shadow-soft overflow-hidden mb-8">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-left hover:bg-border/30 transition-colors">
+              <span className="text-body font-medium text-text-primary">
+                Sådan er dit lånerum beregnet
+              </span>
+              <span className="text-text-muted font-medium tabular-nums group-open:hidden">
+                +
+              </span>
+              <span className="text-text-muted font-medium tabular-nums hidden group-open:inline">
+                −
+              </span>
+            </summary>
+            <div className="border-t border-border px-4 py-4 space-y-3 text-small text-text-secondary">
+              <p>
+                <strong className="text-text-primary">Samlet gældsrum:</strong>{" "}
+                bruttoindtægt ganget med valgt gearing (standard: 4).
+              </p>
+              <p>
+                <strong className="text-text-primary">Maks. boliglån:</strong>{" "}
+                samlet gældsrum minus eksisterende gæld (hvis angivet).
+              </p>
+              <p>
+                <strong className="text-text-primary">Estimeret købspris:</strong>{" "}
+                maks. boliglån divideret med 0,8 (antagelse om ca. 80 %
+                finansiering).
+              </p>
+              <p>
+                Banken ser også på rådighedsbeløb, jobsituation og øvrig risiko,
+                så resultatet er et vejledende pejlemærke.
+              </p>
+            </div>
+          </details>
         </div>
 
         <p className="text-small text-text-muted text-center mb-8">

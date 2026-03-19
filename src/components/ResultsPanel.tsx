@@ -18,10 +18,10 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <div className="grid items-stretch grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-8">
       {/* Etableringsomkostninger – hvad du skal have op af lommen ved køb */}
-      <div className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
-        <h3 className="text-h3 text-text-primary mb-4">
+      <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
+        <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-4 break-words">
           Etableringsomkostninger
         </h3>
         <p className="text-small text-text-muted mb-4">
@@ -50,8 +50,8 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
       </div>
 
       {/* Månedlige udgifter */}
-      <div className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
-        <h3 className="text-h3 text-text-primary mb-4">
+      <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
+        <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-4 break-words">
           Månedlige udgifter
         </h3>
         <ul className="space-y-3 text-body text-text-secondary">
@@ -92,16 +92,16 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
               <span className="shrink-0">{formatKr(output.breakdownMonthly.otherMonthlyDKK)}</span>
             </li>
           )}
-          <li className="flex justify-between gap-4 pt-3 mt-3 border-t border-border font-semibold text-text-primary text-h3">
-            <span className="min-w-0">Samlet pr. måned</span>
+          <li className="flex justify-between gap-4 pt-3 mt-3 border-t border-border font-semibold text-text-primary text-xl md:text-h3 leading-tight">
+            <span className="min-w-0 break-words">Samlet pr. måned</span>
             <span className="shrink-0">{formatKr(base.monthlyTotalDKK)}</span>
           </li>
         </ul>
       </div>
 
       {/* Rentestest */}
-      <div className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
-        <h3 className="text-h3 text-text-primary mb-4">
+      <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
+        <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-4 break-words">
           Rentestest
         </h3>
         <ul className="space-y-3 text-body text-text-secondary">

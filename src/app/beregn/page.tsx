@@ -6,7 +6,6 @@ import { ResultsPanel } from "@/components/ResultsPanel";
 import { AffiliateCta } from "@/components/AffiliateCta";
 import { calculate } from "@/lib/calc";
 import { validateCalcInput } from "@/lib/validation";
-import { generateBeregningPdf } from "@/lib/pdf";
 import type { CalcInput, CalcOutput } from "@/lib/types";
 import { trackCalcSubmit, trackCalcResultView } from "@/lib/track";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
@@ -18,6 +17,7 @@ export default function BeregnPage() {
     Partial<Record<string, string>>
   >({});
   const [firstErrorId, setFirstErrorId] = useState<string | undefined>();
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = useCallback((input: CalcInput) => {
@@ -69,6 +69,18 @@ export default function BeregnPage() {
     }, 100);
   }, []);
 
+  const handleDownloadPdf = useCallback(async () => {
+    if (!lastInput || !output || isGeneratingPdf) return;
+    setIsGeneratingPdf(true);
+    try {
+      // Lazy-load PDF library only when user requests export.
+      const { generateBeregningPdf } = await import("@/lib/pdf");
+      generateBeregningPdf(lastInput, output);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  }, [isGeneratingPdf, lastInput, output]);
+
   return (
     <main className="min-h-screen py-12 px-4 overflow-x-hidden pb-24">
       <div className="container mx-auto max-w-5xl min-w-0">
@@ -102,13 +114,46 @@ export default function BeregnPage() {
               Dine omkostninger
             </h2>
             <ResultsPanel output={output} />
-            <div className="flex justify-center mb-6">
+            <details className="group mt-6 rounded-md border border-border bg-brand-surface shadow-soft overflow-hidden">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-left hover:bg-border/30 transition-colors">
+                <span className="text-body font-medium text-text-primary">
+                  Sådan er resultaterne beregnet
+                </span>
+                <span className="text-text-muted font-medium tabular-nums group-open:hidden">
+                  +
+                </span>
+                <span className="text-text-muted font-medium tabular-nums hidden group-open:inline">
+                  −
+                </span>
+              </summary>
+              <div className="border-t border-border px-4 py-4 space-y-3 text-small text-text-secondary">
+                <p>
+                  <strong className="text-text-primary">Månedlig ydelse:</strong>{" "}
+                  summen af renter, afdrag, ejerudgifter og løbende driftsposter
+                  (fx forsikring/vedligehold) ud fra dine indtastninger.
+                </p>
+                <p>
+                  <strong className="text-text-primary">Engangsomkostninger:</strong>{" "}
+                  omkostninger ved selve boligkøbet, fx tinglysning, evt.
+                  låneoprettelse og andre poster inkluderet i beregnerens model.
+                </p>
+                <p>
+                  <strong className="text-text-primary">Rentetest:</strong> viser
+                  et stresstest-scenarie ved højere rente, så du kan se om
+                  budgettet stadig hænger sammen.
+                </p>
+                <p>
+                  Tallene er vejledende og afhænger af bankens konkrete vilkår og
+                  din økonomi.
+                </p>
+              </div>
+            </details>
+            <div className="flex justify-center mt-8 mb-6">
               <button
                 type="button"
-                onClick={() =>
-                  generateBeregningPdf(lastInput, output)
-                }
-                className="inline-flex items-center justify-center min-h-[48px] gap-2 px-6 py-3 text-body font-medium text-brand-primary border border-brand-primary rounded-md hover:bg-brand-primary hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
+                onClick={handleDownloadPdf}
+                disabled={isGeneratingPdf}
+                className="inline-flex items-center justify-center min-h-[48px] gap-2 px-6 py-3 text-body font-medium text-brand-primary border border-brand-primary rounded-md hover:bg-brand-primary hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-brand-primary"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +171,7 @@ export default function BeregnPage() {
                   <polyline points="7 10 12 15 17 10" />
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
-                Download PDF
+                {isGeneratingPdf ? "Genererer PDF..." : "Download PDF"}
               </button>
             </div>
             <p className="text-small text-text-muted text-center my-8">

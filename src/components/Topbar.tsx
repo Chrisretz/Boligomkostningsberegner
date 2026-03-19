@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { articleCategories, getArticlesBySlugs } from "@/lib/articles";
 import { calculators } from "@/lib/calculators";
@@ -75,12 +76,17 @@ function ChevronDownIcon({ className = "" }: { className?: string }) {
 
 const topNavItemClass =
   "group relative inline-flex items-center px-2 py-2 rounded-md transition-colors transition-transform hover:-translate-y-0.5";
+const mobileNavItemClass =
+  "px-4 py-3 text-body font-medium text-text-primary hover:bg-border active:bg-border/80 rounded-md transition-colors transition-transform duration-150 active:scale-[0.985]";
 
 export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [artiklerOpen, setArtiklerOpen] = useState(false);
   const [beregnereOpen, setBeregnereOpen] = useState(false);
   const [expandedCategoryId, setExpandedCategoryId] = useState<string | null>(null);
+  const [mobileBeregnereOpen, setMobileBeregnereOpen] = useState(false);
+  const [mobileArtiklerOpen, setMobileArtiklerOpen] = useState(false);
+  const [mobileExpandedCategoryId, setMobileExpandedCategoryId] = useState<string | null>(null);
   const artiklerRef = useRef<HTMLDivElement>(null);
   const beregnereRef = useRef<HTMLDivElement>(null);
 
@@ -146,6 +152,14 @@ export function Topbar() {
     }
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!menuOpen) {
+      setMobileBeregnereOpen(false);
+      setMobileArtiklerOpen(false);
+      setMobileExpandedCategoryId(null);
+    }
+  }, [menuOpen]);
+
   return (
     <header className="border-b border-border bg-brand-surface">
       <div className="container mx-auto py-4 px-4">
@@ -155,15 +169,19 @@ export function Topbar() {
             className="flex items-center shrink-0"
             aria-label="Boligklarhed – forsiden"
           >
-            <img
+            <Image
               src="/boligklarhed-logo.svg"
               alt="Boligklarhed logo"
+              width={280}
+              height={56}
+              priority
+              sizes="(min-width: 1024px) 280px, 200px"
               className="h-10 md:h-14 w-auto object-contain"
             />
           </Link>
 
           {/* Desktop: inline nav */}
-          <nav className="hidden md:flex md:items-center md:gap-6">
+          <nav className="hidden lg:flex lg:items-center lg:gap-6">
             <Link
               href="/"
               className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary`}
@@ -309,7 +327,7 @@ export function Topbar() {
           </nav>
 
           {/* Mobile/tablet: menu button */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
@@ -328,12 +346,12 @@ export function Topbar() {
       {menuOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/40 z-40 md:hidden"
+            className="fixed inset-0 bg-black/40 z-40 lg:hidden"
             aria-hidden
             onClick={() => setMenuOpen(false)}
           />
           <aside
-            className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-brand-surface shadow-card z-50 md:hidden flex flex-col"
+            className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-brand-surface shadow-card z-50 lg:hidden flex flex-col"
             role="dialog"
             aria-label="Navigation menu"
           >
@@ -351,39 +369,140 @@ export function Topbar() {
                 <span className="text-small font-medium">Luk</span>
               </button>
             </div>
-            <nav className="flex flex-col p-4 gap-1">
+            <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain flex flex-col p-4 gap-1">
               <Link
                 href="/"
                 onClick={() => setMenuOpen(false)}
-                className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
+                className={mobileNavItemClass}
               >
                 Forside
               </Link>
-              <Link
-                href="/beregnere"
-                onClick={() => setMenuOpen(false)}
-                className="px-4 py-3 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover text-center"
-              >
-                Beregnere
-              </Link>
+              <div className="rounded-md">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileBeregnereOpen((prev) => {
+                      const next = !prev;
+                      if (next) {
+                        setMobileArtiklerOpen(false);
+                        setMobileExpandedCategoryId(null);
+                      }
+                      return next;
+                    });
+                  }}
+                  className={`${mobileNavItemClass} w-full flex items-center justify-between text-left`}
+                  aria-expanded={mobileBeregnereOpen}
+                >
+                  <span>Beregnere</span>
+                  <ChevronDownIcon
+                    className={`transition-transform ${mobileBeregnereOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {mobileBeregnereOpen && (
+                  <div className="mt-1 ml-3 border-l-2 border-border pl-3 space-y-1">
+                    <Link
+                      href="/beregnere"
+                      onClick={() => setMenuOpen(false)}
+                      className="block py-1.5 text-small font-medium text-brand-primary hover:underline"
+                    >
+                      Alle beregnere →
+                    </Link>
+                    {calculators.map((calc) => (
+                      <Link
+                        key={calc.id}
+                        href={calc.href}
+                        onClick={() => setMenuOpen(false)}
+                        className="block py-1.5 text-small text-text-secondary hover:text-brand-primary"
+                      >
+                        {calc.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
               <Link
                 href="/boligbegreber"
                 onClick={() => setMenuOpen(false)}
-                className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
+                className={mobileNavItemClass}
               >
                 Boligbegreber
               </Link>
-              <Link
-                href="/artikler"
-                onClick={() => setMenuOpen(false)}
-                className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
-              >
-                Artikler
-              </Link>
+              <div className="rounded-md">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileArtiklerOpen((prev) => {
+                      const next = !prev;
+                      if (next) {
+                        setMobileBeregnereOpen(false);
+                      } else {
+                        setMobileExpandedCategoryId(null);
+                      }
+                      return next;
+                    });
+                  }}
+                  className={`${mobileNavItemClass} w-full flex items-center justify-between text-left`}
+                  aria-expanded={mobileArtiklerOpen}
+                >
+                  <span>Artikler</span>
+                  <ChevronDownIcon
+                    className={`transition-transform ${mobileArtiklerOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {mobileArtiklerOpen && (
+                  <div className="mt-1 ml-3 border-l-2 border-border pl-3 space-y-2">
+                    <Link
+                      href="/artikler"
+                      onClick={() => setMenuOpen(false)}
+                      className="block py-1.5 text-small font-medium text-brand-primary hover:underline"
+                    >
+                      Alle artikler →
+                    </Link>
+                    {articleCategories.map((category) => {
+                      const isExpanded = mobileExpandedCategoryId === category.id;
+                      const categoryArticles = getArticlesBySlugs([...category.slugs]);
+                      return (
+                        <div key={category.id}>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setMobileExpandedCategoryId(isExpanded ? null : category.id)
+                            }
+                            className="w-full flex items-center justify-between gap-2 py-1 text-left text-small font-medium text-text-primary"
+                          >
+                            <span>{category.title}</span>
+                            <span
+                              className="text-text-muted font-medium tabular-nums"
+                              aria-hidden
+                            >
+                              {isExpanded ? "−" : "+"}
+                            </span>
+                          </button>
+                          {isExpanded && (
+                            <ul className="ml-2 mt-1 space-y-1 border-l border-border pl-2">
+                              {categoryArticles.map((article) => (
+                                <li key={article.slug}>
+                                  <Link
+                                    href={`/artikler/${article.slug}`}
+                                    onClick={() => setMenuOpen(false)}
+                                    className="block py-1 text-small text-text-secondary hover:text-brand-primary"
+                                  >
+                                    {article.title}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
               <Link
                 href="/om-os"
                 onClick={() => setMenuOpen(false)}
-                className="px-4 py-3 text-body font-medium text-text-primary hover:bg-border rounded-md"
+                className={mobileNavItemClass}
               >
                 Om os
               </Link>
