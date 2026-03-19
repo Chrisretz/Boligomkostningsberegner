@@ -5,6 +5,7 @@ import {
   faqSchema,
 } from "@/lib/structured-data";
 import { FAQ_ITEMS } from "@/lib/faq";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
 export const metadata = {
   alternates: { canonical: canonicalUrl("/") },
@@ -248,6 +249,7 @@ export default function HomePage() {
           </ul>
         </div>
       </section>
+      <ScrollToTopButton />
     </main>
   );
 }

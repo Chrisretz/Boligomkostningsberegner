@@ -9,6 +9,7 @@ import { validateCalcInput } from "@/lib/validation";
 import { generateBeregningPdf } from "@/lib/pdf";
 import type { CalcInput, CalcOutput } from "@/lib/types";
 import { trackCalcSubmit, trackCalcResultView } from "@/lib/track";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
 export default function BeregnPage() {
   const [output, setOutput] = useState<CalcOutput | null>(null);
@@ -69,7 +70,7 @@ export default function BeregnPage() {
   }, []);
 
   return (
-    <main className="min-h-screen py-12 px-4 overflow-x-hidden">
+    <main className="min-h-screen py-12 px-4 overflow-x-hidden pb-24">
       <div className="container mx-auto max-w-5xl min-w-0">
         {/* Centreret header */}
         <header className="text-center mb-10">
@@ -144,6 +145,7 @@ export default function BeregnPage() {
           </p>
         )}
       </div>
+      <ScrollToTopButton />
     </main>
   );
 }

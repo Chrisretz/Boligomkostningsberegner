@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { BEGREBER } from "@/lib/begreber";
 import type { Begreb } from "@/lib/begreber";
 import { getArticlesBySlugs } from "@/lib/articles";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
 // Dansk alfabet: A-Z efterfulgt af Æ Ø Å
 const LETTERS = [
@@ -56,7 +57,6 @@ function getFirstLetter(term: string): string {
 
 export function BegreberExplorer() {
   const [query, setQuery] = useState("");
-  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const filtered = useMemo(() => {
     const q = normalizeForSearch(query.trim());
@@ -92,20 +92,6 @@ export function BegreberExplorer() {
     (letter) => termsByLetter[letter]?.length > 0
   );
 
-  useEffect(() => {
-    function onScroll() {
-      // Vis knappen når man er godt nede på siden
-      setShowScrollTop(window.scrollY > 700);
-    }
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
   function scrollToLetter(letter: string) {
     const el = document.getElementById(`begreb-${letter}`);
     el?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -113,27 +99,10 @@ export function BegreberExplorer() {
 
   return (
     <div className="space-y-6">
-      <button
-        type="button"
-        onClick={scrollToTop}
-        aria-label="Tilbage til toppen"
-        className={[
-          "fixed bottom-24 right-6 z-50 transition-opacity transition-transform md:bottom-6",
-          "px-3 py-2 rounded-md shadow-soft touch-manipulation",
-          "bg-brand-primary text-white border-2 border-white/90",
-          showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none",
-        ].join(" ")}
-      >
-        <span className="flex items-center gap-2">
-          <span className="text-small font-semibold">Til toppen</span>
-          <span aria-hidden className="text-base leading-none">
-            ↑
-          </span>
-        </span>
-      </button>
+      <ScrollToTopButton />
 
       <div className="bg-brand-surface rounded-md border border-border shadow-soft p-5">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div className="flex flex-col gap-1">
           <div className="min-w-0">
             <label
               htmlFor="begreber-search"
@@ -141,17 +110,30 @@ export function BegreberExplorer() {
             >
               Søg i begreber
             </label>
-            <input
-              id="begreber-search"
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Skriv fx gældsfaktor, realkreditlån eller tinglysning…"
-              className="w-full md:w-[520px] px-4 py-2.5 bg-white border border-border rounded-md text-body text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            />
-          </div>
-          <div className="text-small text-text-muted whitespace-nowrap">
-            {resultsCount} resultater
+            <div className="relative w-full md:w-[520px]">
+              <input
+                id="begreber-search"
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Skriv fx gældsfaktor, realkreditlån eller tinglysning…"
+                className="w-full px-4 py-2.5 bg-white border border-border rounded-md pr-12 text-body text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              />
+              {query.trim().length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  aria-label="Ryd søgning"
+                  className="absolute right-3 inset-y-0 my-auto flex items-center justify-center w-8 h-8 text-[18px] text-text-muted hover:text-text-primary rounded focus:outline-none focus:ring-2 focus:ring-brand-primary leading-none"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+
+            <div className="mt-2 text-small text-text-muted text-left">
+              {resultsCount} resultater
+            </div>
           </div>
         </div>
 

@@ -73,6 +73,9 @@ function ChevronDownIcon({ className = "" }: { className?: string }) {
   );
 }
 
+const topNavItemClass =
+  "group relative inline-flex items-center px-2 py-2 rounded-md transition-colors transition-transform hover:-translate-y-0.5";
+
 export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [artiklerOpen, setArtiklerOpen] = useState(false);
@@ -163,9 +166,10 @@ export function Topbar() {
           <nav className="hidden md:flex md:items-center md:gap-6">
             <Link
               href="/"
-              className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors"
+              className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary`}
             >
-              Forside
+              <span className="relative z-10">Forside</span>
+              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
             </Link>
             <div
               className="relative"
@@ -177,14 +181,17 @@ export function Topbar() {
                   setBeregnereOpen((prev) => !prev);
                   setArtiklerOpen(false);
                 }}
-                className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors inline-flex items-center gap-2"
+                className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary cursor-pointer gap-2`}
                 aria-haspopup="true"
                 aria-expanded={beregnereOpen}
               >
-                Beregnere
-                <ChevronDownIcon
-                  className={`transition-transform ${beregnereOpen ? "rotate-180" : ""}`}
-                />
+                <span className="relative z-10 inline-flex items-center gap-1">
+                  Beregnere
+                  <ChevronDownIcon
+                    className={`transition-transform ${beregnereOpen ? "rotate-180" : ""}`}
+                  />
+                </span>
+                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
               </button>
               {beregnereOpen && (
                 <div className="absolute right-0 top-full pt-2 z-50 min-w-[260px]">
@@ -212,9 +219,10 @@ export function Topbar() {
             </div>
             <Link
               href="/boligbegreber"
-              className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors"
+              className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary`}
             >
-              Boligbegreber
+              <span className="relative z-10">Boligbegreber</span>
+              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
             </Link>
             <div
               ref={artiklerRef}
@@ -227,14 +235,17 @@ export function Topbar() {
                   setBeregnereOpen(false);
                   if (!artiklerOpen) setExpandedCategoryId(null);
                 }}
-                className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors cursor-pointer inline-flex items-center gap-2"
+                className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary cursor-pointer gap-2`}
                 aria-haspopup="true"
                 aria-expanded={artiklerOpen}
               >
-                <span>Artikler</span>
-                <ChevronDownIcon
-                  className={`transition-transform ${artiklerOpen ? "rotate-180" : ""}`}
-                />
+                <span className="relative z-10 inline-flex items-center gap-1">
+                  <span>Artikler</span>
+                  <ChevronDownIcon
+                    className={`transition-transform ${artiklerOpen ? "rotate-180" : ""}`}
+                  />
+                </span>
+                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
               </button>
               {artiklerOpen && (
                 <div className="absolute left-0 top-full pt-2 z-50 min-w-[280px]">
@@ -290,9 +301,10 @@ export function Topbar() {
             </div>
             <Link
               href="/om-os"
-              className="text-body font-medium text-text-secondary hover:text-text-primary transition-colors"
+              className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary`}
             >
-              Om os
+              <span className="relative z-10">Om os</span>
+              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
             </Link>
           </nav>
 

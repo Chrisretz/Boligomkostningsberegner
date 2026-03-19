@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
 import { calculators } from "@/lib/calculators";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
 export const metadata: Metadata = {
   title: "Beregnere",
@@ -64,6 +65,7 @@ export default function BeregnerePage() {
           </Link>
         </p>
       </div>
+      <ScrollToTopButton />
     </main>
   );
 }
