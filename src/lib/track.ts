@@ -34,3 +34,11 @@ export function trackConsentUpdate(payload: { analytics: boolean }): void {
   if (typeof window === "undefined") return;
   console.debug("[analytics] consent_update", payload);
 }
+
+export function trackLoanLeadSubmit(payload: {
+  marketingConsent: boolean;
+  incomeBucket: string;
+}): void {
+  if (typeof window === "undefined") return;
+  console.debug("[analytics] loan_lead_submit", payload);
+}
