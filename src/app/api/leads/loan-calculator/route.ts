@@ -5,6 +5,7 @@ import {
   bucketAnnualIncome,
   bucketExistingDebt,
 } from "@/lib/leadBuckets";
+import { isValidBirthDate } from "@/lib/birthDate";
 import { LOAN_CALCULATOR_ID, LOAN_LEAD_CONSENT_VERSION } from "@/lib/loanCapacityConstants";
 
 export const runtime = "nodejs";
@@ -16,6 +17,9 @@ function getDatabaseUrl(): string | undefined {
 
 const bodySchema = z.object({
   email: z.string().trim().email().max(320),
+  birthDate: z.string().refine((s) => isValidBirthDate(s), {
+    message: "Ugyldig fødselsdato.",
+  }),
   consentTransactional: z.literal(true),
   consentMarketingPartners: z.boolean(),
   consentVersion: z.string().min(1).max(64),
@@ -50,7 +54,10 @@ export async function POST(req: Request) {
   const parsed = bodySchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Tjek e-mail og afkrydsninger, og prøv igen." },
+      {
+        error:
+          "Tjek e-mail, fødselsdato og afkrydsninger, og prøv igen.",
+      },
       { status: 400 }
     );
   }
@@ -91,14 +98,15 @@ export async function POST(req: Request) {
   try {
     await db.query(
       `INSERT INTO loan_calc_leads (
-        email, email_normalized, calculator_id,
+        email, email_normalized, birth_date, calculator_id,
         consent_transactional, consent_marketing_partners, consent_version,
         input_mode, annual_income_dkk, existing_debt_dkk,
         income_bucket, debt_bucket, max_loan_dkk, estimated_purchase_dkk
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+      ) VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
       [
         body.email,
         emailNormalized,
+        body.birthDate,
         body.calculatorId,
         true,
         body.consentMarketingPartners,
@@ -113,7 +121,13 @@ export async function POST(req: Request) {
       ]
     );
   } catch (e) {
-    console.error("[api/leads/loan-calculator] DB insert failed:", e);
+    const pg = e as { code?: string; detail?: string; message?: string };
+    console.error(
+      "[api/leads/loan-calculator] DB insert failed:",
+      pg.code ?? "no-code",
+      pg.message ?? e,
+      pg.detail ? `detail: ${pg.detail}` : ""
+    );
     return NextResponse.json(
       { error: "Kunne ikke gemme. Prøv igen om lidt." },
       { status: 500 }

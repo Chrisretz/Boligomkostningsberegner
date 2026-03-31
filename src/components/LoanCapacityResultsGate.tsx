@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { LabelWithTooltip } from "@/components/LabelWithTooltip";
+import { isValidBirthDate } from "@/lib/birthDate";
 import {
   GEARING_DEFAULT,
   GEARING_SENSITIVITY,
@@ -38,6 +40,7 @@ export function LoanCapacityResultsGate({
     unlockedSnapshot !== null && unlockedSnapshot === snapshotKey;
 
   const [email, setEmail] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [consentTransactional, setConsentTransactional] = useState(false);
   const [consentMarketing, setConsentMarketing] = useState(false);
   const [honeypot, setHoneypot] = useState("");
@@ -53,6 +56,12 @@ export function LoanCapacityResultsGate({
       );
       return;
     }
+    if (!isValidBirthDate(birthDate)) {
+      setError(
+        "Vælg din fødselsdato i kalenderen og bekræft med knappen Færdig. Du skal være mellem 18 og 100 år."
+      );
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/leads/loan-calculator", {
@@ -60,6 +69,7 @@ export function LoanCapacityResultsGate({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: email.trim(),
+          birthDate,
           consentTransactional: true as const,
           consentMarketingPartners: consentMarketing,
           consentVersion: LOAN_LEAD_CONSENT_VERSION,
@@ -103,9 +113,9 @@ export function LoanCapacityResultsGate({
         <div className="rounded-md border-2 border-dashed border-brand-primary/35 bg-brand-background p-6 md:p-8 mb-8">
           <h3 className="text-h3 text-text-primary mb-2">Få den fulde oversigt</h3>
           <p className="text-small text-text-secondary mb-5 max-w-2xl">
-            Indtast din e-mail og accepter nedenfor, så viser vi hele tabellen med
-            forskellige gearinger og den udvidede forklaring. Oplysningerne
-            gemmes i overensstemmelse med dit samtykke og vores{" "}
+            Indtast din e-mail og fødselsdato, og accepter nedenfor, så viser vi
+            hele tabellen med forskellige gearinger og den udvidede forklaring.
+            Oplysningerne gemmes i overensstemmelse med dit samtykke og vores{" "}
             <Link href="/privacy" className="text-brand-primary hover:underline">
               privatlivspolitik
             </Link>
@@ -128,6 +138,24 @@ export function LoanCapacityResultsGate({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="din@email.dk"
                 className="w-full px-4 py-2.5 bg-white border border-border rounded-md text-body text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="loan-lead-birthdate"
+                className="block text-small font-medium text-text-primary mb-1"
+              >
+                Fødselsdato
+              </label>
+              <p className="text-small text-text-muted mb-2">
+                Åbn kalenderen, vælg år, måned og dag, og tryk Færdig.
+              </p>
+              <BirthDatePicker
+                id="loan-lead-birthdate"
+                value={birthDate}
+                onChange={setBirthDate}
+                disabled={loading}
               />
             </div>
 
