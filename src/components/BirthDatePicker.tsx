@@ -1,43 +1,63 @@
 "use client";
 
+import { da } from "date-fns/locale";
 import { useEffect, useId, useRef, useState } from "react";
+import { DayPicker } from "react-day-picker";
 import {
-  daysInMonth,
   isCalendarDateValid,
   isValidBirthDate,
   parseIsoDateParts,
 } from "@/lib/birthDate";
 
-const MONTHS_DA = [
-  "januar",
-  "februar",
-  "marts",
-  "april",
-  "maj",
-  "juni",
-  "juli",
-  "august",
-  "september",
-  "oktober",
-  "november",
-  "december",
-] as const;
-
-function defaultYmd(): { y: number; m: number; d: number } {
-  const now = new Date();
-  const y = now.getFullYear() - 35;
-  return { y, m: 6, d: 15 };
-}
-
-function clampDay(y: number, m: number, d: number): number {
-  const max = daysInMonth(y, m);
-  return Math.min(Math.max(1, d), max);
-}
+import "react-day-picker/style.css";
 
 function toIso(y: number, m: number, d: number): string {
   const dd = String(d).padStart(2, "0");
   const mm = String(m).padStart(2, "0");
   return `${y}-${mm}-${dd}`;
+}
+
+function isoToLocalDate(iso: string): Date | undefined {
+  const p = parseIsoDateParts(iso);
+  if (!p || !isCalendarDateValid(p.y, p.m, p.d)) return undefined;
+  return new Date(p.y, p.m - 1, p.d);
+}
+
+function birthRange(): { minBirth: Date; maxBirth: Date } {
+  const today = new Date();
+  const maxBirth = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+  );
+  const minBirth = new Date(
+    today.getFullYear() - 100,
+    today.getMonth(),
+    today.getDate()
+  );
+  return { minBirth, maxBirth };
+}
+
+function CalendarIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
 }
 
 export type BirthDatePickerProps = {
@@ -56,36 +76,33 @@ export function BirthDatePicker({
   const panelId = useId();
   const wrapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [panelError, setPanelError] = useState<string | null>(null);
-  const def = defaultYmd();
-  const [y, setY] = useState(def.y);
-  const [m, setM] = useState(def.m);
-  const [d, setD] = useState(() => clampDay(def.y, def.m, def.d));
+  const { minBirth, maxBirth } = birthRange();
   const parsed = parseIsoDateParts(value);
+  const selected = value ? isoToLocalDate(value) : undefined;
+
+  const [month, setMonth] = useState<Date>(() => {
+    const p = parseIsoDateParts(value);
+    if (p) return new Date(p.y, p.m - 1, 1);
+    const t = new Date();
+    return new Date(t.getFullYear() - 35, t.getMonth(), 1);
+  });
 
   useEffect(() => {
     const p = parseIsoDateParts(value);
     if (!p) return;
-    setY(p.y);
-    setM(p.m);
-    setD(clampDay(p.y, p.m, p.d));
+    setMonth(new Date(p.y, p.m - 1, 1));
   }, [value]);
 
   useEffect(() => {
     if (!open) return;
-    setPanelError(null);
     const p = parseIsoDateParts(value);
-    if (p) {
-      setY(p.y);
-      setM(p.m);
-      setD(clampDay(p.y, p.m, p.d));
-    } else {
-      const b = defaultYmd();
-      setY(b.y);
-      setM(b.m);
-      setD(clampDay(b.y, b.m, b.d));
-    }
-  }, [open]);
+    const t = new Date();
+    setMonth(
+      p
+        ? new Date(p.y, p.m - 1, 1)
+        : new Date(t.getFullYear() - 35, t.getMonth(), 1)
+    );
+  }, [open, value]);
 
   useEffect(() => {
     if (!open) return;
@@ -102,14 +119,6 @@ export function BirthDatePicker({
       document.removeEventListener("keydown", onKey);
     };
   }, [open]);
-
-  const maxYear = new Date().getFullYear() - 18;
-  const minYear = new Date().getFullYear() - 100;
-  const years: number[] = [];
-  for (let yr = maxYear; yr >= minYear; yr--) years.push(yr);
-
-  const maxD = daysInMonth(y, m);
-  const days = Array.from({ length: maxD }, (_, i) => i + 1);
 
   const displayLabel =
     parsed && isCalendarDateValid(parsed.y, parsed.m, parsed.d)
@@ -129,13 +138,13 @@ export function BirthDatePicker({
         aria-haspopup="dialog"
         aria-controls={panelId}
         onClick={() => !disabled && setOpen((o) => !o)}
-        className="w-full px-4 py-2.5 bg-white border border-border rounded-md text-body text-left text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary flex items-center justify-between gap-2 min-h-[46px] touch-manipulation disabled:opacity-60"
+        className="w-full pl-11 pr-4 py-2.5 bg-white border border-border rounded-md text-body text-left text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary flex items-center gap-2 min-h-[46px] touch-manipulation disabled:opacity-60 relative"
       >
-        <span className={displayLabel ? "" : "text-text-muted"}>
-          {displayLabel ?? "Vælg dato i kalenderen"}
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none">
+          <CalendarIcon />
         </span>
-        <span className="text-text-muted shrink-0 text-small" aria-hidden>
-          {open ? "▲" : "▼"}
+        <span className={displayLabel ? "flex-1" : "flex-1 text-text-muted"}>
+          {displayLabel ?? "Klik for at vælge dato"}
         </span>
       </button>
 
@@ -144,105 +153,39 @@ export function BirthDatePicker({
           id={panelId}
           role="dialog"
           aria-label="Vælg fødselsdato"
-          className="absolute z-50 mt-2 left-0 right-0 rounded-md border border-border bg-white shadow-lg p-4 space-y-3"
+          className="birth-date-picker-popover absolute z-50 mt-2 left-0 w-[min(100vw-2rem,340px)] max-w-[calc(100vw-2rem)] rounded-md border border-border bg-white shadow-lg p-3 sm:p-4"
         >
-          <p className="text-small font-medium text-text-primary">
-            Vælg år, måned og dag
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label
-                htmlFor={`${id}-y`}
-                className="block text-small text-text-secondary mb-1"
-              >
-                År
-              </label>
-              <select
-                id={`${id}-y`}
-                className="w-full px-3 py-2.5 border border-border rounded-md text-body bg-white text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary touch-manipulation"
-                value={y}
-                onChange={(e) => {
-                  const nextY = Number(e.target.value);
-                  setY(nextY);
-                  setD((prev) => clampDay(nextY, m, prev));
-                }}
-              >
-                {years.map((yr) => (
-                  <option key={yr} value={yr}>
-                    {yr}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label
-                htmlFor={`${id}-m`}
-                className="block text-small text-text-secondary mb-1"
-              >
-                Måned
-              </label>
-              <select
-                id={`${id}-m`}
-                className="w-full px-3 py-2.5 border border-border rounded-md text-body bg-white text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary touch-manipulation"
-                value={m}
-                onChange={(e) => {
-                  const nextM = Number(e.target.value);
-                  setM(nextM);
-                  setD((prev) => clampDay(y, nextM, prev));
-                }}
-              >
-                {MONTHS_DA.map((name, i) => (
-                  <option key={name} value={i + 1}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label
-                htmlFor={`${id}-d`}
-                className="block text-small text-text-secondary mb-1"
-              >
-                Dag
-              </label>
-              <select
-                id={`${id}-d`}
-                className="w-full px-3 py-2.5 border border-border rounded-md text-body bg-white text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary touch-manipulation"
-                value={Math.min(d, maxD)}
-                onChange={(e) => setD(Number(e.target.value))}
-              >
-                {days.map((day) => (
-                  <option key={day} value={day}>
-                    {day}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          {panelError && (
-            <p className="text-small text-red-700 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-              {panelError}
-            </p>
-          )}
-          <button
-            type="button"
-            className="w-full sm:w-auto min-h-[44px] px-4 py-2 text-small font-medium rounded-md bg-brand-primary text-white hover:opacity-90 touch-manipulation"
-            onClick={() => {
-              const day = clampDay(y, m, d);
-              const iso = toIso(y, m, day);
-              if (!isCalendarDateValid(y, m, day) || !isValidBirthDate(iso)) {
-                setPanelError(
-                  "Vælg en gyldig dato. Du skal være mellem 18 og 100 år."
-                );
-                return;
-              }
-              setPanelError(null);
-              onChange(iso);
-              setOpen(false);
-            }}
+          <div
+            className="birth-date-picker-rdp [&_.rdp-root]:[--rdp-accent-color:#1E3A5F] [&_.rdp-root]:[--rdp-accent-background-color:#E8EEF5]"
           >
-            Færdig
-          </button>
+            <DayPicker
+              mode="single"
+              locale={da}
+              weekStartsOn={1}
+              month={month}
+              onMonthChange={setMonth}
+              startMonth={new Date(minBirth.getFullYear(), minBirth.getMonth(), 1)}
+              endMonth={new Date(maxBirth.getFullYear(), maxBirth.getMonth(), 1)}
+              selected={selected}
+              onSelect={(date) => {
+                if (!date) return;
+                const iso = toIso(
+                  date.getFullYear(),
+                  date.getMonth() + 1,
+                  date.getDate()
+                );
+                if (!isValidBirthDate(iso)) return;
+                onChange(iso);
+                setOpen(false);
+              }}
+              disabled={[{ before: minBirth }, { after: maxBirth }]}
+              captionLayout="dropdown-years"
+              reverseYears
+              navLayout="around"
+              showOutsideDays
+              fixedWeeks
+            />
+          </div>
         </div>
       )}
     </div>

@@ -39,6 +39,8 @@ export function LoanCapacityResultsGate({
   const fullUnlocked =
     unlockedSnapshot !== null && unlockedSnapshot === snapshotKey;
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [consentTransactional, setConsentTransactional] = useState(false);
@@ -56,9 +58,15 @@ export function LoanCapacityResultsGate({
       );
       return;
     }
+    const fn = firstName.trim();
+    const ln = lastName.trim();
+    if (!fn || !ln) {
+      setError("Udfyld både fornavn og efternavn.");
+      return;
+    }
     if (!isValidBirthDate(birthDate)) {
       setError(
-        "Vælg din fødselsdato i kalenderen og bekræft med knappen Færdig. Du skal være mellem 18 og 100 år."
+        "Vælg din fødselsdato i kalenderen (klik på en dato). Du skal være mellem 18 og 100 år."
       );
       return;
     }
@@ -68,6 +76,8 @@ export function LoanCapacityResultsGate({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          firstName: fn,
+          lastName: ln,
           email: email.trim(),
           birthDate,
           consentTransactional: true as const,
@@ -113,7 +123,7 @@ export function LoanCapacityResultsGate({
         <div className="rounded-md border-2 border-dashed border-brand-primary/35 bg-brand-background p-6 md:p-8 mb-8">
           <h3 className="text-h3 text-text-primary mb-2">Få den fulde oversigt</h3>
           <p className="text-small text-text-secondary mb-5 max-w-2xl">
-            Indtast din e-mail og fødselsdato, og accepter nedenfor, så viser vi
+            Indtast navn, e-mail og fødselsdato, og accepter nedenfor, så viser vi
             hele tabellen med forskellige gearinger og den udvidede forklaring.
             Oplysningerne gemmes i overensstemmelse med dit samtykke og vores{" "}
             <Link href="/privacy" className="text-brand-primary hover:underline">
@@ -122,6 +132,47 @@ export function LoanCapacityResultsGate({
             , så vi kan følge op på henvendelsen.
           </p>
           <form onSubmit={handleLeadSubmit} className="space-y-4 max-w-xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="loan-lead-firstname"
+                  className="block text-small font-medium text-text-primary mb-1"
+                >
+                  Fornavn
+                </label>
+                <input
+                  id="loan-lead-firstname"
+                  type="text"
+                  name="given-name"
+                  autoComplete="given-name"
+                  required
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Fornavn"
+                  className="w-full px-4 py-2.5 bg-white border border-border rounded-md text-body text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="loan-lead-lastname"
+                  className="block text-small font-medium text-text-primary mb-1"
+                >
+                  Efternavn
+                </label>
+                <input
+                  id="loan-lead-lastname"
+                  type="text"
+                  name="family-name"
+                  autoComplete="family-name"
+                  required
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Efternavn"
+                  className="w-full px-4 py-2.5 bg-white border border-border rounded-md text-body text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                />
+              </div>
+            </div>
+
             <div>
               <label
                 htmlFor="loan-lead-email"
@@ -149,7 +200,8 @@ export function LoanCapacityResultsGate({
                 Fødselsdato
               </label>
               <p className="text-small text-text-muted mb-2">
-                Åbn kalenderen, vælg år, måned og dag, og tryk Færdig.
+                Klik på feltet for at åbne kalenderen, vælg år og måned og klik på
+                din fødselsdag.
               </p>
               <BirthDatePicker
                 id="loan-lead-birthdate"

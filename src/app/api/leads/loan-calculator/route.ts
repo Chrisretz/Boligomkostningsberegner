@@ -16,6 +16,8 @@ function getDatabaseUrl(): string | undefined {
 }
 
 const bodySchema = z.object({
+  firstName: z.string().trim().min(1).max(80),
+  lastName: z.string().trim().min(1).max(80),
   email: z.string().trim().email().max(320),
   birthDate: z.string().refine((s) => isValidBirthDate(s), {
     message: "Ugyldig fødselsdato.",
@@ -56,7 +58,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          "Tjek e-mail, fødselsdato og afkrydsninger, og prøv igen.",
+          "Tjek navn, e-mail, fødselsdato og afkrydsninger, og prøv igen.",
       },
       { status: 400 }
     );
@@ -98,14 +100,16 @@ export async function POST(req: Request) {
   try {
     await db.query(
       `INSERT INTO loan_calc_leads (
-        email, email_normalized, birth_date, calculator_id,
+        email, email_normalized, first_name, last_name, birth_date, calculator_id,
         consent_transactional, consent_marketing_partners, consent_version,
         input_mode, annual_income_dkk, existing_debt_dkk,
         income_bucket, debt_bucket, max_loan_dkk, estimated_purchase_dkk
-      ) VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+      ) VALUES ($1, $2, $3, $4, $5::date, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
       [
         body.email,
         emailNormalized,
+        body.firstName,
+        body.lastName,
         body.birthDate,
         body.calculatorId,
         true,

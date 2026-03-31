@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS loan_calc_leads (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   email TEXT NOT NULL,
   email_normalized TEXT NOT NULL,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
   birth_date DATE NOT NULL,
   calculator_id TEXT NOT NULL,
   consent_transactional BOOLEAN NOT NULL,
