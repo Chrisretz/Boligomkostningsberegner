@@ -6,9 +6,9 @@ export function Footer() {
       <div className="container mx-auto py-14 px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="space-y-3">
-            <h3 className="text-small font-semibold text-white/90">
+            <div className="text-small font-semibold text-white/90">
               Nyttige links
-            </h3>
+            </div>
             <nav className="space-y-2">
               <Link
                 href="/privacy"
@@ -32,9 +32,9 @@ export function Footer() {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-small font-semibold text-white/90">
+            <div className="text-small font-semibold text-white/90">
               Lær og forstå
-            </h3>
+            </div>
             <nav className="space-y-2">
               <Link
                 href="/artikler"
@@ -52,9 +52,9 @@ export function Footer() {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-small font-semibold text-white/90">
+            <div className="text-small font-semibold text-white/90">
               Beregn
-            </h3>
+            </div>
             <nav className="space-y-2">
               <Link
                 href="/beregn"
@@ -72,7 +72,7 @@ export function Footer() {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-small font-semibold text-white/90">Om</h3>
+            <div className="text-small font-semibold text-white/90">Om</div>
             <nav className="space-y-2">
               <Link
                 href="/om-os"

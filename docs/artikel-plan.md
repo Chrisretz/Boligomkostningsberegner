@@ -64,7 +64,7 @@ Når du tilføjer nye artikler:
 
 - Tilføj slug, titel og beskrivelse i `src/app/artikler/page.tsx` (array `articles`).
 - Opret ny side under `src/app/artikler/[slug]/page.tsx` (eller én fil per slug som nu).
-- Tilføj URL i `src/app/sitemap.ts` under artikler.
+- Tilføj URL i `src/lib/sitemap-data.ts` (`SITEMAP_STATIC_PATHS`) under artikler.
 
 ---
 
