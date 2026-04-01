@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Boligklarhed er en gratis boligomkostningsberegner til danske boligkøbere. Læs om formålet, hvem vi er til, og hvad du kan beregne.",
   alternates: { canonical: canonicalUrl("/om-os") },
   openGraph: {
-    title: "Om os | Boligklarhed",
+    title: "Om os",
     description:
       "Gratis boligomkostningsberegner til danske boligkøbere. Få overblik over engangsomkostninger, månedlig ydelse og rentestest.",
     url: canonicalUrl("/om-os"),
@@ -85,6 +85,19 @@ export default function OmOsPage() {
               påvirker ikke de beregninger, du laver, og det koster ikke ekstra
               for dig. Vores formål er at give dig et gennemsigtigt overblik –
               ikke at sælge dig et bestemt lån eller produkt.
+            </p>
+            <p>
+              For generel forbrugerinformation om lån og finansielle produkter
+              kan du også se{" "}
+              <a
+                href="https://www.finanstilsynet.dk/finansielle-temaer/forbruger-og-investorinformation"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                Finanstilsynets forbruger- og investorinformation
+              </a>
+              .
             </p>
           </section>
 

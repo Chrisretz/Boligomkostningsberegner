@@ -4,7 +4,7 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Hvad er en indboforsikring? | Boligklarhed",
+  title: "Hvad er en indboforsikring?",
   description:
     "Få overblik over indboforsikring: hvad den dækker, hvorfor boligejere bør have den og hvordan den indgår i dine ejerudgifter og boligomkostninger.",
   alternates: { canonical: canonicalUrl("/artikler/indboforsikring") },

@@ -4,7 +4,7 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Sådan vurderer banken hvad du kan låne til bolig | Boligklarhed",
+  title: "Sådan vurderer banken hvad du kan låne til bolig",
   description:
     "Lær hvordan banken vurderer dit lånerum: gældsfaktor, rådighedsbeløb og kreditværdighed – og hvad det betyder for dit boligkøb.",
   alternates: {

@@ -4,14 +4,14 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Realkreditlån: Sådan fungerer det | Boligklarhed",
+  title: "Realkreditlån: Sådan fungerer det",
   description:
-    "Få et overblik over realkreditlån i Danmark: annuitetslån, F1/F3/F5, bidrag og månedlig ydelse. Lær hvordan dit boliglån beregnes og brug vores beregner til at finde dine omkostninger.",
+    "Realkreditlån: annuitet, F-kort, bidrag og ydelse. Beregn boliglån og boligomkostninger hos os.",
   alternates: { canonical: canonicalUrl("/artikler/realkreditlan") },
   openGraph: {
     title: "Realkreditlån: Sådan fungerer det",
     description:
-      "Få et overblik over realkreditlån, annuitetslån og hvordan din månedlige ydelse beregnes. Brug vores beregner til at se dine reelle boligomkostninger.",
+      "Realkreditlån: annuitet, F-kort, bidrag og ydelse. Beregn boliglån og boligomkostninger hos os.",
     url: canonicalUrl("/artikler/realkreditlan"),
   },
 };
@@ -20,7 +20,7 @@ export default function RealkreditlanPage() {
   const articleSchema = getArticleSchema({
     title: "Realkreditlån: Sådan fungerer det",
     description:
-      "Få et overblik over realkreditlån i Danmark: annuitetslån, F1/F3/F5, bidrag og månedlig ydelse. Lær hvordan dit boliglån beregnes og brug vores beregner til at finde dine omkostninger.",
+      "Realkreditlån: annuitet, F-kort, bidrag og ydelse. Beregn boliglån og boligomkostninger hos os.",
     path: "/artikler/realkreditlan",
   });
   return (

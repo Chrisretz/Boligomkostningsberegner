@@ -86,7 +86,17 @@ export default function PrivacyPage() {
             <p>
               Du har ret til indsigt, berigtigelse, sletning og indsigelse. For
               at gøre brug af disse rettigheder, kontakt os på den angivne
-              e-mail.
+              e-mail. Du kan også læse mere om databeskyttelse og dine rettigheder
+              hos{" "}
+              <a
+                href="https://www.datatilsynet.dk/borger/hvad-er-dine-rettigheder/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                Datatilsynet
+              </a>
+              .
             </p>
           </section>
 

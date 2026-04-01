@@ -69,6 +69,36 @@ export default function HvadKanJegKoebeBoligForPage() {
           </p>
         </header>
 
+        <section
+          className="mb-10 max-w-3xl mx-auto rounded-md border border-border bg-brand-surface/60 p-6 md:p-8 text-left"
+          aria-labelledby="seo-lanerum-heading"
+        >
+          <h2
+            id="seo-lanerum-heading"
+            className="text-h3 text-text-primary mb-4"
+          >
+            Lånerum og boliglån – sådan forstår du resultatet
+          </h2>
+          <div className="space-y-4 text-body text-text-secondary leading-relaxed">
+            <p>
+              Mange søger efter en <strong className="font-semibold text-text-primary">boliglån beregner</strong>, når de vil vide, hvor meget de kan låne til bolig og hvilken prisklasse der er realistisk. Denne side fungerer som et hurtigt, vejledende værktøj: Den estimerer dit <strong className="font-semibold text-text-primary">lånerum</strong> ud fra din bruttoindtægt og en gængs gearing (standard 4), og trækker den gæld fra, du allerede har. Du får altså et tommelfingerbillede af, hvor meget du kan lægge i boliglån – før du bruger bankens egne modeller og dokumentation.
+            </p>
+            <p>
+              En <strong className="font-semibold text-text-primary">boliglån beregner</strong> i banken tager typisk flere forhold med (rådighedsbeløb, rente, boligens art og mere). Brug derfor resultatet her som et første pejlemærke og som supplement til vores{" "}
+              <Link
+                href="/beregn"
+                className="text-brand-primary font-medium hover:underline"
+              >
+                boligomkostningsberegner
+              </Link>
+              , hvis du også vil se månedlig ydelse, bidrag og andre faste udgifter ved boligkøb.
+            </p>
+            <p>
+              Gearing og gældsfaktor er centrale begreber, men de erstatter ikke bankens kreditvurdering. Jo mere du har styr på både lånerum og månedlige omkostninger, jo lettere er det at sammenligne tilbud og forhandle boliglån på et oplyst grundlag.
+            </p>
+          </div>
+        </section>
+
         <section className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 mb-16">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>

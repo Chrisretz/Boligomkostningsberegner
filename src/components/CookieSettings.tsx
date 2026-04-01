@@ -39,25 +39,25 @@ export function CookieSettings() {
     <div className="bg-brand-surface rounded-md border border-border p-spacing-card space-y-4">
       <p className="text-body text-text-secondary">
         {consent === "accepted"
-          ? "Du har accepteret statistikcookies."
+          ? "Du har accepteret alle cookies (herunder statistik)."
           : consent === "rejected"
-            ? "Du har afvist statistikcookies."
+            ? "Du har kun tilladt nødvendige cookies."
             : "Du har endnu ikke valgt."}
       </p>
-      <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={() => handleSave("accepted")}
-          className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover"
-        >
-          Accepter statistik
-        </button>
+      <div className="flex flex-wrap gap-3">
         <button
           type="button"
           onClick={() => handleSave("rejected")}
           className="px-4 py-2 text-body font-medium text-text-primary bg-border rounded-md hover:bg-border-strong"
         >
-          Afvis statistik
+          Kun nødvendige
+        </button>
+        <button
+          type="button"
+          onClick={() => handleSave("accepted")}
+          className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover"
+        >
+          Accepter alle
         </button>
       </div>
       {saved && (

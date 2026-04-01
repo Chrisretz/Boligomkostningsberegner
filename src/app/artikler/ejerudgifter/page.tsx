@@ -4,14 +4,14 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Hvad er ejerudgifter? | Boligklarhed",
+  title: "Hvad er ejerudgifter?",
   description:
-    "Få overblik over ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter. Lær hvad du betaler som boligejer og hvordan det indgår i dine boligomkostninger.",
+    "Ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter som boligejer.",
   alternates: { canonical: canonicalUrl("/artikler/ejerudgifter") },
   openGraph: {
     title: "Hvad er ejerudgifter?",
     description:
-      "Grundskyld, ejendomsskat, forsikring, vand og varme – her får du overblik over ejerudgifter og hvad du betaler som boligejer.",
+      "Ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter som boligejer.",
     url: canonicalUrl("/artikler/ejerudgifter"),
   },
 };
@@ -20,7 +20,7 @@ export default function EjerudgifterPage() {
   const articleSchema = getArticleSchema({
     title: "Hvad er ejerudgifter?",
     description:
-      "Få overblik over ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter. Lær hvad du betaler som boligejer og hvordan det indgår i dine boligomkostninger.",
+      "Ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter som boligejer.",
     path: "/artikler/ejerudgifter",
   });
   return (

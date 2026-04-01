@@ -4,14 +4,14 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Sådan sparer du på tinglysning ved at udnytte eksisterende pantebrev | Boligklarhed",
+  title: "Spar på tinglysning: Udnyt eksisterende pantebrev",
   description:
-    "Lær hvordan du kan reducere omkostningerne til tinglysning af pant ved at overtage eller genbruge allerede tinglyste pantebreve på boligen. Overtagelse og refinansiering.",
+    "Spar på tinglysning: overtag eller genbrug eksisterende pantebrev ved boligkøb og refinansiering.",
   alternates: { canonical: canonicalUrl("/artikler/eksisterende-pantebrev") },
   openGraph: {
     title: "Spar på tinglysning: Udnyt eksisterende pantebrev",
     description:
-      "Reducer tinglysningsafgift ved at overtage sælgers pant eller genbruge pant ved refinansiering. Sådan udnytter du allerede tinglyste pantebreve.",
+      "Spar på tinglysning: overtag eller genbrug eksisterende pantebrev ved boligkøb og refinansiering.",
     url: canonicalUrl("/artikler/eksisterende-pantebrev"),
   },
 };
@@ -20,7 +20,7 @@ export default function EksisterendePantebrevPage() {
   const articleSchema = getArticleSchema({
     title: "Spar på tinglysning: Udnyt eksisterende pantebrev",
     description:
-      "Lær hvordan du kan reducere omkostningerne til tinglysning af pant ved at overtage eller genbruge allerede tinglyste pantebreve på boligen. Overtagelse og refinansiering.",
+      "Spar på tinglysning: overtag eller genbrug eksisterende pantebrev ved boligkøb og refinansiering.",
     path: "/artikler/eksisterende-pantebrev",
   });
   return (

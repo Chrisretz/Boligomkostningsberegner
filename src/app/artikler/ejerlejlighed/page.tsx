@@ -4,14 +4,14 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Hvad er en ejerlejlighed? | Boligklarhed",
+  title: "Hvad er en ejerlejlighed?",
   description:
-    "Få overblik over hvad en ejerlejlighed er: ejerskab, andel, fællesudgifter og hvordan det adskiller sig fra hus og andelsbolig. Læs om omkostninger ved køb af ejerlejlighed.",
+    "Ejerlejlighed: ejerskab, fællesudgifter og omkostninger. Sådan adskiller det sig fra hus og andelsbolig.",
   alternates: { canonical: canonicalUrl("/artikler/ejerlejlighed") },
   openGraph: {
     title: "Hvad er en ejerlejlighed?",
     description:
-      "Ejerskab, fællesudgifter og omkostninger – her får du overblik over, hvad en ejerlejlighed er og hvad du betaler som ejer.",
+      "Ejerlejlighed: ejerskab, fællesudgifter og omkostninger. Sådan adskiller det sig fra hus og andelsbolig.",
     url: canonicalUrl("/artikler/ejerlejlighed"),
   },
 };
@@ -20,7 +20,7 @@ export default function EjerlejlighedPage() {
   const articleSchema = getArticleSchema({
     title: "Hvad er en ejerlejlighed?",
     description:
-      "Få overblik over hvad en ejerlejlighed er: ejerskab, andel, fællesudgifter og hvordan det adskiller sig fra hus og andelsbolig. Læs om omkostninger ved køb af ejerlejlighed.",
+      "Ejerlejlighed: ejerskab, fællesudgifter og omkostninger. Sådan adskiller det sig fra hus og andelsbolig.",
     path: "/artikler/ejerlejlighed",
   });
   return (

@@ -4,7 +4,7 @@ import { canonicalUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Hvad kan jeg købe bolig for? – Beregn dit lånerum",
   description:
-    "Beregn hvor meget du kan låne og købe bolig for ud fra din indtægt og gearing. Følsomhedsanalyse for gearing 3,5–5. Vejledende lånerum til danske boligkøbere.",
+    "Beregn lånerum og hvad du kan købe bolig for ud fra indtægt og gearing. Vejledende boliglån-beregning med følsomhedsanalyse (gearing 3,5–5). Supplér med boligomkostningsberegneren for ydelse og omkostninger.",
   alternates: { canonical: canonicalUrl("/beregnere/hvad-kan-jeg-koebe-bolig-for") },
   openGraph: {
     title: "Hvad kan jeg købe bolig for? – Beregn dit lånerum",

@@ -5,7 +5,7 @@ import { getArticleSchema } from "@/lib/structured-data";
 import { BegreberExplorer } from "@/components/BegreberExplorer";
 
 export const metadata: Metadata = {
-  title: "Boligbegreber | Boligklarhed",
+  title: "Boligbegreber",
   description:
     "Få korte og lange forklaringer på vigtige begreber inden for boligkøb og boligøkonomi – søg i alfabetisk oversigt og fold forklaringer ud.",
   alternates: { canonical: canonicalUrl("/boligbegreber") },

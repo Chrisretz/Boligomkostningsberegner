@@ -4,14 +4,14 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Boligkøb første gang: Sådan gør du | Boligklarhed",
+  title: "Boligkøb første gang: Sådan gør du",
   description:
-    "Guide til boligkøb første gang: spar op til udbetaling, brug en boligomkostningsberegner, få styr på tinglysning og forsikring, og få råd til at træffe et trygt valg.",
+    "Boligkøb første gang: udbetaling, omkostningsberegner, tinglysning og forsikring – guide til trygt køb.",
   alternates: { canonical: canonicalUrl("/artikler/boligkoeb-foerste-gang") },
   openGraph: {
     title: "Boligkøb første gang: Sådan gør du",
     description:
-      "Spar op, beregn omkostninger, forstå tinglysning og forsikring – en guide til førstegangskøbere.",
+      "Boligkøb første gang: udbetaling, omkostningsberegner, tinglysning og forsikring – guide til trygt køb.",
     url: canonicalUrl("/artikler/boligkoeb-foerste-gang"),
   },
 };
@@ -20,7 +20,7 @@ export default function BoligkoebFoersteGangPage() {
   const articleSchema = getArticleSchema({
     title: "Boligkøb første gang: Sådan gør du",
     description:
-      "Guide til boligkøb første gang: spar op til udbetaling, brug en boligomkostningsberegner, få styr på tinglysning og forsikring, og få råd til at træffe et trygt valg.",
+      "Boligkøb første gang: udbetaling, omkostningsberegner, tinglysning og forsikring – guide til trygt køb.",
     path: "/artikler/boligkoeb-foerste-gang",
   });
   return (

@@ -4,14 +4,14 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Vedligehold af bolig: Hvor meget skal jeg sætte af? | Boligklarhed",
+  title: "Vedligehold af bolig: Hvor meget skal jeg sætte af?",
   description:
-    "Lær hvor meget du bør sætte af til vedligehold af hus eller lejlighed pr. år – og hvad pengene dækker. Få et overblik over vedligeholdelsesreserve og brug vores beregner til dine samlede boligomkostninger.",
+    "Vedligehold af bolig: hvor meget sætte af om året? Reserve, typiske poster og boligomkostninger.",
   alternates: { canonical: canonicalUrl("/artikler/vedligehold") },
   openGraph: {
     title: "Vedligehold af bolig: Hvor meget skal jeg sætte af?",
     description:
-      "Hvor meget skal du sætte af til vedligehold af hus eller lejlighed? Læs om vedligeholdelsesreserve og hvordan den indgår i dine reelle boligomkostninger.",
+      "Vedligehold af bolig: hvor meget sætte af om året? Reserve, typiske poster og boligomkostninger.",
     url: canonicalUrl("/artikler/vedligehold"),
   },
 };
@@ -20,7 +20,7 @@ export default function VedligeholdPage() {
   const articleSchema = getArticleSchema({
     title: "Vedligehold af bolig: Hvor meget skal jeg sætte af?",
     description:
-      "Lær hvor meget du bør sætte af til vedligehold af hus eller lejlighed pr. år – og hvad pengene dækker. Få et overblik over vedligeholdelsesreserve og brug vores beregner til dine samlede boligomkostninger.",
+      "Vedligehold af bolig: hvor meget sætte af om året? Reserve, typiske poster og boligomkostninger.",
     path: "/artikler/vedligehold",
   });
   return (

@@ -4,7 +4,7 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Hvad kan jeg købe bolig for? | Boligklarhed",
+  title: "Hvad kan jeg købe bolig for?",
   description:
     "Få overblik over hvordan du finder ud af, hvor meget bolig du har råd til. Rådighedsbeløb, gældsfaktor, udbetaling og den reelle månedlige boligudgift.",
   alternates: { canonical: canonicalUrl("/artikler/hvad-kan-jeg-koebe-bolig-for") },

@@ -92,6 +92,18 @@ export default function CookiesPage() {
               forventet, og du kan opleve at skulle acceptere cookies igen ved
               næste besøg.
             </p>
+            <p>
+              Regler for brug af cookies på hjemmesider er beskrevet nærmere hos{" "}
+              <a
+                href="https://www.datatilsynet.dk/regler-og-vejledning/cookies-og-lignende-teknologier"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                Datatilsynet
+              </a>
+              .
+            </p>
           </section>
 
           <section>

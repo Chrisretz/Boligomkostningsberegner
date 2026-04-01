@@ -4,14 +4,14 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Hvad bruger en husstand i strøm? | Boligklarhed",
+  title: "Hvad bruger en husstand i strøm?",
   description:
-    "Få overblik over gennemsnitligt elforbrug i Danmark: hvor meget bruger en husstand, en familie eller én person? Kildehenvisninger til Energistyrelsen, EWII og elberegner.dk.",
+    "Elforbrug i danske husstande: gennemsnit efter boligtype og personer. Kilde: Energistyrelsen m.fl.",
   alternates: { canonical: canonicalUrl("/artikler/elforbrug-husstand") },
   openGraph: {
     title: "Hvad bruger en husstand i strøm?",
     description:
-      "Gennemsnitligt elforbrug for lejlighed og hus – efter antal personer. Brug tallene til at budgettere din månedlige eludgift som boligejer.",
+      "Elforbrug i danske husstande: gennemsnit efter boligtype og personer. Kilde: Energistyrelsen m.fl.",
     url: canonicalUrl("/artikler/elforbrug-husstand"),
   },
 };
@@ -20,7 +20,7 @@ export default function ElforbrugHusstandPage() {
   const articleSchema = getArticleSchema({
     title: "Hvad bruger en husstand i strøm?",
     description:
-      "Få overblik over gennemsnitligt elforbrug i Danmark: hvor meget bruger en husstand, en familie eller én person? Kildehenvisninger til Energistyrelsen, EWII og elberegner.dk.",
+      "Elforbrug i danske husstande: gennemsnit efter boligtype og personer. Kilde: Energistyrelsen m.fl.",
     path: "/artikler/elforbrug-husstand",
   });
   return (

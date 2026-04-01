@@ -4,7 +4,7 @@ import { canonicalUrl } from "@/lib/site";
 import { getArticleSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Hvad er grundskyld og ejendomsskat? | Boligklarhed",
+  title: "Hvad er grundskyld og ejendomsskat?",
   description:
     "Få overblik over grundskyld og ejendomsskat: hvad du betaler som boligejer, hvordan beløbene beregnes og hvordan de indgår i dine ejerudgifter.",
   alternates: { canonical: canonicalUrl("/artikler/grundskyld-og-ejendomsskat") },

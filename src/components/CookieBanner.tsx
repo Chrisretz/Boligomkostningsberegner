@@ -57,14 +57,14 @@ export function CookieBanner() {
             onClick={handleReject}
             className="px-4 py-2 text-body font-medium text-text-primary bg-border rounded-md hover:bg-border-strong"
           >
-            Afvis
+            Kun nødvendige
           </button>
           <button
             type="button"
             onClick={handleAccept}
             className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover"
           >
-            Acceptér statistik
+            Accepter alle
           </button>
           <Link
             href="/cookies"

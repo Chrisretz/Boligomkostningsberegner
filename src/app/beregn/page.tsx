@@ -96,6 +96,19 @@ export default function BeregnPage() {
             af, hvor robust din boligøkonomi er – både her og nu og hvis
             forudsætningerne ændrer sig.
           </p>
+          <p className="text-body text-text-secondary max-w-2xl mx-auto mt-4">
+            Engangsomkostninger som tinglysning følger blandt andet de officielle
+            satser – du kan læse om aktuelle tinglysningsafgifter hos{" "}
+            <a
+              href="https://skat.dk/erhverv/afgifter-paa-varer-og-ydelser-punktafgifter/nyhedsbrev-afgifter/tinglysningsafgift-ny-afgiftssats-pr-1-januar-2026"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              Skattestyrelsen
+            </a>
+            .
+          </p>
         </header>
 
         {/* Input-kort */}
