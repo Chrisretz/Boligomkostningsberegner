@@ -50,7 +50,18 @@ export default function HvadKanJegKoebeBoligForPage() {
             reelt har råd til at betale hver måned – når både lån, ejerudgifter,
             vedligehold og din øvrige økonomi er med i regnestykket. Her får du
             et overblik over de vigtigste begreber og hvordan du kan bruge en
-            boligomkostningsberegner til at finde svaret.
+            boligomkostningsberegner til at finde svaret. Et supplement om,
+            hvordan indtægt, gæld og bankens regler hænger sammen med, hvor dyr en
+            bolig du har råd til, er{" "}
+            <a
+              href="https://www.bolius.dk/saa-dyr-en-bolig-har-du-raad-til-at-koebe-3580"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              Bolius’ artikel om råd til boligkøb
+            </a>
+            .
           </p>
 
           <section>

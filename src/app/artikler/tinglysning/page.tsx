@@ -41,7 +41,18 @@ export default function TinglysningPage() {
             ejendom. Når du køber bolig, bliver dit ejerskab først officielt og
             juridisk sikret, når skødet er tinglyst i Tingbogen. Tinglysning
             fungerer som en offentlig dokumentation for, hvem der ejer ejendommen,
-            og hvilke lån eller rettigheder der er knyttet til den.
+            og hvilke lån eller rettigheder der er knyttet til den. Den
+            officielle adgang til digital tinglysning og oplysninger om
+            processen finder du på{" "}
+            <a
+              href="https://www.tinglysning.dk/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              tinglysning.dk
+            </a>
+            .
           </p>
 
           <section>

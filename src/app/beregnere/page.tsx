@@ -7,7 +7,7 @@ import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 export const metadata: Metadata = {
   title: "Beregnere: boligomkostninger, lånerum og boliglån",
   description:
-    "Gratis boligberegnere: Se omkostninger ved boligkøb, månedlig ydelse og hvad du kan købe bolig for. Vejledende boliglån- og boligberegning for danske boligkøbere – før du går i banken.",
+    "Gratis boligberegnere: omkostninger, månedlig ydelse og købeevne. Vejledende boliglåns- og boligberegning for boligkøbere.",
   alternates: { canonical: canonicalUrl("/beregnere") },
   openGraph: {
     title: "Beregnere til boligkøb – boligomkostninger og lånerum",
@@ -28,7 +28,16 @@ export default function BeregnerePage() {
           Her finder du vores <strong className="font-semibold text-text-primary">gratis boligberegnere</strong>, der hjælper dig med at forstå{" "}
           <strong className="font-semibold text-text-primary">omkostninger ved boligkøb</strong>,{" "}
           <strong className="font-semibold text-text-primary">boliglån</strong> og{" "}
-          <strong className="font-semibold text-text-primary">lånerum</strong>, før du booker møde i banken. Brug dem som et første overblik – resultaterne er vejledende og erstatter ikke bankens kreditvurdering.
+          <strong className="font-semibold text-text-primary">lånerum</strong>, før du booker møde i banken.           Brug dem som et første overblik – resultaterne er vejledende og erstatter ikke bankens kreditvurdering. Satser for fx tinglysningsafgift følger blandt andet{" "}
+          <a
+            href="https://skat.dk/erhverv/afgifter-paa-varer-og-ydelser-punktafgifter/nyhedsbrev-afgifter/tinglysningsafgift-ny-afgiftssats-pr-1-januar-2026"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-primary underline hover:no-underline font-medium"
+          >
+            Skattestyrelsen
+          </a>
+          .
         </p>
 
         <section

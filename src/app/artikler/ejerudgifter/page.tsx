@@ -64,8 +64,18 @@ export default function EjerudgifterPage() {
               ejere i samme kommune med samme type bolig. Ejendomsskat (eller
               ejendomsværdiskat) kan også være gældende afhængigt af
               vurderingen. Beløbene varierer meget fra kommune til kommune og
-              fra bolig til bolig – du kan ofte finde et skøn på din kommune eller
-              ved at slå adressen op på Skattestyrelsens hjemmeside.
+              fra bolig til bolig – den foreløbige ejendomsvurdering, som skatten
+              bl.a. knytter sig til, kan du slå op på{" "}
+              <a
+                href="https://www.vurderingsportalen.dk/ejerbolig/vurdering/foreloebige-vurderinger"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                Vurderingsportalen
+              </a>
+              . Herfra kan du også finde vej til mere om grundskyld og
+              ejendomsskat hos Skattestyrelsen.
             </p>
           </section>
 

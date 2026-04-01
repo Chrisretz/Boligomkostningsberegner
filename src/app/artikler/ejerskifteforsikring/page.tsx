@@ -45,7 +45,17 @@ export default function EjerskifteforsikringPage() {
             køberen mod uforudsete udgifter til skader, der allerede var til
             stede ved overtagelsen, men som først opdages senere. Kort sagt:
             Den hjælper dig som boligkøber med at undgå, at et uheldigt fund i
-            huset bliver til en økonomisk katastrofe.
+            huset bliver til en økonomisk katastrofe. Mere om dækning og pris
+            finder du fx i{" "}
+            <a
+              href="https://www.bolius.dk/ejerskifteforsikring-hvad-kan-du-bruge-den-til-8909"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              Bolius om ejerskifteforsikring
+            </a>
+            .
           </p>
 
           <section>

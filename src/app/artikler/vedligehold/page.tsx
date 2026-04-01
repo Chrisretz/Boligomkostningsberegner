@@ -50,7 +50,18 @@ export default function VedligeholdPage() {
             varme og el falder ikke af sig selv, og uforudsete reparationer kan
             løbe op. Derfor er det vigtigt at have en realistisk vedligeholdelsesreserve
             med i din vurdering af, hvad boligen reelt koster. Her får du en
-            tommelfingerregel og forklaring på, hvad den dækker.
+            tommelfingerregel og forklaring på, hvad den dækker. Mere om
+            vedligehold af bolig (planlægning, typiske poster og budget) finder
+            du hos{" "}
+            <a
+              href="https://www.bolius.dk/vedligehold/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              Bolius om vedligehold
+            </a>
+            .
           </p>
 
           <section>

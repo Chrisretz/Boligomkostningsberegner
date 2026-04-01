@@ -56,7 +56,17 @@ export default function DisclaimerPage() {
               banker, realkreditinstitutter, offentlige myndigheder og øvrige
               samarbejdspartnere. Hvis du er i tvivl om, hvilke værdier du skal
               bruge, bør du indhente et konkret tilbud eller en beregning hos
-              din egen rådgiver.
+              din egen rådgiver. Aktuelle satser for offentlige afgifter
+              (herunder tinglysning) kan du altid tjekke hos{" "}
+              <a
+                href="https://skat.dk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                Skattestyrelsen
+              </a>
+              .
             </p>
           </section>
 

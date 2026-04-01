@@ -17,7 +17,17 @@ export default function ArtiklerPage() {
         <h1 className="text-h1 text-text-primary mb-2">Artikler</h1>
         <p className="text-body text-text-secondary mb-8">
           Vejledning og viden om boligkøb – fra tinglysning og realkreditlån til
-          ejerskifteforsikring og mere.
+          ejerskifteforsikring og mere. Officielle oplysninger om bolig, flytning
+          og dine rettigheder som forbruger samler også{" "}
+          <a
+            href="https://www.borger.dk/bolig-og-flytning"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-primary underline hover:no-underline"
+          >
+            Borger.dk under bolig og flytning
+          </a>
+          .
         </p>
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-4 mb-10">

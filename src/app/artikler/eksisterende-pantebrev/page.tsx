@@ -52,6 +52,16 @@ export default function EksisterendePantebrevPage() {
             det eksisterende pantebrev i stedet for at tinglyse helt nyt pant.
             Det kan reducere dine engangsomkostninger ved boligkøb eller
             refinansiering. Her får du et overblik over hvordan det fungerer.
+            Den officielle portal for tinglysning i Danmark er{" "}
+            <a
+              href="https://www.tinglysning.dk/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              tinglysning.dk
+            </a>
+            .
           </p>
 
           <section>

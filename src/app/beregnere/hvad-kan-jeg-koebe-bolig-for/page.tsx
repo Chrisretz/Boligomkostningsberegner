@@ -65,7 +65,16 @@ export default function HvadKanJegKoebeBoligForPage() {
             tommelfingerregel). Efter beregning får du et kort resumé med det
             samme; den fulde tabel med gearinger 3,5–5 og den udvidede forklaring
             vises, når du har indtastet e-mail og accepteret vilkårene herfor.
-            Resultatet er vejledende – banken vurderer din konkrete situation.
+            Resultatet er vejledende – banken vurderer din konkrete situation.{" "}
+            <a
+              href="https://www.finanstilsynet.dk/finansielle-temaer/forbruger-og-investorinformation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              Finanstilsynet
+            </a>{" "}
+            har forbrugerinformation om lån og finansielle produkter.
           </p>
         </header>
 

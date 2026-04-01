@@ -50,7 +50,17 @@ export default function BoligkoebFoersteGangPage() {
             dig et overblik over de vigtigste skridt: fra opsparing og
             økonomisk vurdering over søgning og køb til tinglysning og
             overtagelse. Du behøver ikke være ekspert; du skal bare have en
-            plan og et overblik over, hvad det reelt koster.
+            plan og et overblik over, hvad det reelt koster. Officielle oplysninger om
+            bolig og flytning fra det offentlige finder du også hos{" "}
+            <a
+              href="https://www.borger.dk/bolig-og-flytning"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              Borger.dk
+            </a>
+            .
           </p>
 
           <section>

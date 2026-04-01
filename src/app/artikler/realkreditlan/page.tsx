@@ -60,7 +60,16 @@ export default function RealkreditlanPage() {
             </h2>
             <p>
               Realkreditlån er boliglån, der er sikret med pant i fast ejendom
-              og som følger særlige regler under Realkreditloven. De udbydes af
+              og som følger særlige regler under{" "}
+              <a
+                href="https://www.retsinformation.dk/eli/lta/2025/571"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                realkreditloven
+              </a>
+              . De udbydes af{" "}
               realkreditinstitutter (fx Totalkredit, Nykredit, RD og
               BRFkredit). Lånet er typisk opbygget som et annuitetslån, hvor du
               hver måned betaler en fast ydelse, der dækker både afdrag og

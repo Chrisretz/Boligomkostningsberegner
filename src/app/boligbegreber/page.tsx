@@ -39,7 +39,17 @@ export default function BoligbegreberPage() {
         <p className="text-body text-text-secondary mb-8">
           En samlet ordliste over vigtige begreber inden for boligkøb. Brug
           søgefeltet for at finde hurtigt, eller hop til et bogstav (A–Æ) og
-          fold derefter forklaringerne ud.
+          fold derefter forklaringerne ud. Officielle oplysninger om bolig,
+          flytning, økonomi og dine rettigheder som borger samler{" "}
+          <a
+            href="https://www.borger.dk/bolig-og-flytning"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-primary underline hover:no-underline"
+          >
+            Borger.dk under bolig og flytning
+          </a>
+          .
         </p>
 
         <BegreberExplorer />

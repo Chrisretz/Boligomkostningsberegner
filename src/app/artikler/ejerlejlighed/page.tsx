@@ -51,6 +51,17 @@ export default function EjerlejlighedPage() {
             den fælles ejendom (trappeopgang, tag, facade, grund), som
             administreres gennem en ejendomsadministration. Ejerlejligheden er
             en af de mest almindelige boligformer i Danmark, især i byerne.
+            Praktisk viden om at købe ejerlejlighed – fx fællesudgifter og
+            ejerforening – kan du supplere med{" "}
+            <a
+              href="https://www.bolius.dk/vaerd-at-vide-naar-du-overvejer-at-koebe-en-ejerlejlighed-16216"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              Bolius’ guide til køb af ejerlejlighed
+            </a>
+            .
           </p>
 
           <section>
