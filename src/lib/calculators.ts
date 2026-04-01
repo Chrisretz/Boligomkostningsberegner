@@ -1,4 +1,7 @@
-import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import {
+  PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
+} from "@/lib/site";
 
 /**
  * Fælles data for beregnere – bruges af /beregnere-siden og Topbar-dropdown.
@@ -16,7 +19,7 @@ export const calculators = [
   {
     id: "hvad-kan-jeg-koebe-bolig-for",
     slug: "hvad-kan-jeg-koebe-bolig-for",
-    href: "/beregnere/hvad-kan-jeg-koebe-bolig-for",
+    href: PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
     title: "Hvad kan jeg købe bolig for?",
     description:
       "Beregn dit lånerum ud fra indtægt og gearing. Se hvor meget du kan låne og hvilken købspris du typisk har råd til.",

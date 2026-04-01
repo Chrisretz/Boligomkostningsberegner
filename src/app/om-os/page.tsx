@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import {
+  canonicalUrl,
+  PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
+} from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
 
 const title = "Om os";
@@ -38,7 +42,7 @@ export default function OmOsPage() {
               </Link>
               , der samler engangsudgifter, månedlig ydelse og rentestest for en
               given bolig – og en beregner{" "}
-              <Link href="/beregnere/hvad-kan-jeg-koebe-bolig-for" className="text-brand-primary hover:underline">
+              <Link href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR} className="text-brand-primary hover:underline">
                 Hvad kan jeg købe bolig for?
               </Link>
               , der ud fra din indtægt og gæld giver et vejledende lånerum og
@@ -142,7 +146,7 @@ export default function OmOsPage() {
           </Link>
           {" · "}
           <Link
-            href="/beregnere/hvad-kan-jeg-koebe-bolig-for"
+            href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}
             className="text-body text-brand-primary hover:underline"
           >
             Hvad kan jeg købe bolig for?

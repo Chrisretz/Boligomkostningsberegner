@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import {
+  canonicalUrl,
+  PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
+} from "@/lib/site";
 import {
   softwareApplicationSchema,
   faqSchema,
@@ -42,7 +46,7 @@ export default function HomePage() {
               Beregn boligomkostninger
             </Link>
             <Link
-              href="/beregnere/hvad-kan-jeg-koebe-bolig-for"
+              href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}
               className="inline-flex items-center justify-center min-h-[48px] px-8 py-4 text-body font-semibold text-brand-primary border-2 border-brand-primary bg-transparent rounded-md hover:bg-brand-surface focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors w-full sm:w-auto"
             >
               Hvad kan jeg købe bolig for?
@@ -78,7 +82,7 @@ export default function HomePage() {
               </span>
             </Link>
             <Link
-              href="/beregnere/hvad-kan-jeg-koebe-bolig-for"
+              href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}
               className="block bg-brand-surface rounded-md border border-border shadow-soft p-6 hover:border-brand-primary hover:shadow-md transition-colors text-left group"
             >
               <h3 className="text-h3 text-text-primary mb-2 group-hover:text-brand-primary">

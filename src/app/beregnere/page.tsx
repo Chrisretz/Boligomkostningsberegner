@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import {
+  canonicalUrl,
+  PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
+} from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
 import { calculators } from "@/lib/calculators";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
@@ -64,7 +68,7 @@ export default function BeregnerePage() {
               </Link>
               , derefter kan du estimere <strong className="font-semibold text-text-primary">hvad du kan købe bolig for</strong> ud fra indtægt og gearing med{" "}
               <Link
-                href="/beregnere/hvad-kan-jeg-koebe-bolig-for"
+                href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}
                 className="text-brand-primary font-medium hover:underline"
               >
                 lånerums-beregneren

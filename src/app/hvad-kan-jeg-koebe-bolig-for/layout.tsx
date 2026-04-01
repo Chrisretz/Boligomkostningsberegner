@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { canonicalUrl } from "@/lib/site";
+import { canonicalUrl, PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR } from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
 
 const title = "Hvad kan jeg købe bolig for? – Beregn dit lånerum";
@@ -11,9 +11,9 @@ const ogDescription =
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: canonicalUrl("/beregnere/hvad-kan-jeg-koebe-bolig-for") },
+  alternates: { canonical: canonicalUrl(PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR) },
   ...socialMetadata({
-    path: "/beregnere/hvad-kan-jeg-koebe-bolig-for",
+    path: PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
     title,
     description: ogDescription,
   }),

@@ -5,7 +5,7 @@ export const SITEMAP_STATIC_PATHS = [
   "",
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
   "/beregnere",
-  "/beregnere/hvad-kan-jeg-koebe-bolig-for",
+  "/hvad-kan-jeg-koebe-bolig-for",
   "/artikler",
   "/artikler/tinglysning",
   "/artikler/ejerskifteforsikring",

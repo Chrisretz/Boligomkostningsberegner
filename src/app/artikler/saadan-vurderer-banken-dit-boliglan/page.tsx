@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import {
+  canonicalUrl,
+  PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
+} from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
 import { getArticleDates } from "@/lib/article-dates";
 import { BANK_VURDERER_BOLIGLAN_FAQ } from "@/lib/artikel-faq/saadan-vurderer-banken-dit-boliglan";
@@ -160,7 +164,7 @@ export default function SaadanVurdererBankenDitBoliglanPage() {
             </p>
             <p>
               <Link
-                href="/beregnere/hvad-kan-jeg-koebe-bolig-for"
+                href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}
                 className="text-brand-primary hover:underline font-medium"
               >
                 Brug beregneren &quot;Hvad kan jeg købe bolig for?&quot; her

@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         destination: "/beregn-dine-boligomkostninger",
         permanent: true,
       },
+      {
+        source: "/beregnere/hvad-kan-jeg-koebe-bolig-for",
+        destination: "/hvad-kan-jeg-koebe-bolig-for",
+        permanent: true,
+      },
     ];
   },
 };
