@@ -1,21 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { BANK_VURDERER_BOLIGLAN_FAQ } from "@/lib/artikel-faq/saadan-vurderer-banken-dit-boliglan";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/saadan-vurderer-banken-dit-boliglan";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(BANK_VURDERER_BOLIGLAN_FAQ);
+
+const title = "Sådan vurderer banken hvad du kan låne til bolig";
+const description =
+  "Lær hvordan banken vurderer dit lånerum: gældsfaktor, rådighedsbeløb og kreditværdighed – og hvad det betyder for dit boligkøb.";
+const ogDescription =
+  "Gældsfaktor, rådighedsbeløb og kreditværdighed – sådan vurderer banken, hvor meget du kan låne til bolig.";
 
 export const metadata: Metadata = {
-  title: "Sådan vurderer banken hvad du kan låne til bolig",
-  description:
-    "Lær hvordan banken vurderer dit lånerum: gældsfaktor, rådighedsbeløb og kreditværdighed – og hvad det betyder for dit boligkøb.",
+  title,
+  description,
   alternates: {
-    canonical: canonicalUrl("/artikler/saadan-vurderer-banken-dit-boliglan"),
+    canonical: canonicalUrl(ARTICLE_PATH),
   },
-  openGraph: {
-    title: "Sådan vurderer banken hvad du kan låne til bolig",
-    description:
-      "Gældsfaktor, rådighedsbeløb og kreditværdighed – sådan vurderer banken, hvor meget du kan låne til bolig.",
-    url: canonicalUrl("/artikler/saadan-vurderer-banken-dit-boliglan"),
-  },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description: ogDescription,
+  }),
 };
 
 export default function SaadanVurdererBankenDitBoliglanPage() {
@@ -23,13 +35,19 @@ export default function SaadanVurdererBankenDitBoliglanPage() {
     title: "Sådan vurderer banken hvad du kan låne til bolig",
     description:
       "Lær hvordan banken vurderer dit lånerum: gældsfaktor, rådighedsbeløb og kreditværdighed – og hvad det betyder for dit boligkøb.",
-    path: "/artikler/saadan-vurderer-banken-dit-boliglan",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -41,9 +59,10 @@ export default function SaadanVurdererBankenDitBoliglanPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Sådan vurderer banken hvad du kan låne til bolig
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -154,7 +173,7 @@ export default function SaadanVurdererBankenDitBoliglanPage() {
               Når du har et bud på købspris og lånebeløb, kan du supplere med
               vores{" "}
               <Link
-                href="/beregn"
+                href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
                 className="text-brand-primary hover:underline"
               >
                 boligomkostningsberegner
@@ -163,6 +182,25 @@ export default function SaadanVurdererBankenDitBoliglanPage() {
               rentestest – så du ved, hvad du reelt har råd til at betale
               hver måned.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-bank-boliglan-heading">
+            <h2
+              id="faq-bank-boliglan-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om bankens vurdering af boliglån
+            </h2>
+            <div className="space-y-5">
+              {BANK_VURDERER_BOLIGLAN_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

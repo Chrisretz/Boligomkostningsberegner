@@ -6,6 +6,7 @@ import { LabelWithTooltip } from "@/components/LabelWithTooltip";
 import { LoanCapacityResultsGate } from "@/components/LoanCapacityResultsGate";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import { GEARING_DEFAULT } from "@/lib/loanCapacityConstants";
+import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
 
 const INCOME_SLIDER_MIN = 200_000;
 const INCOME_SLIDER_MAX = 2_500_000;
@@ -95,7 +96,7 @@ export default function HvadKanJegKoebeBoligForPage() {
             <p>
               En <strong className="font-semibold text-text-primary">boliglån beregner</strong> i banken tager typisk flere forhold med (rådighedsbeløb, rente, boligens art og mere). Brug derfor resultatet her som et første pejlemærke og som supplement til vores{" "}
               <Link
-                href="/beregn"
+                href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
                 className="text-brand-primary font-medium hover:underline"
               >
                 boligomkostningsberegner
@@ -283,7 +284,7 @@ export default function HvadKanJegKoebeBoligForPage() {
           </Link>
           {" · "}
           <Link
-            href="/beregn"
+            href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
             className="text-body text-brand-primary hover:underline"
           >
             Boligomkostningsberegner

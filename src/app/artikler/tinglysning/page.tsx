@@ -1,13 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { getArticleDates } from "@/lib/article-dates";
+import { TINGLYSNING_FAQ } from "@/lib/artikel-faq/tinglysning";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/tinglysning";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(TINGLYSNING_FAQ);
+
+const title = "Hvad er tinglysning?";
+const description =
+  "Tinglysning er den juridiske registrering af rettigheder over en fast ejendom. Læs mere om processen, afgifter og hvorfor det er vigtigt.";
 
 export const metadata: Metadata = {
-  title: "Hvad er tinglysning?",
-  description:
-    "Tinglysning er den juridiske registrering af rettigheder over en fast ejendom. Læs mere om processen, afgifter og hvorfor det er vigtigt.",
-  alternates: { canonical: canonicalUrl("/artikler/tinglysning") },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function TinglysningPage() {
@@ -15,13 +31,19 @@ export default function TinglysningPage() {
     title: "Hvad er tinglysning?",
     description:
       "Tinglysning er den juridiske registrering af rettigheder over en fast ejendom. Læs mere om processen, afgifter og hvorfor det er vigtigt.",
-    path: "/artikler/tinglysning",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -33,7 +55,8 @@ export default function TinglysningPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">Hvad er tinglysning?</h1>
+        <h1 className="text-h1 text-text-primary mb-3">Hvad er tinglysning?</h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -139,6 +162,25 @@ export default function TinglysningPage() {
               tinglysning, omkostninger til lån og øvrige udgifter forbundet med
               boligkøbet.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-tinglysning-heading">
+            <h2
+              id="faq-tinglysning-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om tinglysning
+            </h2>
+            <div className="space-y-5">
+              {TINGLYSNING_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { REALKREDITLAN_FAQ } from "@/lib/artikel-faq/realkreditlan";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/realkreditlan";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(REALKREDITLAN_FAQ);
+
+const title = "Realkreditlån: Sådan fungerer det";
+const description =
+  "Realkreditlån: annuitet, F-kort, bidrag og ydelse. Beregn boliglån og boligomkostninger hos os.";
 
 export const metadata: Metadata = {
-  title: "Realkreditlån: Sådan fungerer det",
-  description:
-    "Realkreditlån: annuitet, F-kort, bidrag og ydelse. Beregn boliglån og boligomkostninger hos os.",
-  alternates: { canonical: canonicalUrl("/artikler/realkreditlan") },
-  openGraph: {
-    title: "Realkreditlån: Sådan fungerer det",
-    description:
-      "Realkreditlån: annuitet, F-kort, bidrag og ydelse. Beregn boliglån og boligomkostninger hos os.",
-    url: canonicalUrl("/artikler/realkreditlan"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function RealkreditlanPage() {
@@ -21,13 +31,19 @@ export default function RealkreditlanPage() {
     title: "Realkreditlån: Sådan fungerer det",
     description:
       "Realkreditlån: annuitet, F-kort, bidrag og ydelse. Beregn boliglån og boligomkostninger hos os.",
-    path: "/artikler/realkreditlan",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +55,10 @@ export default function RealkreditlanPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Realkreditlån: Sådan fungerer det
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -52,6 +69,17 @@ export default function RealkreditlanPage() {
             realkreditlån fungerer, hvad den månedlige ydelse afhænger af, og
             hvordan du kan bruge en beregner til at få klarhed over dine reelle
             boligomkostninger.
+          </p>
+          <p>
+            Vil du sammenligne realkredit med banklån, afdragsfrihed og rentetyper
+            i ét overblik, kan du læse artiklen om{" "}
+            <Link
+              href="/artikler/sammenligning-af-laanetyper"
+              className="text-brand-primary hover:underline font-medium"
+            >
+              sammenligning af lånetyper
+            </Link>
+            .
           </p>
 
           <section>
@@ -157,12 +185,31 @@ export default function RealkreditlanPage() {
               kan vise både engangsbeløb, månedlige udgifter og en rentestest.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Brug vores beregner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               til at indtaste købspris, belåning og rente – så får du et
               overblik over dine reelle boligomkostninger.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-realkreditlan-heading">
+            <h2
+              id="faq-realkreditlan-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om realkreditlån
+            </h2>
+            <div className="space-y-5">
+              {REALKREDITLAN_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

@@ -1,17 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
 import {
   formatSitemapLastModified,
   getSitemapRows,
 } from "@/lib/sitemap-data";
 
+const title = "XML Sitemap";
+const description =
+  "Oversigt over sider i Boligklarheds XML-sitemap til søgemaskiner.";
+
 export const metadata: Metadata = {
-  title: "XML Sitemap",
-  description:
-    "Oversigt over sider i Boligklarheds XML-sitemap til søgemaskiner.",
+  title,
+  description,
   alternates: { canonical: canonicalUrl("/sitemap") },
   robots: { index: false, follow: true },
+  ...socialMetadata({
+    path: "/sitemap",
+    title,
+    description,
+  }),
 };
 
 export default function SitemapHtmlPage() {

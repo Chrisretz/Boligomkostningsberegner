@@ -1,14 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArticleMeta } from "@/components/ArticleMeta";
 import { canonicalUrl } from "@/lib/site";
+import { getArticleDates } from "@/lib/article-dates";
+import { socialMetadata } from "@/lib/social-metadata";
 import { getArticleSchema } from "@/lib/structured-data";
 import { BegreberExplorer } from "@/components/BegreberExplorer";
 
+const PAGE_PATH = "/boligbegreber";
+const dates = getArticleDates(PAGE_PATH);
+
+const title = "Boligbegreber";
+const description =
+  "Få korte og lange forklaringer på vigtige begreber inden for boligkøb og boligøkonomi – søg i alfabetisk oversigt og fold forklaringer ud.";
+
 export const metadata: Metadata = {
-  title: "Boligbegreber",
-  description:
-    "Få korte og lange forklaringer på vigtige begreber inden for boligkøb og boligøkonomi – søg i alfabetisk oversigt og fold forklaringer ud.",
+  title,
+  description,
   alternates: { canonical: canonicalUrl("/boligbegreber") },
+  ...socialMetadata({
+    path: PAGE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function BoligbegreberPage() {
@@ -16,7 +30,9 @@ export default function BoligbegreberPage() {
     title: "Boligbegreber",
     description:
       "Kort og lange forklaringer på vigtige begreber inden for boligkøb og boligøkonomi.",
-    path: "/boligbegreber",
+    path: PAGE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
 
   return (
@@ -35,7 +51,8 @@ export default function BoligbegreberPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-6">Boligbegreber</h1>
+        <h1 className="text-h1 text-text-primary mb-3">Boligbegreber</h1>
+        <ArticleMeta {...dates} />
         <p className="text-body text-text-secondary mb-8">
           En samlet ordliste over vigtige begreber inden for boligkøb. Brug
           søgefeltet for at finde hurtigt, eller hop til et bogstav (A–Æ) og

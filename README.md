@@ -22,7 +22,7 @@ npm run dev
 ## Struktur
 
 - `/` – Landing page (funnel, hero, trust)
-- `/beregn` – Beregner med formular og resultater
+- `/beregn-dine-boligomkostninger` – Boligomkostningsberegner (formular og resultater; `/beregn` redirecter hertil)
 - `/go/loan` – Affiliate redirect (302)
 - `/privacy` – Privatlivspolitik
 - `/cookies` – Cookie-information og indstillinger

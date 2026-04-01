@@ -1,20 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
 import { calculators } from "@/lib/calculators";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
+const title = "Beregnere: boligomkostninger, lånerum og boliglån";
+const description =
+  "Gratis boligberegnere: omkostninger, månedlig ydelse og købeevne. Vejledende boliglåns- og boligberegning for boligkøbere.";
+const ogTitle = "Beregnere til boligkøb – boligomkostninger og lånerum";
+const ogDescription =
+  "Samlet oversigt over Boligklarheds beregnere: boligomkostninger, lånerum og købeevne. Gratis værktøjer til boliglån og boligkøb.";
+
 export const metadata: Metadata = {
-  title: "Beregnere: boligomkostninger, lånerum og boliglån",
-  description:
-    "Gratis boligberegnere: omkostninger, månedlig ydelse og købeevne. Vejledende boliglåns- og boligberegning for boligkøbere.",
+  title,
+  description,
   alternates: { canonical: canonicalUrl("/beregnere") },
-  openGraph: {
-    title: "Beregnere til boligkøb – boligomkostninger og lånerum",
-    description:
-      "Samlet oversigt over Boligklarheds beregnere: boligomkostninger, lånerum og købeevne. Gratis værktøjer til boliglån og boligkøb.",
-    url: canonicalUrl("/beregnere"),
-  },
+  ...socialMetadata({
+    path: "/beregnere",
+    title: ogTitle,
+    description: ogDescription,
+  }),
 };
 
 export default function BeregnerePage() {
@@ -53,7 +59,7 @@ export default function BeregnerePage() {
             </p>
             <p>
               På Boligklarhed kan du kombinere værktøjerne: Først får du overblik over <strong className="font-semibold text-text-primary">engangs- og løbende omkostninger</strong> med{" "}
-              <Link href="/beregn" className="text-brand-primary font-medium hover:underline">
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary font-medium hover:underline">
                 boligomkostningsberegneren
               </Link>
               , derefter kan du estimere <strong className="font-semibold text-text-primary">hvad du kan købe bolig for</strong> ud fra indtægt og gearing med{" "}

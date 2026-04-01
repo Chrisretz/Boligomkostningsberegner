@@ -1,13 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { EJERSKIFTE_FAQ } from "@/lib/artikel-faq/ejerskifteforsikring";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/ejerskifteforsikring";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(EJERSKIFTE_FAQ);
+
+const title = "Hvad er en ejerskifteforsikring?";
+const description =
+  "En ejerskifteforsikring dækker skjulte fejl og mangler ved boligkøb. Læs mere om dækning, pris og om den er nødvendig for dig.";
 
 export const metadata: Metadata = {
-  title: "Hvad er en ejerskifteforsikring?",
-  description:
-    "En ejerskifteforsikring dækker skjulte fejl og mangler ved boligkøb. Læs mere om dækning, pris og om den er nødvendig for dig.",
-  alternates: { canonical: canonicalUrl("/artikler/ejerskifteforsikring") },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function EjerskifteforsikringPage() {
@@ -15,13 +31,19 @@ export default function EjerskifteforsikringPage() {
     title: "Hvad er en ejerskifteforsikring?",
     description:
       "En ejerskifteforsikring dækker skjulte fejl og mangler ved boligkøb. Læs mere om dækning, pris og om den er nødvendig for dig.",
-    path: "/artikler/ejerskifteforsikring",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -33,9 +55,10 @@ export default function EjerskifteforsikringPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Hvad er en ejerskifteforsikring?
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -184,6 +207,25 @@ export default function EjerskifteforsikringPage() {
               en del af dine engangsomkostninger, så du får et mere realistisk
               billede af, hvad boligkøbet samlet set koster dig.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-ejerskifteforsikring-heading">
+            <h2
+              id="faq-ejerskifteforsikring-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om ejerskifteforsikring
+            </h2>
+            <div className="space-y-5">
+              {EJERSKIFTE_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

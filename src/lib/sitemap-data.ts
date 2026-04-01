@@ -1,15 +1,17 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/site";
+import { PATH_BOLIGOMKOSTNINGER_BEREGNER, SITE_URL } from "@/lib/site";
 
 export const SITEMAP_STATIC_PATHS = [
   "",
-  "/beregn",
+  PATH_BOLIGOMKOSTNINGER_BEREGNER,
   "/beregnere",
   "/beregnere/hvad-kan-jeg-koebe-bolig-for",
   "/artikler",
   "/artikler/tinglysning",
   "/artikler/ejerskifteforsikring",
   "/artikler/realkreditlan",
+  "/artikler/sammenligning-af-laanetyper",
+  "/artikler/energimaerker-og-boligokonomi",
   "/artikler/vedligehold",
   "/artikler/eksisterende-pantebrev",
   "/artikler/hvad-kan-jeg-koebe-bolig-for",
@@ -40,10 +42,15 @@ export function getSitemapRows(): SitemapRow[] {
     url: `${SITE_URL}${path}`,
     lastModified,
     changeFrequency:
-      path === "" || path === "/beregn"
+      path === "" || path === PATH_BOLIGOMKOSTNINGER_BEREGNER
         ? ("weekly" as const)
         : ("monthly" as const),
-    priority: path === "" ? 1 : path === "/beregn" ? 0.9 : 0.7,
+    priority:
+      path === ""
+        ? 1
+        : path === PATH_BOLIGOMKOSTNINGER_BEREGNER
+          ? 0.9
+          : 0.7,
   }));
 }
 

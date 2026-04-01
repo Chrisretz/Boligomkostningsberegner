@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { ELFORBRUG_HUSSTAND_FAQ } from "@/lib/artikel-faq/elforbrug-husstand";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/elforbrug-husstand";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(ELFORBRUG_HUSSTAND_FAQ);
+
+const title = "Hvad bruger en husstand i strøm?";
+const description =
+  "Elforbrug i danske husstande: gennemsnit efter boligtype og personer. Kilde: Energistyrelsen m.fl.";
 
 export const metadata: Metadata = {
-  title: "Hvad bruger en husstand i strøm?",
-  description:
-    "Elforbrug i danske husstande: gennemsnit efter boligtype og personer. Kilde: Energistyrelsen m.fl.",
-  alternates: { canonical: canonicalUrl("/artikler/elforbrug-husstand") },
-  openGraph: {
-    title: "Hvad bruger en husstand i strøm?",
-    description:
-      "Elforbrug i danske husstande: gennemsnit efter boligtype og personer. Kilde: Energistyrelsen m.fl.",
-    url: canonicalUrl("/artikler/elforbrug-husstand"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function ElforbrugHusstandPage() {
@@ -21,13 +31,19 @@ export default function ElforbrugHusstandPage() {
     title: "Hvad bruger en husstand i strøm?",
     description:
       "Elforbrug i danske husstande: gennemsnit efter boligtype og personer. Kilde: Energistyrelsen m.fl.",
-    path: "/artikler/elforbrug-husstand",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +55,10 @@ export default function ElforbrugHusstandPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Hvad bruger en husstand i strøm?
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -167,7 +184,7 @@ export default function ElforbrugHusstandPage() {
               Brug el-estimat i boligomkostningsberegneren
             </h2>
             <p>
-              På Boligklarhed kan du i <Link href="/beregn" className="text-brand-primary hover:underline">boligomkostningsberegneren</Link> vælge{" "}
+              På Boligklarhed kan du i <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline">boligomkostningsberegneren</Link> vælge{" "}
               <strong>antal personer i husstanden</strong> under &quot;El, varme og
               vand&quot;. Beregneren bruger derefter gennemsnitstal for
               elforbrug (baseret på data fra Energistyrelsen og EWII) for
@@ -235,6 +252,25 @@ export default function ElforbrugHusstandPage() {
             </p>
           </section>
 
+          <section aria-labelledby="faq-elforbrug-husstand-heading">
+            <h2
+              id="faq-elforbrug-husstand-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om elforbrug i husstanden
+            </h2>
+            <div className="space-y-5">
+              {ELFORBRUG_HUSSTAND_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
           <p className="pt-4">
             <Link
               href="/artikler"
@@ -244,7 +280,7 @@ export default function ElforbrugHusstandPage() {
             </Link>
             {" · "}
             <Link
-              href="/beregn"
+              href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
               className="text-body text-brand-primary hover:underline"
             >
               Gå til beregneren

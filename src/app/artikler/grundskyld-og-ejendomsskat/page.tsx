@@ -1,19 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { GRUNDSKYLD_EJENDOMSSKAT_FAQ } from "@/lib/artikel-faq/grundskyld-og-ejendomsskat";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/grundskyld-og-ejendomsskat";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(GRUNDSKYLD_EJENDOMSSKAT_FAQ);
+
+const title = "Hvad er grundskyld og ejendomsskat?";
+const description =
+  "Få overblik over grundskyld og ejendomsskat: hvad du betaler som boligejer, hvordan beløbene beregnes og hvordan de indgår i dine ejerudgifter.";
+const ogDescription =
+  "Grundskyld og ejendomsskat er skatter du betaler som boligejer. Her får du overblik over beregning og hvad det betyder for dine boligomkostninger.";
 
 export const metadata: Metadata = {
-  title: "Hvad er grundskyld og ejendomsskat?",
-  description:
-    "Få overblik over grundskyld og ejendomsskat: hvad du betaler som boligejer, hvordan beløbene beregnes og hvordan de indgår i dine ejerudgifter.",
-  alternates: { canonical: canonicalUrl("/artikler/grundskyld-og-ejendomsskat") },
-  openGraph: {
-    title: "Hvad er grundskyld og ejendomsskat?",
-    description:
-      "Grundskyld og ejendomsskat er skatter du betaler som boligejer. Her får du overblik over beregning og hvad det betyder for dine boligomkostninger.",
-    url: canonicalUrl("/artikler/grundskyld-og-ejendomsskat"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description: ogDescription,
+  }),
 };
 
 export default function GrundskyldOgEjendomsskatPage() {
@@ -21,13 +33,19 @@ export default function GrundskyldOgEjendomsskatPage() {
     title: "Hvad er grundskyld og ejendomsskat?",
     description:
       "Få overblik over grundskyld og ejendomsskat: hvad du betaler som boligejer, hvordan beløbene beregnes og hvordan de indgår i dine ejerudgifter.",
-    path: "/artikler/grundskyld-og-ejendomsskat",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +57,10 @@ export default function GrundskyldOgEjendomsskatPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Hvad er grundskyld og ejendomsskat?
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -191,12 +210,31 @@ export default function GrundskyldOgEjendomsskatPage() {
               skat) og få den samlede månedlige boligudgift.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Brug vores beregner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               for at se, hvordan ejerudgifter inkl. grundskyld og skat
               påvirker din samlede boligøkonomi.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-grundskyld-heading">
+            <h2
+              id="faq-grundskyld-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om grundskyld og ejendomsskat
+            </h2>
+            <div className="space-y-5">
+              {GRUNDSKYLD_EJENDOMSSKAT_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

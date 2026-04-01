@@ -1,18 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+
+const title = "Om os";
+const description =
+  "Boligklarhed er en gratis boligomkostningsberegner til danske boligkøbere. Læs om formålet, hvem vi er til, og hvad du kan beregne.";
+const ogDescription =
+  "Gratis boligomkostningsberegner til danske boligkøbere. Få overblik over engangsomkostninger, månedlig ydelse og rentestest.";
 
 export const metadata: Metadata = {
-  title: "Om os",
-  description:
-    "Boligklarhed er en gratis boligomkostningsberegner til danske boligkøbere. Læs om formålet, hvem vi er til, og hvad du kan beregne.",
+  title,
+  description,
   alternates: { canonical: canonicalUrl("/om-os") },
-  openGraph: {
-    title: "Om os",
-    description:
-      "Gratis boligomkostningsberegner til danske boligkøbere. Få overblik over engangsomkostninger, månedlig ydelse og rentestest.",
-    url: canonicalUrl("/om-os"),
-  },
+  ...socialMetadata({
+    path: "/om-os",
+    title,
+    description: ogDescription,
+  }),
 };
 
 export default function OmOsPage() {
@@ -28,7 +33,7 @@ export default function OmOsPage() {
               Boligklarhed er et uafhængigt online værktøj til dig, der står over
               for et boligkøb og gerne vil forstå, hvad det reelt koster at købe
               og eje en bolig. Vi tilbyder to gratis beregnere: en{" "}
-              <Link href="/beregn" className="text-brand-primary hover:underline">
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline">
                 boligomkostningsberegner
               </Link>
               , der samler engangsudgifter, månedlig ydelse og rentestest for en
@@ -130,7 +135,7 @@ export default function OmOsPage() {
           </Link>
           {" · "}
           <Link
-            href="/beregn"
+            href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
             className="text-body text-brand-primary hover:underline"
           >
             Boligomkostningsberegner

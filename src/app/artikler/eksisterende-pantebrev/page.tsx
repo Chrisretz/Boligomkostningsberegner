@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { EKSISTERENDE_PANTEBREV_FAQ } from "@/lib/artikel-faq/eksisterende-pantebrev";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/eksisterende-pantebrev";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(EKSISTERENDE_PANTEBREV_FAQ);
+
+const title = "Spar på tinglysning: Udnyt eksisterende pantebrev";
+const description =
+  "Spar på tinglysning: overtag eller genbrug eksisterende pantebrev ved boligkøb og refinansiering.";
 
 export const metadata: Metadata = {
-  title: "Spar på tinglysning: Udnyt eksisterende pantebrev",
-  description:
-    "Spar på tinglysning: overtag eller genbrug eksisterende pantebrev ved boligkøb og refinansiering.",
-  alternates: { canonical: canonicalUrl("/artikler/eksisterende-pantebrev") },
-  openGraph: {
-    title: "Spar på tinglysning: Udnyt eksisterende pantebrev",
-    description:
-      "Spar på tinglysning: overtag eller genbrug eksisterende pantebrev ved boligkøb og refinansiering.",
-    url: canonicalUrl("/artikler/eksisterende-pantebrev"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function EksisterendePantebrevPage() {
@@ -21,13 +31,19 @@ export default function EksisterendePantebrevPage() {
     title: "Spar på tinglysning: Udnyt eksisterende pantebrev",
     description:
       "Spar på tinglysning: overtag eller genbrug eksisterende pantebrev ved boligkøb og refinansiering.",
-    path: "/artikler/eksisterende-pantebrev",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +55,10 @@ export default function EksisterendePantebrevPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Sådan sparer du på tinglysning ved at udnytte eksisterende pantebrev
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -181,13 +198,32 @@ export default function EksisterendePantebrevPage() {
               du sparer.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Brug vores beregner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               til at se engangsomkostninger inkl. tinglysning – og brug
               derefter dialog med bank eller realkreditinstitut til at afklare,
               om du kan reducere omkostningerne ved at udnytte eksisterende pant.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-eksisterende-pantebrev-heading">
+            <h2
+              id="faq-eksisterende-pantebrev-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om eksisterende pantebrev
+            </h2>
+            <div className="space-y-5">
+              {EKSISTERENDE_PANTEBREV_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

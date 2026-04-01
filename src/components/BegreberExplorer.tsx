@@ -210,7 +210,7 @@ export function BegreberExplorer() {
                         <details className="group rounded-md border border-border bg-brand-background overflow-hidden">
                           <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2 text-left hover:bg-border/20 transition-colors">
                             <span className="text-small font-medium text-text-primary">
-                              Den lange forklaring
+                              Uddybning: {b.term}
                             </span>
                             <span className="text-text-muted font-medium tabular-nums group-open:hidden">
                               +

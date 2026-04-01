@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
 import { ArticlesSearch } from "@/components/ArticlesSearch";
 
+const title = "Artikler";
+const description =
+  "Lær mere om boligkøb – tinglysning, realkreditlån, ejerskifteforsikring og andre vigtige emner.";
+
 export const metadata: Metadata = {
-  title: "Artikler",
-  description:
-    "Lær mere om boligkøb – tinglysning, realkreditlån, ejerskifteforsikring og andre vigtige emner.",
+  title,
+  description,
   alternates: { canonical: canonicalUrl("/artikler") },
+  ...socialMetadata({
+    path: "/artikler",
+    title,
+    description,
+  }),
 };
 
 export default function ArtiklerPage() {

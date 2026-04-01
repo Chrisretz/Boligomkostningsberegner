@@ -1,4 +1,4 @@
-import { SITE_URL } from "./site";
+import { PATH_BOLIGOMKOSTNINGER_BEREGNER, SITE_URL } from "./site";
 import { FAQ_ITEMS } from "./faq";
 
 export const organizationSchema = {
@@ -29,7 +29,10 @@ export const websiteSchema = {
   inLanguage: "da-DK",
   potentialAction: {
     "@type": "SearchAction",
-    target: { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/beregn` },
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${SITE_URL}${PATH_BOLIGOMKOSTNINGER_BEREGNER}`,
+    },
     "query-input": "required name=search_term_string",
   },
 } as const;
@@ -38,7 +41,7 @@ export const softwareApplicationSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: "Boligomkostningsberegner",
-  url: `${SITE_URL}/beregn`,
+  url: `${SITE_URL}${PATH_BOLIGOMKOSTNINGER_BEREGNER}`,
   description:
     "Beregn engangsomkostninger, månedlige udgifter og rentestest ved boligkøb. Inkluderer tinglysning, vedligehold og ejerudgifter.",
   applicationCategory: "FinanceApplication",
@@ -63,19 +66,37 @@ export const faqSchema = {
   })),
 };
 
+/** FAQPage JSON-LD til artikler med synlig FAQ-sektion. */
+export function getFaqPageSchema(
+  items: readonly { question: string; answer: string }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  } as const;
+}
+
 /** Article JSON-LD for artikelsider. Bruges til SEO og mulige rich results. */
 export function getArticleSchema({
   title,
   description,
   path,
-  datePublished = "2024-06-01",
+  datePublished,
   dateModified,
 }: {
   title: string;
   description: string;
   path: string;
-  datePublished?: string;
-  dateModified?: string;
+  datePublished: string;
+  dateModified: string;
 }) {
   const url = `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
   return {
@@ -86,7 +107,7 @@ export function getArticleSchema({
     url,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     datePublished,
-    dateModified: dateModified ?? datePublished,
+    dateModified,
     author: {
       "@type": "Organization",
       name: "Boligklarhed",

@@ -1,3 +1,5 @@
+import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+
 /**
  * Fælles data for beregnere – bruges af /beregnere-siden og Topbar-dropdown.
  */
@@ -6,7 +8,7 @@ export const calculators = [
   {
     id: "boligomkostninger",
     slug: "boligomkostninger",
-    href: "/beregn",
+    href: PATH_BOLIGOMKOSTNINGER_BEREGNER,
     title: "Boligomkostningsberegner",
     description:
       "Beregn engangsomkostninger, månedlig ydelse og rentestest. Indtast købspris, udbetaling, lån og ejerudgifter.",

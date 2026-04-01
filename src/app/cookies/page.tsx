@@ -2,12 +2,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CookieSettings } from "@/components/CookieSettings";
 import { canonicalUrl } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+
+const title = "Cookies";
+const description =
+  "Cookiepolitik for Boligklarhed: Få overblik over nødvendige cookies og statistikcookies, og se hvordan du kan ændre dine cookie-indstillinger.";
 
 export const metadata: Metadata = {
-  title: "Cookies",
-  description:
-    "Cookiepolitik for Boligklarhed: Få overblik over nødvendige cookies og statistikcookies, og se hvordan du kan ændre dine cookie-indstillinger.",
+  title,
+  description,
   alternates: { canonical: canonicalUrl("/cookies") },
+  ...socialMetadata({
+    path: "/cookies",
+    title,
+    description,
+  }),
 };
 
 export default function CookiesPage() {

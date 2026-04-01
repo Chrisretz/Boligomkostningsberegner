@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { EJERUDGIFTER_FAQ } from "@/lib/artikel-faq/ejerudgifter";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/ejerudgifter";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(EJERUDGIFTER_FAQ);
+
+const title = "Hvad er ejerudgifter?";
+const description =
+  "Ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter som boligejer.";
 
 export const metadata: Metadata = {
-  title: "Hvad er ejerudgifter?",
-  description:
-    "Ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter som boligejer.",
-  alternates: { canonical: canonicalUrl("/artikler/ejerudgifter") },
-  openGraph: {
-    title: "Hvad er ejerudgifter?",
-    description:
-      "Ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter som boligejer.",
-    url: canonicalUrl("/artikler/ejerudgifter"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function EjerudgifterPage() {
@@ -21,13 +31,19 @@ export default function EjerudgifterPage() {
     title: "Hvad er ejerudgifter?",
     description:
       "Ejerudgifter: grundskyld, ejendomsskat, forsikring, vand, varme og fællesudgifter som boligejer.",
-    path: "/artikler/ejerudgifter",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +55,10 @@ export default function EjerudgifterPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Hvad er ejerudgifter?
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -136,12 +153,31 @@ export default function EjerudgifterPage() {
               så du får et samlet billede.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Brug vores beregner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               til at indtaste dine forventede ejerudgifter og se den samlede
               månedlige boligomkostning.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-ejerudgifter-heading">
+            <h2
+              id="faq-ejerudgifter-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om ejerudgifter
+            </h2>
+            <div className="space-y-5">
+              {EJERUDGIFTER_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

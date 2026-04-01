@@ -13,6 +13,7 @@ import {
 } from "@/lib/loanCapacityConstants";
 import { bucketAnnualIncome } from "@/lib/leadBuckets";
 import { trackLoanLeadSubmit } from "@/lib/track";
+import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
 
 export type LoanCapacityResultsGateProps = {
   snapshotKey: string;
@@ -315,7 +316,7 @@ export function LoanCapacityResultsGate({
                 Købspris-estimatet antager, at du låner op til 80 % og lægger
                 mindst 20 % i udbetaling. Brug{" "}
                 <Link
-                  href="/beregn"
+                  href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
                   className="text-brand-primary hover:underline"
                 >
                   boligomkostningsberegneren

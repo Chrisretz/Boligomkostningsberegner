@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { BOLIGKOEB_FOERSTE_GANG_FAQ } from "@/lib/artikel-faq/boligkoeb-foerste-gang";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/boligkoeb-foerste-gang";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(BOLIGKOEB_FOERSTE_GANG_FAQ);
+
+const title = "Boligkøb første gang: Sådan gør du";
+const description =
+  "Boligkøb første gang: udbetaling, omkostningsberegner, tinglysning og forsikring – guide til trygt køb.";
 
 export const metadata: Metadata = {
-  title: "Boligkøb første gang: Sådan gør du",
-  description:
-    "Boligkøb første gang: udbetaling, omkostningsberegner, tinglysning og forsikring – guide til trygt køb.",
-  alternates: { canonical: canonicalUrl("/artikler/boligkoeb-foerste-gang") },
-  openGraph: {
-    title: "Boligkøb første gang: Sådan gør du",
-    description:
-      "Boligkøb første gang: udbetaling, omkostningsberegner, tinglysning og forsikring – guide til trygt køb.",
-    url: canonicalUrl("/artikler/boligkoeb-foerste-gang"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function BoligkoebFoersteGangPage() {
@@ -21,13 +31,19 @@ export default function BoligkoebFoersteGangPage() {
     title: "Boligkøb første gang: Sådan gør du",
     description:
       "Boligkøb første gang: udbetaling, omkostningsberegner, tinglysning og forsikring – guide til trygt køb.",
-    path: "/artikler/boligkoeb-foerste-gang",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +55,10 @@ export default function BoligkoebFoersteGangPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Boligkøb første gang: Sådan gør du
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -95,8 +112,8 @@ export default function BoligkoebFoersteGangPage() {
               så ved du, hvilket prisniveau der passer til din økonomi.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Prøv vores boligomkostningsberegner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               for at se engangsomkostninger og månedlig total.
             </p>
@@ -157,6 +174,25 @@ export default function BoligkoebFoersteGangPage() {
               boligomkostningsberegneren, så du har både tal og viden med, når
               du køber bolig første gang.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-boligkoeb-foerste-gang-heading">
+            <h2
+              id="faq-boligkoeb-foerste-gang-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om boligkøb første gang
+            </h2>
+            <div className="space-y-5">
+              {BOLIGKOEB_FOERSTE_GANG_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

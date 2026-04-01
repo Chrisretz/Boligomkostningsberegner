@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+
+const title = "Ansvarsfraskrivelse";
+const description =
+  "Ansvarsfraskrivelse for Boligklarhed: Beregningerne i boligomkostningsberegneren er vejledende og erstatter ikke finansiel eller juridisk rådgivning.";
 
 export const metadata: Metadata = {
-  title: "Ansvarsfraskrivelse",
-  description:
-    "Ansvarsfraskrivelse for Boligklarhed: Beregningerne i boligomkostningsberegneren er vejledende og erstatter ikke finansiel eller juridisk rådgivning.",
+  title,
+  description,
   alternates: { canonical: canonicalUrl("/disclaimer") },
+  ...socialMetadata({
+    path: "/disclaimer",
+    title,
+    description,
+  }),
 };
 
 export default function DisclaimerPage() {
@@ -119,7 +128,7 @@ export default function DisclaimerPage() {
 
         <p className="mt-8">
           <Link
-            href="/beregn"
+            href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
             className="text-body text-brand-primary hover:underline"
           >
             Gå til beregneren

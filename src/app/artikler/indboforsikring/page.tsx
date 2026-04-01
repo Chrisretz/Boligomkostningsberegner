@@ -1,19 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { INDBOFORSIKRING_FAQ } from "@/lib/artikel-faq/indboforsikring";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/indboforsikring";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(INDBOFORSIKRING_FAQ);
+
+const title = "Hvad er en indboforsikring?";
+const description =
+  "Få overblik over indboforsikring: hvad den dækker, hvorfor boligejere bør have den og hvordan den indgår i dine ejerudgifter og boligomkostninger.";
+const ogDescription =
+  "Indboforsikring dækker indbo, brand, vandskade og mere. Læs hvad den koster og hvorfor den er en del af dine ejerudgifter.";
 
 export const metadata: Metadata = {
-  title: "Hvad er en indboforsikring?",
-  description:
-    "Få overblik over indboforsikring: hvad den dækker, hvorfor boligejere bør have den og hvordan den indgår i dine ejerudgifter og boligomkostninger.",
-  alternates: { canonical: canonicalUrl("/artikler/indboforsikring") },
-  openGraph: {
-    title: "Hvad er en indboforsikring?",
-    description:
-      "Indboforsikring dækker indbo, brand, vandskade og mere. Læs hvad den koster og hvorfor den er en del af dine ejerudgifter.",
-    url: canonicalUrl("/artikler/indboforsikring"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description: ogDescription,
+  }),
 };
 
 export default function IndboforsikringPage() {
@@ -21,13 +33,19 @@ export default function IndboforsikringPage() {
     title: "Hvad er en indboforsikring?",
     description:
       "Få overblik over indboforsikring: hvad den dækker, hvorfor boligejere bør have den og hvordan den indgår i dine ejerudgifter og boligomkostninger.",
-    path: "/artikler/indboforsikring",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +57,10 @@ export default function IndboforsikringPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Hvad er en indboforsikring?
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -171,12 +190,31 @@ export default function IndboforsikringPage() {
               den samlede månedlige boligudgift.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Brug vores beregner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               for at se, hvordan ejerudgifter inkl. forsikring påvirker din
               samlede boligøkonomi.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-indboforsikring-heading">
+            <h2
+              id="faq-indboforsikring-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om indboforsikring
+            </h2>
+            <div className="space-y-5">
+              {INDBOFORSIKRING_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { VEDLIGEHOLD_FAQ } from "@/lib/artikel-faq/vedligehold";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/vedligehold";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(VEDLIGEHOLD_FAQ);
+
+const title = "Vedligehold af bolig: Hvor meget skal jeg sætte af?";
+const description =
+  "Vedligehold af bolig: hvor meget sætte af om året? Reserve, typiske poster og boligomkostninger.";
 
 export const metadata: Metadata = {
-  title: "Vedligehold af bolig: Hvor meget skal jeg sætte af?",
-  description:
-    "Vedligehold af bolig: hvor meget sætte af om året? Reserve, typiske poster og boligomkostninger.",
-  alternates: { canonical: canonicalUrl("/artikler/vedligehold") },
-  openGraph: {
-    title: "Vedligehold af bolig: Hvor meget skal jeg sætte af?",
-    description:
-      "Vedligehold af bolig: hvor meget sætte af om året? Reserve, typiske poster og boligomkostninger.",
-    url: canonicalUrl("/artikler/vedligehold"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function VedligeholdPage() {
@@ -21,13 +31,19 @@ export default function VedligeholdPage() {
     title: "Vedligehold af bolig: Hvor meget skal jeg sætte af?",
     description:
       "Vedligehold af bolig: hvor meget sætte af om året? Reserve, typiske poster og boligomkostninger.",
-    path: "/artikler/vedligehold",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +55,10 @@ export default function VedligeholdPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Vedligehold af bolig: Hvor meget skal jeg sætte af?
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -171,12 +188,31 @@ export default function VedligeholdPage() {
               samlede månedlige udgift inkl. vedligehold.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Brug vores beregner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               til at se dine reelle boligomkostninger – inkl. vedligehold – for
               hus eller lejlighed.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-vedligehold-heading">
+            <h2
+              id="faq-vedligehold-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om vedligehold af bolig
+            </h2>
+            <div className="space-y-5">
+              {VEDLIGEHOLD_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

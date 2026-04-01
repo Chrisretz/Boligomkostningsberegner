@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { EJERLEJLIGHED_FAQ } from "@/lib/artikel-faq/ejerlejlighed";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/ejerlejlighed";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(EJERLEJLIGHED_FAQ);
+
+const title = "Hvad er en ejerlejlighed?";
+const description =
+  "Ejerlejlighed: ejerskab, fællesudgifter og omkostninger. Sådan adskiller det sig fra hus og andelsbolig.";
 
 export const metadata: Metadata = {
-  title: "Hvad er en ejerlejlighed?",
-  description:
-    "Ejerlejlighed: ejerskab, fællesudgifter og omkostninger. Sådan adskiller det sig fra hus og andelsbolig.",
-  alternates: { canonical: canonicalUrl("/artikler/ejerlejlighed") },
-  openGraph: {
-    title: "Hvad er en ejerlejlighed?",
-    description:
-      "Ejerlejlighed: ejerskab, fællesudgifter og omkostninger. Sådan adskiller det sig fra hus og andelsbolig.",
-    url: canonicalUrl("/artikler/ejerlejlighed"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description,
+  }),
 };
 
 export default function EjerlejlighedPage() {
@@ -21,13 +31,19 @@ export default function EjerlejlighedPage() {
     title: "Hvad er en ejerlejlighed?",
     description:
       "Ejerlejlighed: ejerskab, fællesudgifter og omkostninger. Sådan adskiller det sig fra hus og andelsbolig.",
-    path: "/artikler/ejerlejlighed",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +55,10 @@ export default function EjerlejlighedPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Hvad er en ejerlejlighed?
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -132,12 +149,31 @@ export default function EjerlejlighedPage() {
               så vedligehold beregnes med den rigtige sats.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Brug vores beregner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               og vælg boligtypen ejerlejlighed for at få et overblik over dine
               reelle boligomkostninger.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-ejerlejlighed-heading">
+            <h2
+              id="faq-ejerlejlighed-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om ejerlejlighed
+            </h2>
+            <div className="space-y-5">
+              {EJERLEJLIGHED_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

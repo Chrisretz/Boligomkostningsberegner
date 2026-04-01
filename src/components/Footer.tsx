@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
 
 export function Footer() {
   return (
@@ -57,7 +58,7 @@ export function Footer() {
             </div>
             <nav className="space-y-2">
               <Link
-                href="/beregn"
+                href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
                 className="block text-body text-white/75 hover:text-white transition-colors"
               >
                 Boligomkostningsberegner

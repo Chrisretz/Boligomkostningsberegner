@@ -1,19 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalUrl } from "@/lib/site";
-import { getArticleSchema } from "@/lib/structured-data";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+import { getArticleDates } from "@/lib/article-dates";
+import { HVAD_KAN_JEG_KOEBE_FAQ } from "@/lib/artikel-faq/hvad-kan-jeg-koebe-bolig-for";
+import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
+import { ArticleMeta } from "@/components/ArticleMeta";
+
+const ARTICLE_PATH = "/artikler/hvad-kan-jeg-koebe-bolig-for";
+const dates = getArticleDates(ARTICLE_PATH);
+const faqSchema = getFaqPageSchema(HVAD_KAN_JEG_KOEBE_FAQ);
+
+const title = "Hvad kan jeg købe bolig for?";
+const description =
+  "Få overblik over hvordan du finder ud af, hvor meget bolig du har råd til. Rådighedsbeløb, gældsfaktor, udbetaling og den reelle månedlige boligudgift.";
+const ogDescription =
+  "Sådan finder du ud af, hvor meget bolig du har råd til – rådighedsbeløb, gældsfaktor og den reelle månedlige udgift.";
 
 export const metadata: Metadata = {
-  title: "Hvad kan jeg købe bolig for?",
-  description:
-    "Få overblik over hvordan du finder ud af, hvor meget bolig du har råd til. Rådighedsbeløb, gældsfaktor, udbetaling og den reelle månedlige boligudgift.",
-  alternates: { canonical: canonicalUrl("/artikler/hvad-kan-jeg-koebe-bolig-for") },
-  openGraph: {
-    title: "Hvad kan jeg købe bolig for?",
-    description:
-      "Sådan finder du ud af, hvor meget bolig du har råd til – rådighedsbeløb, gældsfaktor og den reelle månedlige udgift.",
-    url: canonicalUrl("/artikler/hvad-kan-jeg-koebe-bolig-for"),
-  },
+  title,
+  description,
+  alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
+  ...socialMetadata({
+    path: ARTICLE_PATH,
+    title,
+    description: ogDescription,
+  }),
 };
 
 export default function HvadKanJegKoebeBoligForPage() {
@@ -21,13 +33,19 @@ export default function HvadKanJegKoebeBoligForPage() {
     title: "Hvad kan jeg købe bolig for?",
     description:
       "Få overblik over hvordan du finder ud af, hvor meget bolig du har råd til. Rådighedsbeløb, gældsfaktor, udbetaling og den reelle månedlige boligudgift.",
-    path: "/artikler/hvad-kan-jeg-koebe-bolig-for",
+    path: ARTICLE_PATH,
+    datePublished: dates.datePublished,
+    dateModified: dates.dateModified,
   });
   return (
     <main className="min-h-screen py-12 px-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
@@ -39,9 +57,10 @@ export default function HvadKanJegKoebeBoligForPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-8">
+        <h1 className="text-h1 text-text-primary mb-3">
           Hvad kan jeg købe bolig for?
         </h1>
+        <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -147,12 +166,31 @@ export default function HvadKanJegKoebeBoligForPage() {
               rentestigninger), er et godt bud på, hvad du kan købe bolig for.
             </p>
             <p>
-              <Link href="/beregn" className="text-brand-primary hover:underline font-medium">
-                Brug vores boligomkostningsberegner her
+              <Link href={PATH_BOLIGOMKOSTNINGER_BEREGNER} className="text-brand-primary hover:underline font-medium">
+                Beregn boligomkostninger
               </Link>{" "}
               for at teste forskellige scenarier og få et overblik over
               engangsomkostninger og månedlig total.
             </p>
+          </section>
+
+          <section aria-labelledby="faq-hvad-kan-jeg-koebe-heading">
+            <h2
+              id="faq-hvad-kan-jeg-koebe-heading"
+              className="text-h3 text-text-primary mb-4"
+            >
+              Ofte stillede spørgsmål om, hvad du kan købe bolig for
+            </h2>
+            <div className="space-y-5">
+              {HVAD_KAN_JEG_KOEBE_FAQ.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-body font-semibold text-text-primary mb-2">
+                    {item.question}
+                  </h3>
+                  <p className="text-body text-text-secondary">{item.answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section>

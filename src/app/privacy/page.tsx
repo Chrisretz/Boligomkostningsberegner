@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalUrl } from "@/lib/site";
+import { socialMetadata } from "@/lib/social-metadata";
+
+const title = "Privatlivspolitik";
+const description =
+  "Privatlivspolitik for Boligklarhed: Læs hvordan vi behandler personoplysninger og cookies, når du bruger boligomkostningsberegneren på boligklarhed.dk.";
 
 export const metadata: Metadata = {
-  title: "Privatlivspolitik",
-  description:
-    "Privatlivspolitik for Boligklarhed: Læs hvordan vi behandler personoplysninger og cookies, når du bruger boligomkostningsberegneren på boligklarhed.dk.",
+  title,
+  description,
   alternates: { canonical: canonicalUrl("/privacy") },
+  ...socialMetadata({
+    path: "/privacy",
+    title,
+    description,
+  }),
 };
 
 export default function PrivacyPage() {
