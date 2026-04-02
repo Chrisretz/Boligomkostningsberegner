@@ -1,9 +1,14 @@
 import type { MetadataRoute } from "next";
-import { PATH_BOLIGOMKOSTNINGER_BEREGNER, SITE_URL } from "@/lib/site";
+import {
+  PATH_BOLIGLAAN_BEREGNER,
+  PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  SITE_URL,
+} from "@/lib/site";
 
 export const SITEMAP_STATIC_PATHS = [
   "",
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  PATH_BOLIGLAAN_BEREGNER,
   "/beregnere",
   "/hvad-kan-jeg-koebe-bolig-for",
   "/artikler",
@@ -42,7 +47,9 @@ export function getSitemapRows(): SitemapRow[] {
     url: `${SITE_URL}${path}`,
     lastModified,
     changeFrequency:
-      path === "" || path === PATH_BOLIGOMKOSTNINGER_BEREGNER
+      path === "" ||
+      path === PATH_BOLIGOMKOSTNINGER_BEREGNER ||
+      path === PATH_BOLIGLAAN_BEREGNER
         ? ("weekly" as const)
         : ("monthly" as const),
     priority:
@@ -50,7 +57,9 @@ export function getSitemapRows(): SitemapRow[] {
         ? 1
         : path === PATH_BOLIGOMKOSTNINGER_BEREGNER
           ? 0.9
-          : 0.7,
+          : path === PATH_BOLIGLAAN_BEREGNER
+            ? 0.85
+            : 0.7,
   }));
 }
 

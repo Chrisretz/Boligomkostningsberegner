@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import { LabelWithTooltip } from "@/components/LabelWithTooltip";
 import { LoanCapacityResultsGate } from "@/components/LoanCapacityResultsGate";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import { GEARING_DEFAULT } from "@/lib/loanCapacityConstants";
+import { CALCULATION_UI_DELAY_MS } from "@/lib/calculationUiDelay";
 import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
 
 const INCOME_SLIDER_MIN = 200_000;
 const INCOME_SLIDER_MAX = 2_500_000;
 const INCOME_SLIDER_STEP = 25_000;
+
+type ResultPhase = "idle" | "calculating" | "ready";
 
 function formatKr(val: number): string {
   return val.toLocaleString("da-DK");
@@ -25,7 +28,7 @@ export default function HvadKanJegKoebeBoligForPage() {
   const [annualIncome, setAnnualIncome] = useState(600_000);
   const [monthlyIncome, setMonthlyIncome] = useState(50_000);
   const [existingDebt, setExistingDebt] = useState(0);
-  const [hasCalculated, setHasCalculated] = useState(false);
+  const [resultPhase, setResultPhase] = useState<ResultPhase>("idle");
   const resultRef = useRef<HTMLDivElement>(null);
 
   const annualFromInput =
@@ -39,11 +42,19 @@ export default function HvadKanJegKoebeBoligForPage() {
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    setHasCalculated(true);
-    setTimeout(() => {
-      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
+    setResultPhase("calculating");
+    window.setTimeout(() => {
+      setResultPhase("ready");
+    }, CALCULATION_UI_DELAY_MS);
   }, []);
+
+  useEffect(() => {
+    if (resultPhase !== "ready") return;
+    const id = window.setTimeout(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+    return () => window.clearTimeout(id);
+  }, [resultPhase]);
 
   const syncFromAnnual = (v: number) => {
     setAnnualIncome(v);
@@ -245,26 +256,53 @@ export default function HvadKanJegKoebeBoligForPage() {
             </div>
             <button
               type="submit"
-              className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
+              disabled={resultPhase === "calculating"}
+              aria-busy={resultPhase === "calculating"}
+              className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation disabled:opacity-70 disabled:cursor-wait"
             >
-              Beregn lånerum
+              {resultPhase === "calculating" ? "Beregner…" : "Beregn lånerum"}
             </button>
           </form>
         </section>
 
-        {hasCalculated && (
-          <div ref={resultRef} className="mt-16">
-            <h2 className="text-h2 text-text-primary mb-6">Dit lånerum</h2>
-            <LoanCapacityResultsGate
-              snapshotKey={`${annualFromInput}:${existingDebt}:${inputMode}`}
-              formatKr={formatKr}
-              annualFromInput={annualFromInput}
-              existingDebt={existingDebt}
-              inputMode={inputMode}
-              maxLoanCapacityDefault={maxLoanCapacityDefault}
-              maxLoanDefault={maxLoanDefault}
-              estimatedPurchaseDefault={estimatedPurchaseDefault}
-            />
+        {(resultPhase === "calculating" || resultPhase === "ready") && (
+          <div
+            ref={resultRef}
+            className="mt-12 md:mt-16 scroll-mt-24"
+            aria-live="polite"
+          >
+            {resultPhase === "calculating" && (
+              <div className="max-w-2xl mx-auto flex flex-col items-center justify-center rounded-xl border border-border bg-white py-14 px-6 shadow-soft">
+                <div
+                  className="h-12 w-12 rounded-full border-[3px] border-brand-primary border-t-transparent animate-spin mb-5"
+                  aria-hidden
+                />
+                <p className="text-body font-semibold text-text-primary text-center">
+                  Beregner dit lånerum…
+                </p>
+                <p className="text-small text-text-muted text-center mt-1">
+                  Vi sammenholder indtægt, gearing og gæld
+                </p>
+              </div>
+            )}
+            {resultPhase === "ready" && (
+              <>
+                <h2 className="text-h2 text-text-primary mb-6 text-center md:text-left">
+                  Dit lånerum
+                </h2>
+                <LoanCapacityResultsGate
+                  key={`${annualFromInput}:${existingDebt}:${inputMode}`}
+                  snapshotKey={`${annualFromInput}:${existingDebt}:${inputMode}`}
+                  formatKr={formatKr}
+                  annualFromInput={annualFromInput}
+                  existingDebt={existingDebt}
+                  inputMode={inputMode}
+                  maxLoanCapacityDefault={maxLoanCapacityDefault}
+                  maxLoanDefault={maxLoanDefault}
+                  estimatedPurchaseDefault={estimatedPurchaseDefault}
+                />
+              </>
+            )}
           </div>
         )}
 

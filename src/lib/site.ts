@@ -12,6 +12,9 @@ export const PATH_BOLIGOMKOSTNINGER_BEREGNER =
 export const PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR =
   "/hvad-kan-jeg-koebe-bolig-for" as const;
 
+/** SEO-landing for søgeordet «boliglån beregner» – guide + CTA til boligomkostningsberegneren. */
+export const PATH_BOLIGLAAN_BEREGNER = "/boliglaan-beregner" as const;
+
 export function canonicalUrl(path: string): string {
   const p = path.startsWith("/") ? path : `/${path}`;
   return `${SITE_URL}${p}`;

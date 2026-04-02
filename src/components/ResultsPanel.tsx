@@ -18,7 +18,34 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
   );
 
   return (
-    <div className="grid items-stretch grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-8">
+    <div className="mb-8">
+      <div
+        className="loan-capacity-hero-reveal rounded-xl border border-border bg-white shadow-soft px-5 py-8 sm:px-8 sm:py-9 md:px-10 text-center mb-8 md:mb-10"
+        role="region"
+        aria-label="Overblik over boligomkostninger"
+      >
+        <p className="text-lg sm:text-xl font-semibold text-brand-primary mb-2">
+          Dit samlede boligbudget
+        </p>
+        <p className="text-small text-text-muted mb-1">
+          Ca. pr. måned (ydelse, ejerudgifter og løbende poster)
+        </p>
+        <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-text-primary tracking-tight tabular-nums break-words leading-tight">
+          {formatKr(base.monthlyTotalDKK)} kr
+        </p>
+        <p className="text-body text-text-secondary mt-5 max-w-xl mx-auto">
+          Kontantbehov ved køb:{" "}
+          <span className="font-semibold text-text-primary">
+            {formatKr(output.cashNeededAtCloseDKK)} kr
+          </span>
+        </p>
+        <p className="text-small text-text-muted mt-3 max-w-lg mx-auto leading-relaxed">
+          Ved +1&nbsp;% rente: ca. {formatKr(plus1.monthlyTotalDKK)} kr/md · Ved
+          +2&nbsp;%: ca. {formatKr(plus2.monthlyTotalDKK)} kr/md
+        </p>
+      </div>
+
+      <div className="grid items-stretch grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
       {/* Etableringsomkostninger – hvad du skal have op af lommen ved køb */}
       <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
         <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-4 break-words">
@@ -42,9 +69,13 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
             <span className="min-w-0">Bank & gebyrer</span>
             <span className="shrink-0">{formatKr(output.upfrontOtherDKK)}</span>
           </li>
-          <li className="flex justify-between gap-4 pt-3 mt-3 border-t border-border font-semibold text-text-primary">
-            <span className="min-w-0">Samlet kontantbehov ved køb</span>
-            <span className="shrink-0">{formatKr(output.cashNeededAtCloseDKK)}</span>
+          <li className="flex justify-between gap-4 items-baseline pt-4 mt-4 border-t border-border">
+            <span className="min-w-0 text-body font-semibold text-text-primary">
+              Samlet kontantbehov ved køb
+            </span>
+            <span className="shrink-0 text-xl sm:text-2xl font-bold text-text-primary tabular-nums">
+              {formatKr(output.cashNeededAtCloseDKK)} kr
+            </span>
           </li>
         </ul>
       </div>
@@ -92,9 +123,13 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
               <span className="shrink-0">{formatKr(output.breakdownMonthly.otherMonthlyDKK)}</span>
             </li>
           )}
-          <li className="flex justify-between gap-4 pt-3 mt-3 border-t border-border font-semibold text-text-primary text-xl md:text-h3 leading-tight">
-            <span className="min-w-0 break-words">Samlet pr. måned</span>
-            <span className="shrink-0">{formatKr(base.monthlyTotalDKK)}</span>
+          <li className="flex justify-between gap-4 items-baseline pt-4 mt-4 border-t border-border">
+            <span className="min-w-0 break-words text-body font-semibold text-text-primary">
+              Samlet pr. måned
+            </span>
+            <span className="shrink-0 text-xl sm:text-2xl font-bold text-text-primary tabular-nums">
+              {formatKr(base.monthlyTotalDKK)} kr
+            </span>
           </li>
         </ul>
       </div>
@@ -104,21 +139,22 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
         <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-4 break-words">
           Rentestest
         </h3>
-        <ul className="space-y-3 text-body text-text-secondary">
-          <li className="flex justify-between gap-6">
-            <span className="min-w-0">+1% rente</span>
-            <span className="font-semibold text-text-primary shrink-0 whitespace-nowrap">
-              {formatKr(plus1.monthlyTotalDKK)} pr md.
+        <ul className="space-y-4 text-body text-text-secondary">
+          <li className="flex justify-between gap-4 items-baseline">
+            <span className="min-w-0 font-medium text-text-primary">+1% rente</span>
+            <span className="text-lg sm:text-xl font-bold text-text-primary shrink-0 whitespace-nowrap tabular-nums">
+              {formatKr(plus1.monthlyTotalDKK)} kr/md
             </span>
           </li>
-          <li className="flex justify-between gap-6">
-            <span className="min-w-0">+2% rente</span>
-            <span className="font-semibold text-text-primary shrink-0 whitespace-nowrap">
-              {formatKr(plus2.monthlyTotalDKK)} pr md.
+          <li className="flex justify-between gap-4 items-baseline">
+            <span className="min-w-0 font-medium text-text-primary">+2% rente</span>
+            <span className="text-lg sm:text-xl font-bold text-text-primary shrink-0 whitespace-nowrap tabular-nums">
+              {formatKr(plus2.monthlyTotalDKK)} kr/md
             </span>
           </li>
         </ul>
       </div>
+    </div>
     </div>
   );
 }

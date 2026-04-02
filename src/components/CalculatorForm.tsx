@@ -11,6 +11,7 @@ interface CalculatorFormProps {
   onSubmit: (input: CalcInput) => void;
   validationErrors?: ValidationErrors;
   firstErrorId?: string;
+  isCalculating?: boolean;
 }
 
 const TERM_OPTIONS = Array.from({ length: 40 }, (_, i) => i + 1);
@@ -63,6 +64,7 @@ export function CalculatorForm({
   onSubmit,
   validationErrors = {},
   firstErrorId,
+  isCalculating = false,
 }: CalculatorFormProps) {
   const [purchasePriceDKK, setPurchasePriceDKK] = useState(5_000_000);
   const [downPaymentDKK, setDownPaymentDKK] = useState(250_000);
@@ -951,9 +953,11 @@ export function CalculatorForm({
       <div className="flex justify-center pt-2" id={firstErrorId}>
         <button
           type="submit"
-          className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-opacity touch-manipulation"
+          disabled={isCalculating}
+          aria-busy={isCalculating}
+          className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-opacity touch-manipulation disabled:opacity-70 disabled:cursor-wait"
         >
-          Beregn omkostninger
+          {isCalculating ? "Beregner…" : "Beregn omkostninger"}
         </button>
       </div>
     </form>

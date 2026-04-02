@@ -4,7 +4,7 @@ import { socialMetadata } from "@/lib/social-metadata";
 
 const title = "Beregn boligomkostninger";
 const description =
-  "Beregn hvad det reelt koster at købe og eje din bolig. Engangsomkostninger, månedlig total og stress test.";
+  "Boliglån beregner og boligbudget: beregn ydelse, engangsomkostninger, månedlig total og rentestress. Vejledende tal til boligkøb.";
 
 export const metadata: Metadata = {
   title,

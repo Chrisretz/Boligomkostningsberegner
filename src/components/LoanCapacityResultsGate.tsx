@@ -36,6 +36,8 @@ export function LoanCapacityResultsGate({
   maxLoanDefault,
   estimatedPurchaseDefault,
 }: LoanCapacityResultsGateProps) {
+  const estimatedDownPaymentApprox = Math.round(estimatedPurchaseDefault * 0.2);
+
   const [unlockedSnapshot, setUnlockedSnapshot] = useState<string | null>(null);
   const fullUnlocked =
     unlockedSnapshot !== null && unlockedSnapshot === snapshotKey;
@@ -110,13 +112,30 @@ export function LoanCapacityResultsGate({
 
   return (
     <>
-      <div className="rounded-md border border-border bg-brand-surface p-6 shadow-soft mb-6">
-        <p className="text-body text-text-primary leading-relaxed">
-          <strong>Ved gearing 4</strong> (vejledende) kan du ca. låne{" "}
-          <strong>{formatKr(maxLoanDefault)} kr</strong> til boligen
-          {existingDebt > 0 ? " (efter fradrag af angivet gæld)" : ""}. Med ca.{" "}
-          80&nbsp;% finansiering svarer det til en estimeret købspris på ca.{" "}
-          <strong>{formatKr(estimatedPurchaseDefault)} kr</strong>.
+      <div
+        className="loan-capacity-hero-reveal rounded-xl border border-border bg-white shadow-soft mb-6 px-5 py-9 sm:px-8 sm:py-10 md:px-12 text-center"
+        role="region"
+        aria-label="Beregnet lånerum"
+      >
+        <p className="text-lg sm:text-xl font-semibold text-brand-primary mb-3">
+          Du kan ca. købe bolig for
+        </p>
+        <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight tabular-nums break-words leading-tight">
+          {formatKr(estimatedPurchaseDefault)} kr
+        </p>
+        <p className="text-body text-text-secondary mt-5 max-w-xl mx-auto leading-relaxed">
+          Ved gearing {GEARING_DEFAULT} (vejledende) kan du ca. låne{" "}
+          <span className="font-semibold text-text-primary">
+            {formatKr(maxLoanDefault)} kr
+          </span>{" "}
+          til boligen
+          {existingDebt > 0 ? " (efter fradrag af angivet gæld)" : ""}.
+        </p>
+        <p className="text-small text-text-muted mt-4 max-w-lg mx-auto leading-relaxed">
+          Med ca. 80&nbsp;% finansiering svarer det til ca.{" "}
+          {formatKr(estimatedDownPaymentApprox)} kr i egen udbetaling (ca. 20&nbsp;%
+          af købsprisen). Indikativ beregning – kontakt en rådgiver for dit
+          konkrete lånerum.
         </p>
       </div>
 
