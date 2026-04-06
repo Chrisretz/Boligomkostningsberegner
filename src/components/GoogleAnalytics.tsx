@@ -3,8 +3,9 @@
 import Script from "next/script";
 import { useEffect } from "react";
 
+import { COOKIE_CONSENT_KEY } from "@/lib/cookieConsent";
+
 const GA_MEASUREMENT_ID = "G-JMLETWTJ28";
-const COOKIE_CONSENT_KEY = "cookie_consent";
 
 function applyConsent(granted: boolean) {
   if (typeof window === "undefined" || typeof window.gtag !== "function") return;

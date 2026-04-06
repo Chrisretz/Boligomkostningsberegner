@@ -1,36 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const COOKIE_CONSENT_KEY = "cookie_consent";
-const COOKIE_CONSENT_TIMESTAMP_KEY = "cookie_consent_timestamp";
-
-function dispatchConsentChange(analytics: boolean) {
-  if (typeof window === "undefined") return;
-  window.dispatchEvent(
-    new CustomEvent("cookie-consent-changed", { detail: { analytics } })
-  );
-}
+import {
+  persistCookieConsent,
+  readCookieConsent,
+  type CookieConsentValue,
+} from "@/lib/cookieConsent";
 
 export function CookieSettings() {
-  const [consent, setConsent] = useState<"accepted" | "rejected" | null>(null);
+  const [consent, setConsent] = useState<CookieConsentValue | null>(null);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const stored = localStorage.getItem(COOKIE_CONSENT_KEY) as
-      | "accepted"
-      | "rejected"
-      | null;
-    setConsent(stored);
+    setConsent(readCookieConsent());
   }, []);
 
-  const handleSave = (value: "accepted" | "rejected") => {
-    const now = new Date().toISOString();
-    localStorage.setItem(COOKIE_CONSENT_KEY, value);
-    localStorage.setItem(COOKIE_CONSENT_TIMESTAMP_KEY, now);
+  const handleSave = (value: CookieConsentValue) => {
+    persistCookieConsent(value);
     setConsent(value);
-    dispatchConsentChange(value === "accepted");
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -50,14 +37,14 @@ export function CookieSettings() {
           onClick={() => handleSave("rejected")}
           className="px-4 py-2 text-body font-medium text-text-primary bg-border rounded-md hover:bg-border-strong"
         >
-          Kun nødvendige
+          Afvis alle
         </button>
         <button
           type="button"
           onClick={() => handleSave("accepted")}
-          className="px-4 py-2 text-body font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover"
+          className="px-4 py-2 text-body font-medium text-white bg-status-success rounded-md hover:opacity-90"
         >
-          Accepter alle
+          Acceptér alle
         </button>
       </div>
       {saved && (
