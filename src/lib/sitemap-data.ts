@@ -15,6 +15,7 @@ export const SITEMAP_STATIC_PATHS = [
   "/artikler/tinglysning",
   "/artikler/ejerskifteforsikring",
   "/artikler/realkreditlan",
+  "/artikler/saadan-vurderer-banken-dit-boliglan",
   "/artikler/sammenligning-af-laanetyper",
   "/artikler/energimaerker-og-boligokonomi",
   "/artikler/vedligehold",
