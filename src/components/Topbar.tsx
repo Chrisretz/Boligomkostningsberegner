@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { articleCategories, getArticlesBySlugs } from "@/lib/articles";
 import { calculators } from "@/lib/calculators";
+import { SiteSearch } from "@/components/SiteSearch";
 
 const navLinks = [
   { href: "/", label: "Forside" },
@@ -163,7 +164,7 @@ export function Topbar() {
   return (
     <header className="border-b border-border bg-brand-surface">
       <div className="container mx-auto py-4 px-4">
-        <div className="flex items-center justify-between md:flex-row md:gap-4">
+        <div className="flex items-center justify-between gap-4 md:flex-row">
           <Link
             href="/"
             className="flex items-center shrink-0"
@@ -180,8 +181,9 @@ export function Topbar() {
             />
           </Link>
 
-          {/* Desktop: inline nav */}
-          <nav className="hidden lg:flex lg:items-center lg:gap-6">
+          {/* Desktop: nav + sitesøgning */}
+          <div className="hidden lg:flex flex-1 items-center justify-end gap-6 min-w-0">
+          <nav className="flex items-center gap-6 shrink-0">
             <Link
               href="/"
               className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary`}
@@ -325,6 +327,8 @@ export function Topbar() {
               <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
             </Link>
           </nav>
+          <SiteSearch className="w-[min(100%,200px)] shrink-0" />
+          </div>
 
           {/* Mobile/tablet: menu button */}
           <div className="flex items-center gap-2 lg:hidden">
@@ -368,6 +372,12 @@ export function Topbar() {
                 <CloseIcon />
                 <span className="text-small font-medium">Luk</span>
               </button>
+            </div>
+            <div className="px-4 pb-4 border-b border-border">
+              <SiteSearch
+                className="w-full"
+                onNavigate={() => setMenuOpen(false)}
+              />
             </div>
             <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain flex flex-col p-4 gap-1">
               <Link

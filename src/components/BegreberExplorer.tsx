@@ -170,7 +170,8 @@ export function BegreberExplorer() {
                   return (
                     <details
                       key={b.id}
-                      className="group rounded-md border border-border bg-brand-surface shadow-soft overflow-hidden"
+                      id={b.id}
+                      className="group rounded-md border border-border bg-brand-surface shadow-soft overflow-hidden scroll-mt-24"
                     >
                       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 text-left hover:bg-border/30 transition-colors">
                         <span className="text-h3 text-text-primary">

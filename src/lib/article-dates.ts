@@ -48,6 +48,10 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
     datePublished: "2026-03-14T10:00:00+01:00",
     dateModified: "2026-04-01T12:00:00+02:00",
   },
+  "/artikler/realkreditlan-beregner": {
+    datePublished: "2026-04-30T10:00:00+02:00",
+    dateModified: "2026-04-30T10:00:00+02:00",
+  },
   "/artikler/sammenligning-af-laanetyper": {
     datePublished: "2026-04-01T14:00:00+02:00",
     dateModified: "2026-04-01T14:00:00+02:00",
@@ -67,6 +71,10 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   "/artikler/vedligehold": {
     datePublished: "2026-03-18T10:00:00+01:00",
     dateModified: "2026-04-01T12:00:00+02:00",
+  },
+  "/artikler/tvangsauktioner": {
+    datePublished: "2026-04-07T10:00:00+02:00",
+    dateModified: "2026-04-07T10:00:00+02:00",
   },
   "/boligbegreber": {
     datePublished: "2026-03-20T10:00:00+01:00",
