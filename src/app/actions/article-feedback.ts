@@ -27,7 +27,7 @@ const feedbackSchema = z.object({
   message: z
     .string()
     .trim()
-    .min(20, "Skriv mindst 20 tegn")
+    .min(1, "Skriv en besked")
     .max(5000, "Beskeden er for lang"),
   articlePath: z
     .string()
