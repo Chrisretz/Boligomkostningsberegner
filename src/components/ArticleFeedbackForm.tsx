@@ -63,7 +63,7 @@ function ArticleFeedbackFormInner({
   return (
     <div className="rounded-lg border border-border bg-white p-6 shadow-soft">
       <h2 className="text-h3 text-text-primary mb-2">
-        Har du et sp�rgsm�l eller en kommentar?
+        Har du et spørgsmål eller en kommentar?
       </h2>
       <p className="text-body text-text-secondary mb-6">
         Skriv til os herunder – vi læser alle henvendelser. Du kan også komme

@@ -71,7 +71,7 @@ function buildArticleFeedbackHtml(params: {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spùrgsmùl fra artikel</title>
+<title>Sp√∏rgsm√•l fra artikel</title>
 </head>
 <body style="margin:0;padding:0;background-color:#F4F7FA;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#F4F7FA;padding:24px 16px;">
@@ -86,7 +86,7 @@ function buildArticleFeedbackHtml(params: {
         <tr>
           <td style="padding:24px;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.6;color:#1F2933;">
             <p style="margin:0 0 20px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#6B7280;">
-              Spùrgsmùl fra artikel
+              Sp√∏rgsm√•l fra artikel
             </p>
             <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#6B7280;">Navn</p>
             <p style="margin:0 0 18px;">${safeName}</p>
@@ -96,7 +96,7 @@ function buildArticleFeedbackHtml(params: {
             </p>
             <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#6B7280;">Artikel</p>
             <p style="margin:0 0 10px;">
-              <a href="${safeUrl}" style="display:inline-block;background-color:#1E3A5F;color:#FFFFFF;text-decoration:none;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;">ùbn artikel</a>
+              <a href="${safeUrl}" style="display:inline-block;background-color:#1E3A5F;color:#FFFFFF;text-decoration:none;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;">√Öbn artikel</a>
             </p>
             <p style="margin:0 0 22px;font-size:13px;word-break:break-all;">
               <a href="${safeUrl}" style="color:#1E40AF;text-decoration:underline;">${safeUrl}</a>
@@ -109,7 +109,7 @@ function buildArticleFeedbackHtml(params: {
         </tr>
       </table>
       <p style="margin:16px 0 0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;font-size:12px;line-height:1.5;color:#9CA3AF;max-width:560px;">
-        Svar ved at bruge &quot;Svar&quot; i din mailklient ù afsenderens adresse er sat som svar til.
+        Svar ved at bruge &quot;Svar&quot; i din mailklient ‚Äì afsenderens adresse er sat som svar til.
       </p>
     </td>
   </tr>
@@ -174,7 +174,7 @@ export async function submitArticleFeedback(
   if (!allowRateLimit(ip)) {
     return {
       ok: false,
-      error: "For mange forsùg fra denne forbindelse. Prùv igen om lidt.",
+      error: "For mange fors√∏g fra denne forbindelse. Pr√∏v igen om lidt.",
     };
   }
 
@@ -184,7 +184,7 @@ export async function submitArticleFeedback(
     return {
       ok: false,
       error:
-        "E-mail kunne ikke sendes (konfiguration). Skriv til os pù info@boligklarhed.dk.",
+        "E-mail kunne ikke sendes (konfiguration). Skriv til os p√• info@boligklarhed.dk.",
     };
   }
 
@@ -210,7 +210,7 @@ export async function submitArticleFeedback(
     from,
     to: [to],
     replyTo: parsed.data.email,
-    subject: `[Boligklarhed] Spùrgsmùl fra artikel ù ${parsed.data.name}`,
+    subject: `[Boligklarhed] Sp√∏rgsm√•l fra artikel ‚Äì ${parsed.data.name}`,
     text: plainText,
     html: buildArticleFeedbackHtml({
       name: parsed.data.name,
@@ -224,7 +224,7 @@ export async function submitArticleFeedback(
     console.error("Resend:", error);
     return {
       ok: false,
-      error: "E-mail kunne ikke sendes. Prùv igen senere.",
+      error: "E-mail kunne ikke sendes. Pr√∏v igen senere.",
     };
   }
 
