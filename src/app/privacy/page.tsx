@@ -55,7 +55,7 @@ export default function PrivacyPage() {
             </p>
             <p>
               På artikelsider kan du udfylde formularen &quot;Har du et spørgsmål
-              til artiklen?&quot;. Vi behandler her navn, e-mail, din besked og
+              eller en kommentar?&quot;. Vi behandler her navn, e-mail, din besked og
               hvilken artikel du skriver fra (URL). Formålet er udelukkende at
               besvare dig. E-mail sendes via tjenesten{" "}
               <a
