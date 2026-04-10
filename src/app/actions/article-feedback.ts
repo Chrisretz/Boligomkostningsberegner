@@ -13,6 +13,9 @@ export type ArticleFeedbackState = {
 
 const articlePathRegex = /^\/artikler\/[a-z0-9-]+$/i;
 
+/** Same wording as the form on article pages (`ArticleFeedbackForm`). */
+const ARTICLE_FEEDBACK_HEADLINE = "Har du et spørgsmål eller en kommentar?";
+
 const feedbackSchema = z.object({
   name: z
     .string()
@@ -65,13 +68,14 @@ function buildArticleFeedbackHtml(params: {
   const mailtoHref = escapeHtml(`mailto:${encodeURIComponent(email)}`);
   const safeUrl = escapeHtml(articleUrl);
   const safeMessage = formatMessageHtml(message);
+  const safeHeadline = escapeHtml(ARTICLE_FEEDBACK_HEADLINE);
 
   return `<!DOCTYPE html>
 <html lang="da">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spørgsmål fra artikel</title>
+<title>${safeHeadline}</title>
 </head>
 <body style="margin:0;padding:0;background-color:#F4F7FA;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#F4F7FA;padding:24px 16px;">
@@ -85,8 +89,8 @@ function buildArticleFeedbackHtml(params: {
         </tr>
         <tr>
           <td style="padding:24px;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.6;color:#1F2933;">
-            <p style="margin:0 0 20px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#6B7280;">
-              Spørgsmål fra artikel
+            <p style="margin:0 0 20px;font-size:15px;font-weight:600;line-height:1.35;color:#1F2933;">
+              ${safeHeadline}
             </p>
             <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#6B7280;">Navn</p>
             <p style="margin:0 0 18px;">${safeName}</p>
@@ -197,6 +201,8 @@ export async function submitArticleFeedback(
   const path = parsed.data.articlePath;
   const fullUrl = `${SITE_URL}${path}`;
   const plainText = [
+    ARTICLE_FEEDBACK_HEADLINE,
+    "",
     `Navn: ${parsed.data.name}`,
     `E-mail: ${parsed.data.email}`,
     `Artikel: ${fullUrl}`,
@@ -210,7 +216,7 @@ export async function submitArticleFeedback(
     from,
     to: [to],
     replyTo: parsed.data.email,
-    subject: `[Boligklarhed] Spørgsmål fra artikel – ${parsed.data.name}`,
+    subject: `[Boligklarhed] ${ARTICLE_FEEDBACK_HEADLINE} – ${parsed.data.name}`,
     text: plainText,
     html: buildArticleFeedbackHtml({
       name: parsed.data.name,
