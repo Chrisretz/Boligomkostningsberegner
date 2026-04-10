@@ -30,14 +30,14 @@ npm run dev
 
 ## Artikel-feedback (e-mail fra artikler)
 
-Nederst på alle undersider under `/artikler/…` vises et skema der sender til **info@boligklarhed.dk** via [Resend](https://resend.com).
+Nederst på alle undersider under `/artikler/…` vises et skema der sender til **<info@boligklarhed.dk>** via [Resend](https://resend.com).
 
 1. Opret konto og API-nøgle hos Resend.
 2. Verificer **boligklarhed.dk** og brug en afsender fra dit domæne, fx `Boligklarhed <kontakt@boligklarhed.dk>`.
 3. Sæt i miljø (se `.env.example`):
 
    - `RESEND_API_KEY`
-   - `ARTICLE_FEEDBACK_TO_EMAIL` (valgfri, standard er info@boligklarhed.dk)
+   - `ARTICLE_FEEDBACK_TO_EMAIL` (valgfri, standard er <info@boligklarhed.dk>)
    - `ARTICLE_FEEDBACK_FROM_EMAIL` (påkrævet i produktion med verificeret domæne)
 
 Uden `RESEND_API_KEY` viser formularen en fejl ved afsendelse. Resends test-afsender `onboarding@resend.dev` kan kun levere til begrænsede modtagere – brug eget domæne til rigtig drift.
