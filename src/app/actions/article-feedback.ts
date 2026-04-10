@@ -39,6 +39,85 @@ const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_MAX = 5;
 const rateByIp = new Map<string, number[]>();
 
+/** Escapes user-controlled strings for HTML body and attributes. */
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function formatMessageHtml(message: string): string {
+  const escaped = escapeHtml(message);
+  return escaped.replace(/\r\n|\r|\n/g, "<br />");
+}
+
+function buildArticleFeedbackHtml(params: {
+  name: string;
+  email: string;
+  articleUrl: string;
+  message: string;
+}): string {
+  const { name, email, articleUrl, message } = params;
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const mailtoHref = escapeHtml(`mailto:${encodeURIComponent(email)}`);
+  const safeUrl = escapeHtml(articleUrl);
+  const safeMessage = formatMessageHtml(message);
+
+  return `<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spùrgsmùl fra artikel</title>
+</head>
+<body style="margin:0;padding:0;background-color:#F4F7FA;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#F4F7FA;padding:24px 16px;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background-color:#FFFFFF;border-radius:10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+        <tr>
+          <td style="background-color:#1E3A5F;color:#FFFFFF;padding:20px 24px;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;font-size:18px;font-weight:600;line-height:1.3;">
+            Boligklarhed
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.6;color:#1F2933;">
+            <p style="margin:0 0 20px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#6B7280;">
+              Spùrgsmùl fra artikel
+            </p>
+            <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#6B7280;">Navn</p>
+            <p style="margin:0 0 18px;">${safeName}</p>
+            <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#6B7280;">E-mail</p>
+            <p style="margin:0 0 18px;">
+              <a href="${mailtoHref}" style="color:#1E3A5F;text-decoration:underline;">${safeEmail}</a>
+            </p>
+            <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#6B7280;">Artikel</p>
+            <p style="margin:0 0 10px;">
+              <a href="${safeUrl}" style="display:inline-block;background-color:#1E3A5F;color:#FFFFFF;text-decoration:none;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;">ùbn artikel</a>
+            </p>
+            <p style="margin:0 0 22px;font-size:13px;word-break:break-all;">
+              <a href="${safeUrl}" style="color:#1E40AF;text-decoration:underline;">${safeUrl}</a>
+            </p>
+            <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#6B7280;">Besked</p>
+            <div style="margin:0;padding:16px 18px;background-color:#F4F7FA;border-left:4px solid #1E3A5F;border-radius:0 8px 8px 0;color:#1F2933;font-size:15px;line-height:1.55;">
+              ${safeMessage}
+            </div>
+          </td>
+        </tr>
+      </table>
+      <p style="margin:16px 0 0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;font-size:12px;line-height:1.5;color:#9CA3AF;max-width:560px;">
+        Svar ved at bruge &quot;Svar&quot; i din mailklient ù afsenderens adresse er sat som svar til.
+      </p>
+    </td>
+  </tr>
+</table>
+</body>
+</html>`;
+}
+
 async function getClientIp(): Promise<string> {
   const h = await headers();
   const xff = h.get("x-forwarded-for");
@@ -95,7 +174,7 @@ export async function submitArticleFeedback(
   if (!allowRateLimit(ip)) {
     return {
       ok: false,
-      error: "For mange fors√∏g fra denne forbindelse. Pr√∏v igen om lidt.",
+      error: "For mange forsùg fra denne forbindelse. Prùv igen om lidt.",
     };
   }
 
@@ -105,7 +184,7 @@ export async function submitArticleFeedback(
     return {
       ok: false,
       error:
-        "E-mail kunne ikke sendes (konfiguration). Skriv til os p√• info@boligklarhed.dk.",
+        "E-mail kunne ikke sendes (konfiguration). Skriv til os pù info@boligklarhed.dk.",
     };
   }
 
@@ -117,28 +196,35 @@ export async function submitArticleFeedback(
 
   const path = parsed.data.articlePath;
   const fullUrl = `${SITE_URL}${path}`;
+  const plainText = [
+    `Navn: ${parsed.data.name}`,
+    `E-mail: ${parsed.data.email}`,
+    `Artikel: ${fullUrl}`,
+    "",
+    "Besked:",
+    parsed.data.message,
+  ].join("\n");
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
     from,
     to: [to],
     replyTo: parsed.data.email,
-    subject: `[Boligklarhed] Sp√∏rgsm√•l fra artikel ‚Äì ${parsed.data.name}`,
-    text: [
-      `Navn: ${parsed.data.name}`,
-      `E-mail: ${parsed.data.email}`,
-      `Artikel: ${fullUrl}`,
-      "",
-      "Besked:",
-      parsed.data.message,
-    ].join("\n"),
+    subject: `[Boligklarhed] Spùrgsmùl fra artikel ù ${parsed.data.name}`,
+    text: plainText,
+    html: buildArticleFeedbackHtml({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      articleUrl: fullUrl,
+      message: parsed.data.message,
+    }),
   });
 
   if (error) {
     console.error("Resend:", error);
     return {
       ok: false,
-      error: "E-mail kunne ikke sendes. Pr√∏v igen senere.",
+      error: "E-mail kunne ikke sendes. Prùv igen senere.",
     };
   }
 
