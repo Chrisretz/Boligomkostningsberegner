@@ -53,6 +53,22 @@ export default function PrivacyPage() {
               at kunne besvare dig. Vi beder dig undgå at sende følsomme
               personoplysninger, medmindre det er strengt nødvendigt.
             </p>
+            <p>
+              På artikelsider kan du udfylde formularen &quot;Har du et spørgsmål
+              til artiklen?&quot;. Vi behandler her navn, e-mail, din besked og
+              hvilken artikel du skriver fra (URL). Formålet er udelukkende at
+              besvare dig. E-mail sendes via tjenesten{" "}
+              <a
+                href="https://resend.com/legal/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                Resend
+              </a>
+              , som fungerer som databehandler. Henvendelsen lagres ikke i en database på
+              hjemmesiden; indholdet findes i den e-mail, der modtages hos os.
+            </p>
           </section>
 
           <section>
@@ -112,8 +128,14 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-h3 text-text-primary">Kontakt</h2>
             <p>
-              Ved spørgsmål til behandlingen af dine data, kontakt os gerne på
-              [indsæt e-mail].
+              Ved spørgsmål til behandlingen af dine data, kontakt os gerne på{" "}
+              <a
+                href="mailto:info@boligklarhed.dk"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                info@boligklarhed.dk
+              </a>
+              .
             </p>
           </section>
 

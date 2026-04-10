@@ -1,0 +1,30 @@
+---
+description: Kør article:new / article:touch når artikler oprettes eller opdateres (publiceret- og opdateret-datoer).
+alwaysApply: true
+---
+
+# Artikel- og begrebsdatoer (Boligklarhed)
+
+Synlige datoer og JSON-LD Article kommer fra `src/lib/article-dates.ts` (`getArticleDates(path)`). Sider kaster fejl, hvis path mangler i filen.
+
+## Når du skal gøre hvad
+
+1. **Ny artikel** (ny `page.tsx` under `src/app/artikler/…`, ny slug, tilføjelse til `articles.ts` / sitemap osv.):  
+   Kør efter ændringerne:  
+   `npm run article:new -- /artikler/<slug>`  
+   Det sætter **både** `datePublished` og `dateModified` til **i dag kl. 12:00** (Europe/Copenhagen).
+
+2. **Eksisterende artikel opdateret** (væsentligt indhold — ikke kun kosmetik):  
+   Kør:  
+   `npm run article:touch -- /artikler/<slug>`  
+   Det opdaterer **kun** `dateModified`.
+
+3. **Sider i `article-dates.ts` der ikke ligger under `/artikler/`** (fx `/boligbegreber`):  
+   Brug samme kommandoer med den **eksakte path-nøgle** som i `getArticleDates`, fx  
+   `npm run article:touch -- /boligbegreber`.
+
+## Path
+
+Stien skal matche den konstant brugt på siden, fx `ARTICLE_PATH = "/artikler/ejerudgifter"`.
+
+Se også `README.md` (afsnit om artikel-datoer) og kommentaren øverst i `src/lib/article-dates.ts`.

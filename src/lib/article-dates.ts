@@ -1,6 +1,15 @@
 /**
  * Publicerings- og seneste opdateringsdato pr. side (ISO 8601).
- * Indhold er primært udarbejdet marts 2026; redaktionelle/SEO-opdateringer 1. april 2026.
+ * Vises i ArticleMeta og i JSON-LD (Article).
+ *
+ * Når du opretter en ny artikel-side: kør `npm run article:new -- /artikler/din-slug`
+ * (sætter datePublished og dateModified til i dag kl. 12:00 Europe/Copenhagen).
+ *
+ * Når du opdaterer indhold på en eksisterende artikel: kør
+ * `npm run article:touch -- /artikler/din-slug` (opdaterer kun dateModified).
+ *
+ * Alternativt kan du redigere tidsstemplerne manuelt her — brug altid den faktiske
+ * publicerings-/redigeringsdato, ikke en tilfældig dato fra en tidligere session.
  */
 export type ArticleDates = {
   datePublished: string;
@@ -22,7 +31,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/ejerudgifter": {
     datePublished: "2026-03-08T10:00:00+01:00",
-    dateModified: "2026-04-01T12:00:00+02:00",
+    dateModified: "2026-04-10T12:00:00+02:00",
   },
   "/artikler/elforbrug-husstand": {
     datePublished: "2026-03-09T10:00:00+01:00",
