@@ -45,7 +45,7 @@ export function ScrollToTopButton() {
       aria-label="Tilbage til toppen"
       className={[
         "fixed bottom-24 right-6 z-50 transition-opacity transition-transform md:bottom-6",
-        "px-3 py-2 rounded-md shadow-soft touch-manipulation",
+        "inline-flex h-12 w-12 items-center justify-center rounded-full shadow-soft touch-manipulation",
         "bg-brand-primary text-white border-2 border-white/90",
         "will-change-transform",
         "transition-transform duration-700 ease-out transition-opacity duration-200",
@@ -56,12 +56,18 @@ export function ScrollToTopButton() {
             : "opacity-0 translate-y-36 md:translate-y-24 pointer-events-none ease-in",
       ].join(" ")}
     >
-      <span className="flex items-center gap-2">
-        <span className="text-small font-semibold">Til toppen</span>
-        <span aria-hidden className="text-base leading-none">
-          ↑
-        </span>
-      </span>
+      <svg
+        viewBox="0 0 24 24"
+        className="h-6 w-6 shrink-0"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.25}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
     </button>
   );
 }

@@ -1,15 +1,42 @@
-import { PATH_BOLIGOMKOSTNINGER_BEREGNER, SITE_URL } from "./site";
+import {
+  COMPANY_CONTACT_EMAIL,
+  COMPANY_CVR,
+  COMPANY_LEGAL_NAME,
+  PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  SITE_URL,
+  SOCIAL_FACEBOOK_URL,
+  SOCIAL_INSTAGRAM_URL,
+  SOCIAL_LINKEDIN_URL,
+} from "./site";
 import { FAQ_ITEMS } from "./faq";
+
+const organizationSameAs = [
+  SOCIAL_LINKEDIN_URL,
+  SOCIAL_FACEBOOK_URL,
+  SOCIAL_INSTAGRAM_URL,
+].filter((url) => url.length > 0);
 
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Boligklarhed",
+  legalName: COMPANY_LEGAL_NAME,
+  ...(COMPANY_CVR
+    ? {
+        identifier: {
+          "@type": "PropertyValue",
+          name: "CVR",
+          value: COMPANY_CVR,
+        },
+      }
+    : {}),
   url: SITE_URL,
+  email: COMPANY_CONTACT_EMAIL,
+  ...(organizationSameAs.length > 0 ? { sameAs: organizationSameAs } : {}),
   description:
     "Klarhed over din boligøkonomi. Beregn engangsomkostninger, månedlige udgifter og stress test ved boligkøb.",
   logo: `${SITE_URL}/boligklarhed-logo.svg`,
-} as const;
+};
 
 export const websiteSchema = {
   "@context": "https://schema.org",
