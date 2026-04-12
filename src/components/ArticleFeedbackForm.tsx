@@ -9,8 +9,15 @@ import {
 
 const initialState: ArticleFeedbackState = { ok: false };
 
+const DEFAULT_HEADING = "Har du et spørgsmål eller en kommentar?";
+const DEFAULT_DESCRIPTION =
+  "Skriv til os herunder – vi læser alle henvendelser. Du kan også komme med forslag eller kommentarer til Boligklarhed.";
+
 type ArticleFeedbackFormProps = {
   articlePath: string;
+  /** Standard er som på artikelsiderne. */
+  heading?: string;
+  description?: string;
 };
 
 function fieldError(
@@ -23,8 +30,12 @@ function fieldError(
 
 function ArticleFeedbackFormInner({
   articlePath,
+  heading = DEFAULT_HEADING,
+  description = DEFAULT_DESCRIPTION,
   onSendAnother,
 }: ArticleFeedbackFormProps & { onSendAnother: () => void }) {
+  const idPrefix =
+    articlePath === "/kontakt" ? "contact-feedback" : "article-feedback";
   const [state, formAction, isPending] = useActionState(
     submitArticleFeedback,
     initialState,
@@ -62,13 +73,8 @@ function ArticleFeedbackFormInner({
 
   return (
     <div className="rounded-lg border border-border bg-white p-6 shadow-soft">
-      <h2 className="text-h3 text-text-primary mb-2">
-        Har du et spørgsmål eller en kommentar?
-      </h2>
-      <p className="text-body text-text-secondary mb-6">
-        Skriv til os herunder – vi læser alle henvendelser. Du kan også komme
-        med forslag eller kommentarer til Boligklarhed.
-      </p>
+      <h2 className="text-h3 text-text-primary mb-2">{heading}</h2>
+      <p className="text-body text-text-secondary mb-6">{description}</p>
 
       <form
         ref={formRef}
@@ -81,10 +87,10 @@ function ArticleFeedbackFormInner({
           className="absolute -left-[9999px] h-px w-px overflow-hidden"
           aria-hidden="true"
         >
-          <label htmlFor="article-feedback-website">Website</label>
+          <label htmlFor={`${idPrefix}-website`}>Website</label>
           <input
             type="text"
-            id="article-feedback-website"
+            id={`${idPrefix}-website`}
             name="website"
             tabIndex={-1}
             autoComplete="off"
@@ -93,13 +99,13 @@ function ArticleFeedbackFormInner({
 
         <div>
           <label
-            htmlFor="article-feedback-name"
+            htmlFor={`${idPrefix}-name`}
             className="mb-1.5 block text-small font-medium text-text-primary"
           >
             Navn
           </label>
           <input
-            id="article-feedback-name"
+            id={`${idPrefix}-name`}
             name="name"
             type="text"
             required
@@ -109,13 +115,13 @@ function ArticleFeedbackFormInner({
             aria-invalid={Boolean(fieldError(state.fieldErrors, "name"))}
             aria-describedby={
               fieldError(state.fieldErrors, "name")
-                ? "article-feedback-name-err"
+                ? `${idPrefix}-name-err`
                 : undefined
             }
           />
           {fieldError(state.fieldErrors, "name") ? (
             <p
-              id="article-feedback-name-err"
+              id={`${idPrefix}-name-err`}
               className="mt-1 text-small text-status-danger"
             >
               {fieldError(state.fieldErrors, "name")}
@@ -125,13 +131,13 @@ function ArticleFeedbackFormInner({
 
         <div>
           <label
-            htmlFor="article-feedback-email"
+            htmlFor={`${idPrefix}-email`}
             className="mb-1.5 block text-small font-medium text-text-primary"
           >
             E-mail
           </label>
           <input
-            id="article-feedback-email"
+            id={`${idPrefix}-email`}
             name="email"
             type="email"
             required
@@ -141,13 +147,13 @@ function ArticleFeedbackFormInner({
             aria-invalid={Boolean(fieldError(state.fieldErrors, "email"))}
             aria-describedby={
               fieldError(state.fieldErrors, "email")
-                ? "article-feedback-email-err"
+                ? `${idPrefix}-email-err`
                 : undefined
             }
           />
           {fieldError(state.fieldErrors, "email") ? (
             <p
-              id="article-feedback-email-err"
+              id={`${idPrefix}-email-err`}
               className="mt-1 text-small text-status-danger"
             >
               {fieldError(state.fieldErrors, "email")}
@@ -157,13 +163,13 @@ function ArticleFeedbackFormInner({
 
         <div>
           <label
-            htmlFor="article-feedback-message"
+            htmlFor={`${idPrefix}-message`}
             className="mb-1.5 block text-small font-medium text-text-primary"
           >
             Besked
           </label>
           <textarea
-            id="article-feedback-message"
+            id={`${idPrefix}-message`}
             name="message"
             required
             rows={5}
@@ -172,13 +178,13 @@ function ArticleFeedbackFormInner({
             aria-invalid={Boolean(fieldError(state.fieldErrors, "message"))}
             aria-describedby={
               fieldError(state.fieldErrors, "message")
-                ? "article-feedback-message-err"
+                ? `${idPrefix}-message-err`
                 : undefined
             }
           />
           {fieldError(state.fieldErrors, "message") ? (
             <p
-              id="article-feedback-message-err"
+              id={`${idPrefix}-message-err`}
               className="mt-1 text-small text-status-danger"
             >
               {fieldError(state.fieldErrors, "message")}
@@ -219,12 +225,18 @@ function ArticleFeedbackFormInner({
   );
 }
 
-export function ArticleFeedbackForm({ articlePath }: ArticleFeedbackFormProps) {
+export function ArticleFeedbackForm({
+  articlePath,
+  heading,
+  description,
+}: ArticleFeedbackFormProps) {
   const [instanceKey, setInstanceKey] = useState(0);
   return (
     <ArticleFeedbackFormInner
       key={instanceKey}
       articlePath={articlePath}
+      heading={heading}
+      description={description}
       onSendAnother={() => setInstanceKey((k) => k + 1)}
     />
   );

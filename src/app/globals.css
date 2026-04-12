@@ -45,3 +45,28 @@ input[type="range"].range-slider::-moz-range-thumb {
     height: 28px;
   }
 }
+
+/* Karussel-slider på forsiden (Hvad inkluderer vi?) */
+input[type="range"].inclusion-carousel-slider {
+  @apply h-2 w-full rounded-full bg-gray-200 appearance-none cursor-pointer;
+  accent-color: theme("colors.brand.primary");
+}
+input[type="range"].inclusion-carousel-slider::-webkit-slider-thumb {
+  @apply appearance-none w-5 h-5 rounded-full border-0 cursor-pointer bg-brand-primary shadow-soft;
+}
+input[type="range"].inclusion-carousel-slider::-moz-range-thumb {
+  @apply w-5 h-5 rounded-full border-0 cursor-pointer bg-brand-primary shadow-soft;
+}
+@media (max-width: 768px) {
+  input[type="range"].inclusion-carousel-slider {
+    @apply py-2;
+  }
+  input[type="range"].inclusion-carousel-slider::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  input[type="range"].inclusion-carousel-slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+}

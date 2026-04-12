@@ -11,10 +11,13 @@ export type ArticleFeedbackState = {
   fieldErrors?: Partial<Record<"name" | "email" | "message", string[]>>;
 };
 
-const articlePathRegex = /^\/artikler\/[a-z0-9-]+$/i;
+const feedbackPathRegex =
+  /^(\/artikler\/[a-z0-9-]+|\/kontakt)$/i;
 
 /** Same wording as the form on article pages (`ArticleFeedbackForm`). */
 const ARTICLE_FEEDBACK_HEADLINE = "Har du et spørgsmål eller en kommentar?";
+
+const CONTACT_PAGE_HEADLINE = "Kontakt os";
 
 const feedbackSchema = z.object({
   name: z
@@ -35,7 +38,7 @@ const feedbackSchema = z.object({
   articlePath: z
     .string()
     .max(200)
-    .regex(articlePathRegex, "Ugyldig artikelreference"),
+    .regex(feedbackPathRegex, "Ugyldig side-reference"),
 });
 
 const RATE_WINDOW_MS = 10 * 60 * 1000;
@@ -59,16 +62,24 @@ function formatMessageHtml(message: string): string {
 function buildArticleFeedbackHtml(params: {
   name: string;
   email: string;
-  articleUrl: string;
+  pageUrl: string;
   message: string;
+  sourcePath: string;
 }): string {
-  const { name, email, articleUrl, message } = params;
+  const { name, email, pageUrl, message, sourcePath } = params;
+  const isKontakt = sourcePath === "/kontakt";
+  const headline = isKontakt ? CONTACT_PAGE_HEADLINE : ARTICLE_FEEDBACK_HEADLINE;
+  const pageKindLabel = isKontakt ? "Side" : "Artikel";
+  const openButtonLabel = isKontakt ? "Åbn kontaktside" : "Åbn artikel";
+
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const mailtoHref = escapeHtml(`mailto:${encodeURIComponent(email)}`);
-  const safeUrl = escapeHtml(articleUrl);
+  const safeUrl = escapeHtml(pageUrl);
   const safeMessage = formatMessageHtml(message);
-  const safeHeadline = escapeHtml(ARTICLE_FEEDBACK_HEADLINE);
+  const safeHeadline = escapeHtml(headline);
+  const safePageKindLabel = escapeHtml(pageKindLabel);
+  const safeOpenButtonLabel = escapeHtml(openButtonLabel);
 
   return `<!DOCTYPE html>
 <html lang="da">
@@ -98,9 +109,9 @@ function buildArticleFeedbackHtml(params: {
             <p style="margin:0 0 18px;">
               <a href="${mailtoHref}" style="color:#1E3A5F;text-decoration:underline;">${safeEmail}</a>
             </p>
-            <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#6B7280;">Artikel</p>
+            <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#6B7280;">${safePageKindLabel}</p>
             <p style="margin:0 0 10px;">
-              <a href="${safeUrl}" style="display:inline-block;background-color:#1E3A5F;color:#FFFFFF;text-decoration:none;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;">Åbn artikel</a>
+              <a href="${safeUrl}" style="display:inline-block;background-color:#1E3A5F;color:#FFFFFF;text-decoration:none;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;">${safeOpenButtonLabel}</a>
             </p>
             <p style="margin:0 0 22px;font-size:13px;word-break:break-all;">
               <a href="${safeUrl}" style="color:#1E40AF;text-decoration:underline;">${safeUrl}</a>
@@ -200,12 +211,15 @@ export async function submitArticleFeedback(
 
   const path = parsed.data.articlePath;
   const fullUrl = `${SITE_URL}${path}`;
+  const isKontakt = path === "/kontakt";
+  const headline = isKontakt ? CONTACT_PAGE_HEADLINE : ARTICLE_FEEDBACK_HEADLINE;
+  const pageKindLabel = isKontakt ? "Side" : "Artikel";
   const plainText = [
-    ARTICLE_FEEDBACK_HEADLINE,
+    headline,
     "",
     `Navn: ${parsed.data.name}`,
     `E-mail: ${parsed.data.email}`,
-    `Artikel: ${fullUrl}`,
+    `${pageKindLabel}: ${fullUrl}`,
     "",
     "Besked:",
     parsed.data.message,
@@ -216,13 +230,14 @@ export async function submitArticleFeedback(
     from,
     to: [to],
     replyTo: parsed.data.email,
-    subject: `[Boligklarhed] ${ARTICLE_FEEDBACK_HEADLINE} – ${parsed.data.name}`,
+    subject: `[Boligklarhed] ${headline} – ${parsed.data.name}`,
     text: plainText,
     html: buildArticleFeedbackHtml({
       name: parsed.data.name,
       email: parsed.data.email,
-      articleUrl: fullUrl,
+      pageUrl: fullUrl,
       message: parsed.data.message,
+      sourcePath: path,
     }),
   });
 

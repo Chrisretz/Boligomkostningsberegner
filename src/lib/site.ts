@@ -4,11 +4,8 @@
  */
 export const SITE_URL = "https://www.boligklarhed.dk";
 
-/** Juridisk enhedsnavn til footer og copyright (enkeltmandsvirksomhed). */
+/** Juridisk enhedsnavn til footer og copyright. */
 export const COMPANY_LEGAL_NAME = "Boligklarhed" as const;
-
-/** Årstal for stiftelse/start – vises i footeren. */
-export const COMPANY_ESTABLISHED_YEAR = 2026 as const;
 
 /** Generel kontakt-e-mail. */
 export const COMPANY_CONTACT_EMAIL = "info@boligklarhed.dk" as const;
@@ -26,6 +23,9 @@ export const SOCIAL_FACEBOOK_URL =
   "https://www.facebook.com/profile.php?id=61573361431441" as const;
 export const SOCIAL_INSTAGRAM_URL =
   "https://www.instagram.com/boligklarhed" as const;
+
+/** Kontakt-side med e-mail og henvendelsesformular. */
+export const PATH_KONTAKT = "/kontakt" as const;
 
 /** Kanonisk sti til boligomkostningsberegneren (beskrivende URL til SEO). */
 export const PATH_BOLIGOMKOSTNINGER_BEREGNER =

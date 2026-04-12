@@ -54,10 +54,10 @@ export default function PrivacyPage() {
               personoplysninger, medmindre det er strengt nødvendigt.
             </p>
             <p>
-              På artikelsider kan du udfylde formularen &quot;Har du et spørgsmål
-              eller en kommentar?&quot;. Vi behandler her navn, e-mail, din besked og
-              hvilken artikel du skriver fra (URL). Formålet er udelukkende at
-              besvare dig. E-mail sendes via tjenesten{" "}
+              På artikelsider og på kontaktsiden kan du udfylde formularen til
+              henvendelser. Vi behandler her navn, e-mail, din besked og hvilken
+              side du skriver fra (URL). Formålet er udelukkende at besvare dig.
+              E-mail sendes via tjenesten{" "}
               <a
                 href="https://resend.com/legal/privacy-policy"
                 target="_blank"

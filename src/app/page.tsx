@@ -10,6 +10,7 @@ import {
 } from "@/lib/structured-data";
 import { FAQ_ITEMS } from "@/lib/faq";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
+import { InclusionCardsCarousel } from "@/components/InclusionCardsCarousel";
 
 export const metadata = {
   alternates: { canonical: canonicalUrl("/") },
@@ -103,41 +104,7 @@ export default function HomePage() {
           <p className="text-body text-text-secondary mb-8 max-w-3xl mx-auto text-center">
             Boligklarhed samler de vigtigste omkostninger ved boligkøb i én beregning, så du slipper for at regne i regneark eller gætte dig frem. Beregnerne følger de officielle satser og typiske tommelfingerregler, så du får et realistisk billede af, hvad det koster at købe og eje din bolig – både ved overtagelse og hver måned.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">
-              <h3 className="text-h3 text-text-primary mb-2">
-                Tinglysning
-              </h3>
-              <p className="text-body text-text-secondary">
-                Skøde- og pantafgifter beregnes efter Skattestyrelsens gældende satser, så du kan se, hvad tinglysning af skøde og pant reelt koster. Vi medregner både de faste og de variable beløb, så du får styr på denne ofte oversete del af omkostningerne ved boligkøb. Du kan læse mere om de aktuelle satser hos{" "}
-                <a
-                  href="https://skat.dk/erhverv/afgifter-paa-varer-og-ydelser-punktafgifter/nyhedsbrev-afgifter/tinglysningsafgift-ny-afgiftssats-pr-1-januar-2026"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-brand-primary underline hover:no-underline"
-                >
-                  Skattestyrelsen
-                </a>
-                .
-              </p>
-            </div>
-            <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">
-              <h3 className="text-h3 text-text-primary mb-2">
-                Vedligehold
-              </h3>
-              <p className="text-body text-text-secondary">
-                Estimeret vedligeholdelse baseret på boligtype, så du afsætter et realistisk beløb til løbende forbedringer og reparationer. For huse beregner vi et højere niveau end for ejerlejligheder, da vedligeholdelsesbehovet typisk er større.
-              </p>
-            </div>
-            <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">
-              <h3 className="text-h3 text-text-primary mb-2">
-                Ejerudgifter
-              </h3>
-              <p className="text-body text-text-secondary">
-                Skat, forsikring og andre faste ejeromkostninger samles i én oversigt, så du kan se din samlede månedlige boligudgift. Du kan selv tilpasse beløbene til din konkrete bolig og dermed bruge beregneren som et praktisk værktøj til at teste dit boligbudget.
-              </p>
-            </div>
-          </div>
+          <InclusionCardsCarousel />
         </div>
       </section>
 

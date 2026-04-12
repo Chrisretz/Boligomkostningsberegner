@@ -6,13 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { articleCategories, getArticlesBySlugs } from "@/lib/articles";
 import { calculators } from "@/lib/calculators";
 import { SiteSearch } from "@/components/SiteSearch";
-
-const navLinks = [
-  { href: "/", label: "Forside" },
-  { href: "/om-os", label: "Om os" },
-  { href: "/beregnere", label: "Beregnere" },
-  { href: "/boligbegreber", label: "Boligbegreber" },
-] as const;
+import { PATH_KONTAKT } from "@/lib/site";
 
 function MenuIcon() {
   return (
@@ -84,12 +78,15 @@ export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [artiklerOpen, setArtiklerOpen] = useState(false);
   const [beregnereOpen, setBeregnereOpen] = useState(false);
+  const [omMenuOpen, setOmMenuOpen] = useState(false);
   const [expandedCategoryId, setExpandedCategoryId] = useState<string | null>(null);
   const [mobileBeregnereOpen, setMobileBeregnereOpen] = useState(false);
   const [mobileArtiklerOpen, setMobileArtiklerOpen] = useState(false);
+  const [mobileOmOpen, setMobileOmOpen] = useState(false);
   const [mobileExpandedCategoryId, setMobileExpandedCategoryId] = useState<string | null>(null);
   const artiklerRef = useRef<HTMLDivElement>(null);
   const beregnereRef = useRef<HTMLDivElement>(null);
+  const omMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (menuOpen) {
@@ -104,7 +101,7 @@ export function Topbar() {
 
   // Luk dropdowns ved klik udenfor (desktop)
   useEffect(() => {
-    if (!artiklerOpen && !beregnereOpen) return;
+    if (!artiklerOpen && !beregnereOpen && !omMenuOpen) return;
 
     function onMouseDown(e: MouseEvent) {
       const target = e.target as Node | null;
@@ -121,11 +118,14 @@ export function Topbar() {
       ) {
         setBeregnereOpen(false);
       }
+      if (omMenuOpen && omMenuRef.current && !omMenuRef.current.contains(target)) {
+        setOmMenuOpen(false);
+      }
     }
 
     document.addEventListener("mousedown", onMouseDown);
     return () => document.removeEventListener("mousedown", onMouseDown);
-  }, [artiklerOpen, beregnereOpen]);
+  }, [artiklerOpen, beregnereOpen, omMenuOpen]);
 
   useEffect(() => {
     function handleEscape(e: KeyboardEvent) {
@@ -137,11 +137,14 @@ export function Topbar() {
       if (beregnereOpen) {
         setBeregnereOpen(false);
       }
+      if (omMenuOpen) {
+        setOmMenuOpen(false);
+      }
     }
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [artiklerOpen, beregnereOpen]);
+  }, [artiklerOpen, beregnereOpen, omMenuOpen]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -157,6 +160,7 @@ export function Topbar() {
     if (!menuOpen) {
       setMobileBeregnereOpen(false);
       setMobileArtiklerOpen(false);
+      setMobileOmOpen(false);
       setMobileExpandedCategoryId(null);
     }
   }, [menuOpen]);
@@ -200,6 +204,7 @@ export function Topbar() {
                 onClick={() => {
                   setBeregnereOpen((prev) => !prev);
                   setArtiklerOpen(false);
+                  setOmMenuOpen(false);
                 }}
                 className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary cursor-pointer gap-2`}
                 aria-haspopup="true"
@@ -253,6 +258,7 @@ export function Topbar() {
                 onClick={() => {
                   setArtiklerOpen((prev) => !prev);
                   setBeregnereOpen(false);
+                  setOmMenuOpen(false);
                   if (!artiklerOpen) setExpandedCategoryId(null);
                 }}
                 className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary cursor-pointer gap-2`}
@@ -319,13 +325,55 @@ export function Topbar() {
                 </div>
               )}
             </div>
-            <Link
-              href="/om-os"
-              className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary`}
-            >
-              <span className="relative z-10">Om os</span>
-              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
-            </Link>
+            <div className="relative" ref={omMenuRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setOmMenuOpen((prev) => !prev);
+                  setBeregnereOpen(false);
+                  setArtiklerOpen(false);
+                  setExpandedCategoryId(null);
+                }}
+                className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary cursor-pointer gap-2`}
+                aria-haspopup="true"
+                aria-expanded={omMenuOpen}
+                aria-controls="desktop-om-menu"
+              >
+                <span className="relative z-10 inline-flex items-center gap-1">
+                  Om
+                  <ChevronDownIcon
+                    className={`transition-transform ${omMenuOpen ? "rotate-180" : ""}`}
+                  />
+                </span>
+                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
+              </button>
+              {omMenuOpen ? (
+                <div
+                  id="desktop-om-menu"
+                  className="absolute right-0 top-full pt-2 z-50 min-w-[280px]"
+                  role="menu"
+                >
+                  <div className="bg-brand-surface border border-border rounded-md shadow-card py-2">
+                    <Link
+                      href="/om-os"
+                      className="block whitespace-nowrap px-4 py-2 text-body text-text-primary hover:bg-border/50"
+                      role="menuitem"
+                      onClick={() => setOmMenuOpen(false)}
+                    >
+                      Om os
+                    </Link>
+                    <Link
+                      href={PATH_KONTAKT}
+                      className="block whitespace-nowrap px-4 py-2 text-body text-text-primary hover:bg-border/50"
+                      role="menuitem"
+                      onClick={() => setOmMenuOpen(false)}
+                    >
+                      Kontakt os
+                    </Link>
+                  </div>
+                </div>
+              ) : null}
+            </div>
           </nav>
           <SiteSearch className="w-[min(100%,200px)] shrink-0" />
           </div>
@@ -395,6 +443,7 @@ export function Topbar() {
                       const next = !prev;
                       if (next) {
                         setMobileArtiklerOpen(false);
+                        setMobileOmOpen(false);
                         setMobileExpandedCategoryId(null);
                       }
                       return next;
@@ -445,6 +494,7 @@ export function Topbar() {
                       const next = !prev;
                       if (next) {
                         setMobileBeregnereOpen(false);
+                        setMobileOmOpen(false);
                       } else {
                         setMobileExpandedCategoryId(null);
                       }
@@ -509,13 +559,47 @@ export function Topbar() {
                   </div>
                 )}
               </div>
-              <Link
-                href="/om-os"
-                onClick={() => setMenuOpen(false)}
-                className={mobileNavItemClass}
-              >
-                Om os
-              </Link>
+              <div className="rounded-md">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileOmOpen((prev) => {
+                      const next = !prev;
+                      if (next) {
+                        setMobileBeregnereOpen(false);
+                        setMobileArtiklerOpen(false);
+                        setMobileExpandedCategoryId(null);
+                      }
+                      return next;
+                    });
+                  }}
+                  className={`${mobileNavItemClass} w-full flex items-center justify-between text-left`}
+                  aria-expanded={mobileOmOpen}
+                >
+                  <span>Om</span>
+                  <ChevronDownIcon
+                    className={`transition-transform ${mobileOmOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {mobileOmOpen ? (
+                  <div className="mt-1 ml-3 border-l-2 border-border pl-3 space-y-1">
+                    <Link
+                      href="/om-os"
+                      onClick={() => setMenuOpen(false)}
+                      className="block py-1.5 text-small text-text-secondary hover:text-brand-primary"
+                    >
+                      Om os
+                    </Link>
+                    <Link
+                      href={PATH_KONTAKT}
+                      onClick={() => setMenuOpen(false)}
+                      className="block py-1.5 text-small text-text-secondary hover:text-brand-primary"
+                    >
+                      Kontakt os
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
             </nav>
           </aside>
         </>

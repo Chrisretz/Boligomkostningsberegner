@@ -1,6 +1,7 @@
 import { articles } from "@/lib/articles";
 import { BEGREBER } from "@/lib/begreber";
 import { calculators } from "@/lib/calculators";
+import { PATH_KONTAKT } from "@/lib/site";
 
 export type SiteSearchKind = "side" | "beregner" | "artikel" | "begreb";
 
@@ -46,6 +47,14 @@ const STATIC_PAGES: readonly SiteSearchItem[] = [
     href: "/om-os",
     title: "Om os",
     description: "Hvem står bag Boligklarhed og hvad kan du bruge sitet til.",
+    kind: "side",
+  },
+  {
+    id: "kontakt",
+    href: PATH_KONTAKT,
+    title: "Kontakt os",
+    description:
+      "Kontakt Boligklarhed på e-mail eller via formularen. CVR og virksomhedsoplysninger.",
     kind: "side",
   },
   {

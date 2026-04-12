@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import {
   PATH_BOLIGLAAN_BEREGNER,
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  PATH_KONTAKT,
   SITE_URL,
 } from "@/lib/site";
 
@@ -33,6 +34,7 @@ export const SITEMAP_STATIC_PATHS = [
   "/cookies",
   "/disclaimer",
   "/om-os",
+  PATH_KONTAKT,
   "/boligbegreber",
 ] as const;
 
@@ -62,7 +64,9 @@ export function getSitemapRows(): SitemapRow[] {
           ? 0.9
           : path === PATH_BOLIGLAAN_BEREGNER
             ? 0.85
-            : 0.7,
+            : path === PATH_KONTAKT
+              ? 0.65
+              : 0.7,
   }));
 }
 

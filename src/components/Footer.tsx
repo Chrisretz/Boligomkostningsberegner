@@ -3,9 +3,9 @@ import Link from "next/link";
 import {
   COMPANY_CONTACT_EMAIL,
   COMPANY_CVR,
-  COMPANY_ESTABLISHED_YEAR,
   COMPANY_LEGAL_NAME,
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
+  PATH_KONTAKT,
   SOCIAL_FACEBOOK_URL,
   SOCIAL_INSTAGRAM_URL,
   SOCIAL_LINKEDIN_URL,
@@ -120,6 +120,12 @@ export function Footer() {
               >
                 Om os
               </Link>
+              <Link
+                href={PATH_KONTAKT}
+                className="block text-body text-white/75 hover:text-white transition-colors"
+              >
+                Kontakt os
+              </Link>
             </nav>
           </div>
         </div>
@@ -134,8 +140,6 @@ export function Footer() {
                   CVR: {COMPANY_CVR}
                 </>
               ) : null}
-              {" · "}
-              Etableret {COMPANY_ESTABLISHED_YEAR}
               {" · "}
               <a
                 href={`mailto:${COMPANY_CONTACT_EMAIL}`}

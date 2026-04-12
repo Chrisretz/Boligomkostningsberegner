@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   canonicalUrl,
+  COMPANY_CVR,
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
   PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
+  PATH_KONTAKT,
 } from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
 
@@ -128,9 +130,37 @@ export default function OmOsPage() {
               .
             </p>
           </section>
+
+          <section>
+            <h2 className="text-h3 text-text-primary">Virksomhed</h2>
+            <p>
+              Boligklarhed
+              {COMPANY_CVR ? (
+                <>
+                  {" "}
+                  – CVR:{" "}
+                  <span className="tabular-nums font-medium text-text-primary">
+                    {COMPANY_CVR}
+                  </span>
+                </>
+              ) : null}
+              . Har du spørgsmål eller feedback?{" "}
+              <Link href={PATH_KONTAKT} className="text-brand-primary hover:underline">
+                Kontakt os
+              </Link>
+              .
+            </p>
+          </section>
         </div>
 
         <p className="mt-8">
+          <Link
+            href={PATH_KONTAKT}
+            className="text-body text-brand-primary hover:underline"
+          >
+            Kontakt os
+          </Link>
+          {" · "}
           <Link
             href="/"
             className="text-body text-brand-primary hover:underline"
