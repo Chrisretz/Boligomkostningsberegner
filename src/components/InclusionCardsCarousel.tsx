@@ -21,9 +21,12 @@ const SLIDE_TITLES = [
 ] as const;
 
 const slideClass =
-  "min-w-0 w-1/6 shrink-0 px-6 py-8 sm:px-8 sm:py-9 text-left";
+  "min-w-0 w-1/6 shrink-0 px-5 py-5 sm:px-7 sm:py-6 text-left";
 
 const SWIPE_MIN_DX = 56;
+
+const navArrowClass =
+  "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-brand-surface text-brand-primary shadow-soft transition-colors hover:border-brand-primary hover:bg-brand-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2";
 
 export function InclusionCardsCarousel() {
   const [index, setIndex] = useState(0);
@@ -125,37 +128,15 @@ export function InclusionCardsCarousel() {
         Emne {index + 1} af {SLIDE_COUNT}: {SLIDE_TITLES[index]}
       </p>
 
-      <div className="flex items-stretch gap-2 sm:gap-3">
-        <button
-          type="button"
-          onClick={() => go(-1)}
-          aria-controls={regionId}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center self-center rounded-full border border-border bg-brand-surface text-brand-primary shadow-soft transition-colors hover:border-brand-primary hover:bg-brand-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-          aria-label={`Forrige: ${prevTitle}`}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-
-        <div
-          id={regionId}
-          role="region"
-          aria-roledescription="Karrusel"
-          aria-label="Hvad boligomkostningsberegneren inkluderer"
-          className="min-h-[20rem] min-w-0 flex-1 overflow-hidden rounded-md border border-border bg-brand-surface/50 shadow-soft sm:min-h-[19rem] touch-pan-y"
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
+      <div
+        id={regionId}
+        role="region"
+        aria-roledescription="Karrusel"
+        aria-label="Hvad boligomkostningsberegneren inkluderer"
+        className="w-full overflow-hidden rounded-md border border-border bg-brand-surface/50 shadow-soft touch-pan-y"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
           <div
             className="flex transition-transform duration-500 ease-out motion-reduce:transition-none"
             style={{
@@ -315,28 +296,6 @@ export function InclusionCardsCarousel() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => go(1)}
-          aria-controls={regionId}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center self-center rounded-full border border-border bg-brand-surface text-brand-primary shadow-soft transition-colors hover:border-brand-primary hover:bg-brand-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-          aria-label={`Næste: ${nextTitle}`}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
-      </div>
-
       <p
         className="mt-4 text-center text-help text-text-secondary tabular-nums"
         aria-hidden="true"
@@ -346,24 +305,66 @@ export function InclusionCardsCarousel() {
         <span className="text-text-secondary">{SLIDE_TITLES[index]}</span>
       </p>
 
-      <div className="mt-4 flex flex-col items-center gap-3">
+      <div className="mt-4 flex flex-col gap-3">
         <label
           htmlFor={`${regionId}-slider`}
           className="text-help text-text-secondary sr-only"
         >
           Vælg emne ({index + 1} af {SLIDE_COUNT})
         </label>
-        <input
-          id={`${regionId}-slider`}
-          type="range"
-          min={0}
-          max={SLIDE_COUNT - 1}
-          step={1}
-          value={index}
-          onChange={(e) => setIndex(Number(e.target.value))}
-          className="inclusion-carousel-slider h-2 w-full max-w-xs cursor-pointer rounded-full sm:max-w-sm"
-          aria-valuetext={`${SLIDE_TITLES[index]}, emne ${index + 1} af ${SLIDE_COUNT}`}
-        />
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            aria-controls={regionId}
+            className={navArrowClass}
+            aria-label={`Forrige: ${prevTitle}`}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <input
+            id={`${regionId}-slider`}
+            type="range"
+            min={0}
+            max={SLIDE_COUNT - 1}
+            step={1}
+            value={index}
+            onChange={(e) => setIndex(Number(e.target.value))}
+            className="inclusion-carousel-slider h-2 min-w-0 flex-1 cursor-pointer rounded-full"
+            aria-valuetext={`${SLIDE_TITLES[index]}, emne ${index + 1} af ${SLIDE_COUNT}`}
+          />
+          <button
+            type="button"
+            onClick={() => go(1)}
+            aria-controls={regionId}
+            className={navArrowClass}
+            aria-label={`Næste: ${nextTitle}`}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
         <nav className="flex flex-wrap justify-center gap-1.5" aria-label="Vælg emne">
           {Array.from({ length: SLIDE_COUNT }, (_, i) => (
             <button
