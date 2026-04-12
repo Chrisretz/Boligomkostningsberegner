@@ -11,9 +11,9 @@ import { socialMetadata } from "@/lib/social-metadata";
 
 const title = "Kontakt os";
 const description =
-  "Kontakt Boligklarhed på e-mail eller via formularen. CVR og virksomhedsoplysninger. Vi svarer på henvendelser om beregnerne og webstedet.";
+  "Kontakt Boligklarhed pÃ¥ e-mail eller via formularen. CVR og virksomhedsoplysninger. Vi svarer pÃ¥ henvendelser om beregnerne og webstedet.";
 const ogDescription =
-  "Skriv til Boligklarhed på e-mail eller brug kontaktformularen – vi læser alle henvendelser.";
+  "Skriv til Boligklarhed pÃ¥ e-mail eller brug kontaktformularen â€“ vi lÃ¦ser alle henvendelser.";
 
 export const metadata: Metadata = {
   title,
@@ -34,16 +34,16 @@ export default function KontaktPage() {
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6 mb-10">
           <p>
-            Har du spørgsmål om beregnerne, artiklerne eller noget andet på
-            Boligklarhed? Skriv gerne til os på{" "}
+            Har du spÃ¸rgsmÃ¥l om beregnerne, artiklerne eller noget andet pÃ¥
+            Boligklarhed? Skriv gerne til os pÃ¥{" "}
             <a
               href={`mailto:${COMPANY_CONTACT_EMAIL}`}
               className="text-brand-primary underline hover:no-underline"
             >
               {COMPANY_CONTACT_EMAIL}
             </a>{" "}
-            eller brug formularen herunder – vi læser alle henvendelser og
-            vender tilbage på e-mail, når vi kan.
+            eller brug formularen herunder â€“ vi lÃ¦ser alle henvendelser og
+            vender tilbage pÃ¥ e-mail, nÃ¥r vi kan.
           </p>
 
           <div className="not-prose rounded-lg border border-border bg-brand-surface/40 px-4 py-4 text-body text-text-secondary shadow-soft sm:px-5">
@@ -53,7 +53,7 @@ export default function KontaktPage() {
               {COMPANY_CVR ? (
                 <>
                   {" "}
-                  – CVR:{" "}
+                  â€“ CVR:{" "}
                   <span className="tabular-nums font-medium text-text-primary">
                     {COMPANY_CVR}
                   </span>
@@ -67,14 +67,14 @@ export default function KontaktPage() {
         <ArticleFeedbackForm
           articlePath={PATH_KONTAKT}
           heading="Skriv til os"
-          description="Udfyld formularen herunder – vi læser alle henvendelser og svarer på e-mail. Du kan også komme med forslag til webstedet eller spørgsmål om beregnerne."
+          description="Udfyld formularen herunder â€“ vi lÃ¦ser alle henvendelser og svarer pÃ¥ e-mail. Du kan ogsÃ¥ komme med forslag til webstedet eller spÃ¸rgsmÃ¥l om beregnerne."
         />
 
         <p className="mt-10">
           <Link href="/om-os" className="text-body text-brand-primary hover:underline">
             Om os
           </Link>
-          {" · "}
+          {" Â· "}
           <Link href="/" className="text-body text-brand-primary hover:underline">
             Tilbage til forsiden
           </Link>
