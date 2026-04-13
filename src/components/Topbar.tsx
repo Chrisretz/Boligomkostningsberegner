@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { articleCategories, getArticlesBySlugs } from "@/lib/articles";
 import { calculators } from "@/lib/calculators";
@@ -74,7 +75,11 @@ const topNavItemClass =
 const mobileNavItemClass =
   "px-4 py-3 text-body font-medium text-text-primary hover:bg-border active:bg-border/80 rounded-md transition-colors transition-transform duration-150 active:scale-[0.985]";
 
+const SCROLL_DELTA_MIN = 2;
+const SCROLL_TOP_SHOW_BELOW = 40;
+
 export function Topbar() {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [artiklerOpen, setArtiklerOpen] = useState(false);
   const [beregnereOpen, setBeregnereOpen] = useState(false);
@@ -84,9 +89,67 @@ export function Topbar() {
   const [mobileArtiklerOpen, setMobileArtiklerOpen] = useState(false);
   const [mobileOmOpen, setMobileOmOpen] = useState(false);
   const [mobileExpandedCategoryId, setMobileExpandedCategoryId] = useState<string | null>(null);
+  const [barHidden, setBarHidden] = useState(false);
+  const [spacerHeight, setSpacerHeight] = useState(80);
   const artiklerRef = useRef<HTMLDivElement>(null);
   const beregnereRef = useRef<HTMLDivElement>(null);
   const omMenuRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const lastScrollY = useRef(0);
+  const menuOpenRef = useRef(false);
+  menuOpenRef.current = menuOpen;
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      setSpacerHeight(el.offsetHeight);
+    });
+    ro.observe(el);
+    setSpacerHeight(el.offsetHeight);
+    return () => ro.disconnect();
+  }, [menuOpen]);
+
+  useEffect(() => {
+    setBarHidden(false);
+    lastScrollY.current =
+      typeof window !== "undefined" ? window.scrollY : 0;
+  }, [pathname]);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    function onScroll() {
+      if (menuOpenRef.current) {
+        setBarHidden(false);
+        lastScrollY.current = window.scrollY;
+        return;
+      }
+
+      const y = window.scrollY;
+      const prev = lastScrollY.current;
+
+      if (y <= SCROLL_TOP_SHOW_BELOW) {
+        setBarHidden(false);
+        lastScrollY.current = y;
+        return;
+      }
+
+      const delta = y - prev;
+      lastScrollY.current = y;
+
+      if (Math.abs(delta) < SCROLL_DELTA_MIN) return;
+
+      if (delta > 0) {
+        setBarHidden(true);
+      } else {
+        setBarHidden(false);
+      }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     if (menuOpen) {
@@ -166,12 +229,22 @@ export function Topbar() {
   }, [menuOpen]);
 
   return (
-    <header className="border-b border-border bg-brand-surface">
+    <>
+    <header
+      ref={headerRef}
+      className={[
+        "fixed top-0 left-0 right-0 z-[55] border-b border-white/15 bg-brand-primary",
+        "transition-transform duration-300 ease-out motion-reduce:transition-none",
+        barHidden
+          ? "-translate-y-full pointer-events-none motion-reduce:translate-y-0 motion-reduce:pointer-events-auto"
+          : "translate-y-0 shadow-sm",
+      ].join(" ")}
+    >
       <div className="container mx-auto py-4 px-4">
         <div className="flex items-center justify-between gap-4 md:flex-row">
           <Link
             href="/"
-            className="flex items-center shrink-0"
+            className="flex items-center shrink-0 rounded-xl bg-white px-3 py-2 shadow-soft ring-1 ring-black/[0.06] transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary"
             aria-label="Boligklarhed – forsiden"
           >
             <Image
@@ -190,10 +263,10 @@ export function Topbar() {
           <nav className="flex items-center gap-6 shrink-0">
             <Link
               href="/"
-              className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary`}
+              className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white`}
             >
               <span className="relative z-10">Forside</span>
-              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
+              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-white origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
             </Link>
             <div
               className="relative"
@@ -206,7 +279,7 @@ export function Topbar() {
                   setArtiklerOpen(false);
                   setOmMenuOpen(false);
                 }}
-                className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary cursor-pointer gap-2`}
+                className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white cursor-pointer gap-2`}
                 aria-haspopup="true"
                 aria-expanded={beregnereOpen}
               >
@@ -216,7 +289,7 @@ export function Topbar() {
                     className={`transition-transform ${beregnereOpen ? "rotate-180" : ""}`}
                   />
                 </span>
-                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
+                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-white origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
               </button>
               {beregnereOpen && (
                 <div className="absolute right-0 top-full pt-2 z-50 min-w-[260px]">
@@ -244,10 +317,10 @@ export function Topbar() {
             </div>
             <Link
               href="/boligbegreber"
-              className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary`}
+              className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white`}
             >
               <span className="relative z-10">Boligbegreber</span>
-              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
+              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-white origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
             </Link>
             <div
               ref={artiklerRef}
@@ -261,7 +334,7 @@ export function Topbar() {
                   setOmMenuOpen(false);
                   if (!artiklerOpen) setExpandedCategoryId(null);
                 }}
-                className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary cursor-pointer gap-2`}
+                className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white cursor-pointer gap-2`}
                 aria-haspopup="true"
                 aria-expanded={artiklerOpen}
               >
@@ -271,7 +344,7 @@ export function Topbar() {
                     className={`transition-transform ${artiklerOpen ? "rotate-180" : ""}`}
                   />
                 </span>
-                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
+                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-white origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
               </button>
               {artiklerOpen && (
                 <div className="absolute left-0 top-full pt-2 z-50 min-w-[280px]">
@@ -334,7 +407,7 @@ export function Topbar() {
                   setArtiklerOpen(false);
                   setExpandedCategoryId(null);
                 }}
-                className={`${topNavItemClass} text-body font-medium text-text-secondary hover:text-text-primary cursor-pointer gap-2`}
+                className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white cursor-pointer gap-2`}
                 aria-haspopup="true"
                 aria-expanded={omMenuOpen}
                 aria-controls="desktop-om-menu"
@@ -345,7 +418,7 @@ export function Topbar() {
                     className={`transition-transform ${omMenuOpen ? "rotate-180" : ""}`}
                   />
                 </span>
-                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-brand-primary origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
+                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-white origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
               </button>
               {omMenuOpen ? (
                 <div
@@ -383,7 +456,7 @@ export function Topbar() {
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              className="flex flex-col items-center gap-0.5 text-text-primary hover:text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 rounded p-2"
+              className="flex flex-col items-center gap-0.5 text-white hover:text-white/90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-primary rounded p-2"
               aria-label="Åbn menu"
               aria-expanded={menuOpen}
             >
@@ -605,5 +678,11 @@ export function Topbar() {
         </>
       )}
     </header>
+    <div
+      aria-hidden
+      className="shrink-0"
+      style={{ height: spacerHeight }}
+    />
+    </>
   );
 }

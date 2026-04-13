@@ -42,7 +42,7 @@ function SocialIcon({
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-border bg-brand-primary text-white">
+    <footer className="mt-auto border-t border-white/15 bg-brand-primary text-text-inverse">
       <div className="container mx-auto py-14 px-4">
         <div className="grid grid-cols-1 gap-10 border-b border-white/10 pb-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">
