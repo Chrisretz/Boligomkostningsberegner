@@ -82,7 +82,9 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-brand-background text-text-primary flex flex-col min-h-screen">
         <GoogleAnalytics />
         <Topbar />
-        <div className="flex-1">{children}</div>
+        <div id="site-content-bounce-root" className="flex-1">
+          {children}
+        </div>
         <Footer />
         <CookieBanner />
       </body>

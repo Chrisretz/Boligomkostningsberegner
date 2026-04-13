@@ -466,41 +466,42 @@ export function Topbar() {
           </div>
         </div>
       </div>
+    </header>
 
-      {/* Mobile/tablet: overlay menu */}
+      {/* fixed children must not be inside header: transform creates a containing block and clips height */}
       {menuOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+            className="fixed inset-0 z-[60] bg-black/40 lg:hidden"
             aria-hidden
             onClick={() => setMenuOpen(false)}
           />
           <aside
-            className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-brand-surface shadow-card z-50 lg:hidden flex flex-col"
+            className="fixed top-0 right-0 bottom-0 z-[70] flex w-full max-w-sm flex-col bg-brand-surface shadow-card lg:hidden"
             role="dialog"
             aria-label="Navigation menu"
           >
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <span className="text-h3 text-text-primary font-semibold">
+            <div className="flex items-center justify-between border-b border-border p-4">
+              <span className="text-h3 font-semibold text-text-primary">
                 Menu
               </span>
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
-                className="flex flex-col items-center gap-0.5 text-text-primary hover:text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 rounded p-2"
+                className="flex flex-col items-center gap-0.5 rounded p-2 text-text-primary hover:text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
                 aria-label="Luk menu"
               >
                 <CloseIcon />
                 <span className="text-small font-medium">Luk</span>
               </button>
             </div>
-            <div className="px-4 pb-4 border-b border-border">
+            <div className="border-b border-border px-4 py-4">
               <SiteSearch
                 className="w-full"
                 onNavigate={() => setMenuOpen(false)}
               />
             </div>
-            <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain flex flex-col p-4 gap-1">
+            <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain p-4">
               <Link
                 href="/"
                 onClick={() => setMenuOpen(false)}
@@ -522,7 +523,7 @@ export function Topbar() {
                       return next;
                     });
                   }}
-                  className={`${mobileNavItemClass} w-full flex items-center justify-between text-left`}
+                  className={`${mobileNavItemClass} flex w-full items-center justify-between text-left`}
                   aria-expanded={mobileBeregnereOpen}
                 >
                   <span>Beregnere</span>
@@ -531,7 +532,7 @@ export function Topbar() {
                   />
                 </button>
                 {mobileBeregnereOpen && (
-                  <div className="mt-1 ml-3 border-l-2 border-border pl-3 space-y-1">
+                  <div className="mt-1 ml-3 space-y-1 border-l-2 border-border pl-3">
                     <Link
                       href="/beregnere"
                       onClick={() => setMenuOpen(false)}
@@ -574,7 +575,7 @@ export function Topbar() {
                       return next;
                     });
                   }}
-                  className={`${mobileNavItemClass} w-full flex items-center justify-between text-left`}
+                  className={`${mobileNavItemClass} flex w-full items-center justify-between text-left`}
                   aria-expanded={mobileArtiklerOpen}
                 >
                   <span>Artikler</span>
@@ -583,7 +584,7 @@ export function Topbar() {
                   />
                 </button>
                 {mobileArtiklerOpen && (
-                  <div className="mt-1 ml-3 border-l-2 border-border pl-3 space-y-2">
+                  <div className="mt-1 ml-3 space-y-2 border-l-2 border-border pl-3">
                     <Link
                       href="/artikler"
                       onClick={() => setMenuOpen(false)}
@@ -601,11 +602,11 @@ export function Topbar() {
                             onClick={() =>
                               setMobileExpandedCategoryId(isExpanded ? null : category.id)
                             }
-                            className="w-full flex items-center justify-between gap-2 py-1 text-left text-small font-medium text-text-primary"
+                            className="flex w-full items-center justify-between gap-2 py-1 text-left text-small font-medium text-text-primary"
                           >
                             <span>{category.title}</span>
                             <span
-                              className="text-text-muted font-medium tabular-nums"
+                              className="font-medium tabular-nums text-text-muted"
                               aria-hidden
                             >
                               {isExpanded ? "−" : "+"}
@@ -646,7 +647,7 @@ export function Topbar() {
                       return next;
                     });
                   }}
-                  className={`${mobileNavItemClass} w-full flex items-center justify-between text-left`}
+                  className={`${mobileNavItemClass} flex w-full items-center justify-between text-left`}
                   aria-expanded={mobileOmOpen}
                 >
                   <span>Om</span>
@@ -655,7 +656,7 @@ export function Topbar() {
                   />
                 </button>
                 {mobileOmOpen ? (
-                  <div className="mt-1 ml-3 border-l-2 border-border pl-3 space-y-1">
+                  <div className="mt-1 ml-3 space-y-1 border-l-2 border-border pl-3">
                     <Link
                       href="/om-os"
                       onClick={() => setMenuOpen(false)}
@@ -677,12 +678,11 @@ export function Topbar() {
           </aside>
         </>
       )}
-    </header>
-    <div
-      aria-hidden
-      className="shrink-0"
-      style={{ height: spacerHeight }}
-    />
+      <div
+        aria-hidden
+        className="shrink-0"
+        style={{ height: spacerHeight }}
+      />
     </>
   );
 }
