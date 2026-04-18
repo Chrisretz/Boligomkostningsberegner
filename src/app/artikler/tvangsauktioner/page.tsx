@@ -17,7 +17,7 @@ const faqSchema = getFaqPageSchema([...TVANGSAUKTIONER_FAQ]);
 
 const title = "Tvangsauktioner: guide til muligheder og faldgruber";
 const description =
-  "Tvangsauktioner i Danmark: hvad det er, fordele og risici, typisk forløb i fogedretten, økonomi og finansiering — og hvordan Boligklarheds beregnere kan hjælpe med overblikket.";
+  "Tvangsauktioner i Danmark: muligheder, risici og fogedret. Overblik over økonomi og finansiering – brug Boligklarhed til budget og beregning.";
 
 export const metadata: Metadata = {
   title,

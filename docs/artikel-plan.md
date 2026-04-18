@@ -62,9 +62,9 @@ Ekstra artikler der styrker autoritet og søgeord.
 
 Når du tilføjer nye artikler:
 
-- Tilføj slug, titel og beskrivelse i `src/app/artikler/page.tsx` (array `articles`).
-- Opret ny side under `src/app/artikler/[slug]/page.tsx` (eller én fil per slug som nu).
-- Tilføj URL i `src/lib/sitemap-data.ts` (`SITEMAP_STATIC_PATHS`) under artikler.
+- Tilføj slug, titel og beskrivelse i `src/lib/articles.ts` (array `articles`).
+- Opret ny side under `src/app/artikler/<slug>/page.tsx`.
+- **Sitemap:** Artikel-URL'er (`/artikler/<slug>`) bygges automatisk fra `articles.ts` i `src/lib/sitemap-data.ts` – du behøver ikke vedligeholde en manuel liste.
 
 ---
 

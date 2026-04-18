@@ -16,9 +16,9 @@ const ARTICLE_PATH = "/artikler/realkreditlan-beregner";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema([...REALKREDITLAN_BEREGNER_FAQ]);
 
-const title = "Realkreditlån beregner: Få overblik over dine boligomkostninger";
+const title = "Realkreditlån beregner og boligomkostninger";
 const description =
-  "Brug Boligklarheds boligomkostningsberegner som realkreditlån beregner: ydelse, 80/15/5, banklån, tinglysning, vedligehold og ejerudgifter — gratis og uden login.";
+  "Realkreditlån beregner i boligomkostningsberegneren: ydelse, 80/15/5, banklån, tinglysning og vedligehold – gratis uden login.";
 
 export const metadata: Metadata = {
   title,
@@ -33,8 +33,7 @@ export const metadata: Metadata = {
 
 export default function RealkreditlanBeregnerArticlePage() {
   const articleSchema = getArticleSchema({
-    title:
-      "Realkreditlån beregner: Få overblik over dine boligomkostninger",
+    title,
     description,
     path: ARTICLE_PATH,
     datePublished: dates.datePublished,
@@ -61,9 +60,7 @@ export default function RealkreditlanBeregnerArticlePage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-3">
-          Realkreditlån beregner: Få overblik over dine boligomkostninger
-        </h1>
+        <h1 className="text-h1 text-text-primary mb-3">{title}</h1>
         <ArticleMeta {...dates} />
 
         <article className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">

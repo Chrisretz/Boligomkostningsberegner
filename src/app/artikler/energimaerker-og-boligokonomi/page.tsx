@@ -14,8 +14,7 @@ const ARTICLE_PATH = "/artikler/energimaerker-og-boligokonomi";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema(ENERGIMARKER_BOLIGOKONOMI_FAQ);
 
-const title =
-  "Energimærker og boligøkonomi: så påvirker A–G dit budget ved boligkøb";
+const title = "Energimærker og boligbudget: A–G ved boligkøb";
 const description =
   "Energimærke A–G: hvad det betyder for varme, el og månedlige omkostninger. Brug mærket i dit boligbudget sammen med boligomkostningsberegner og vedligehold.";
 
@@ -32,8 +31,7 @@ export const metadata: Metadata = {
 
 export default function EnergimaerkerOgBoligokonomiPage() {
   const articleSchema = getArticleSchema({
-    title:
-      "Energimærker og boligøkonomi: så påvirker A–G dit budget ved boligkøb",
+    title,
     description:
       "Energimærke A–G: hvad det betyder for varme, el og månedlige omkostninger. Brug mærket i dit boligbudget sammen med boligomkostningsberegner og vedligehold.",
     path: ARTICLE_PATH,
@@ -61,9 +59,7 @@ export default function EnergimaerkerOgBoligokonomiPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-3">
-          Energimærker og boligøkonomi: så påvirker A–G dit budget ved boligkøb
-        </h1>
+        <h1 className="text-h1 text-text-primary mb-3">{title}</h1>
         <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">

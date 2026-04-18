@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { articles } from "@/lib/articles";
 import {
   PATH_BOLIGLAAN_BEREGNER,
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
@@ -6,30 +7,17 @@ import {
   SITE_URL,
 } from "@/lib/site";
 
-export const SITEMAP_STATIC_PATHS = [
+/** Ikke-artikel-sider (rækkefølge bevares i sitemap). */
+const SITEMAP_PREFIX_PATHS = [
   "",
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
   PATH_BOLIGLAAN_BEREGNER,
   "/beregnere",
   "/hvad-kan-jeg-koebe-bolig-for",
   "/artikler",
-  "/artikler/tinglysning",
-  "/artikler/ejerskifteforsikring",
-  "/artikler/realkreditlan",
-  "/artikler/realkreditlan-beregner",
-  "/artikler/saadan-vurderer-banken-dit-boliglan",
-  "/artikler/sammenligning-af-laanetyper",
-  "/artikler/energimaerker-og-boligokonomi",
-  "/artikler/vedligehold",
-  "/artikler/tvangsauktioner",
-  "/artikler/eksisterende-pantebrev",
-  "/artikler/hvad-kan-jeg-koebe-bolig-for",
-  "/artikler/ejerudgifter",
-  "/artikler/ejerlejlighed",
-  "/artikler/boligkoeb-foerste-gang",
-  "/artikler/grundskyld-og-ejendomsskat",
-  "/artikler/indboforsikring",
-  "/artikler/elforbrug-husstand",
+] as const;
+
+const SITEMAP_SUFFIX_PATHS = [
   "/privacy",
   "/cookies",
   "/disclaimer",
@@ -37,6 +25,13 @@ export const SITEMAP_STATIC_PATHS = [
   PATH_KONTAKT,
   "/boligbegreber",
 ] as const;
+
+/** Alle paths i XML-sitemap: kerne + én URL per artikel (fra `articles.ts`) + juridisk/kontakt. */
+export const SITEMAP_PATHS: readonly string[] = [
+  ...SITEMAP_PREFIX_PATHS,
+  ...articles.map((a) => `/artikler/${a.slug}`),
+  ...SITEMAP_SUFFIX_PATHS,
+];
 
 export type SitemapRow = {
   url: string;
@@ -48,7 +43,7 @@ export type SitemapRow = {
 export function getSitemapRows(): SitemapRow[] {
   const lastModified = new Date();
 
-  return SITEMAP_STATIC_PATHS.map((path) => ({
+  return SITEMAP_PATHS.map((path) => ({
     url: `${SITE_URL}${path}`,
     lastModified,
     changeFrequency:

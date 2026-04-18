@@ -17,7 +17,7 @@ const faqSchema = getFaqPageSchema(EJERUDGIFTER_FAQ);
 
 const title = "Hvad dækker ejerudgifter? Komplet guide til boligejere";
 const description =
-  "Ejerudgifter forklaret: grundskyld, ejendomsværdiskat, ejerforeningsbidrag, forsikring og hvad der ikke er ejerudgifter. Sammenlign hus og lejlighed og brug boligomkostningsberegneren.";
+  "Ejerudgifter: grundskyld, ejendomsværdiskat, forsikring og ejerforening. Hus vs. lejlighed – indregn i boligomkostningsberegneren.";
 
 export const metadata: Metadata = {
   title,

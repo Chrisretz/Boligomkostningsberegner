@@ -14,8 +14,7 @@ const ARTICLE_PATH = "/artikler/sammenligning-af-laanetyper";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema(SAMMENLIGNING_LAANETYPER_FAQ);
 
-const title =
-  "Sammenligning af lånetyper: realkredit, banklån og afdragsfrihed";
+const title = "Lånetyper: realkredit, banklån og afdragsfrihed";
 const description =
   "Sammenlign realkreditlån, banklån og afdragsfrihed. Få overblik over renter, risiko og månedlig ydelse – og hvordan du tester scenarier i en boligberegner.";
 
@@ -32,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function SammenligningAfLaanetyperPage() {
   const articleSchema = getArticleSchema({
-    title: "Sammenligning af lånetyper: realkredit, banklån og afdragsfrihed",
+    title,
     description:
       "Sammenlign realkreditlån, banklån og afdragsfrihed. Få overblik over renter, risiko og månedlig ydelse – og hvordan du tester scenarier i en boligberegner.",
     path: ARTICLE_PATH,
@@ -60,9 +59,7 @@ export default function SammenligningAfLaanetyperPage() {
           </Link>
         </p>
 
-        <h1 className="text-h1 text-text-primary mb-3">
-          Sammenligning af lånetyper: realkredit, banklån og afdragsfrihed
-        </h1>
+        <h1 className="text-h1 text-text-primary mb-3">{title}</h1>
         <ArticleMeta {...dates} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">

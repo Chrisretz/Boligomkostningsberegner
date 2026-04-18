@@ -31,7 +31,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/ejerudgifter": {
     datePublished: "2026-03-08T10:00:00+01:00",
-    dateModified: "2026-04-10T12:00:00+02:00",
+    dateModified: "2026-04-18T12:00:00+02:00",
   },
   "/artikler/elforbrug-husstand": {
     datePublished: "2026-03-09T10:00:00+01:00",
@@ -59,15 +59,15 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/realkreditlan-beregner": {
     datePublished: "2026-04-30T10:00:00+02:00",
-    dateModified: "2026-04-30T10:00:00+02:00",
+    dateModified: "2026-04-18T12:00:00+02:00",
   },
   "/artikler/sammenligning-af-laanetyper": {
     datePublished: "2026-04-01T14:00:00+02:00",
-    dateModified: "2026-04-01T14:00:00+02:00",
+    dateModified: "2026-04-18T12:00:00+02:00",
   },
   "/artikler/energimaerker-og-boligokonomi": {
     datePublished: "2026-04-01T14:00:00+02:00",
-    dateModified: "2026-04-01T14:00:00+02:00",
+    dateModified: "2026-04-18T12:00:00+02:00",
   },
   "/artikler/saadan-vurderer-banken-dit-boliglan": {
     datePublished: "2026-03-15T10:00:00+01:00",
@@ -83,7 +83,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/tvangsauktioner": {
     datePublished: "2026-04-07T10:00:00+02:00",
-    dateModified: "2026-04-07T10:00:00+02:00",
+    dateModified: "2026-04-18T12:00:00+02:00",
   },
   "/boligbegreber": {
     datePublished: "2026-03-20T10:00:00+01:00",

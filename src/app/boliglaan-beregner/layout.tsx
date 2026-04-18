@@ -4,7 +4,7 @@ import { socialMetadata } from "@/lib/social-metadata";
 
 const title = "Boliglån beregner – beregn ydelse og boligbudget";
 const description =
-  "Gratis boliglånsberegner og guide: 80/15/5-finansiering, månedlig ydelse, typiske omkostninger og FAQ. Beregn dit boliglån og boligomkostninger hos Boligklarhed.";
+  "Gratis boliglånsberegner og guide: 80/15/5, månedlig ydelse og typiske omkostninger. Beregn boliglån og boligbudget på Boligklarhed.";
 
 export const metadata: Metadata = {
   title,
