@@ -6,6 +6,7 @@ import type { CalcInput, HouseholdSize } from "@/lib/types";
 import type { ValidationErrors } from "@/lib/validation";
 import { DEFAULTS } from "@/lib/constants";
 import { estimateMonthlyElDKK, getEstimatedYearlyKWh } from "@/lib/electricity";
+import { trackGaEvent } from "@/lib/trackGaEvent";
 
 interface CalculatorFormProps {
   onSubmit: (input: CalcInput) => void;
@@ -196,6 +197,9 @@ export function CalculatorForm({
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
+      trackGaEvent("calculator_beregn_klik", {
+        beregner_type: "boligomkostninger",
+      });
       const input: CalcInput = {
         purchasePriceDKK,
         downPaymentDKK,

@@ -8,6 +8,7 @@ import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import { GEARING_DEFAULT } from "@/lib/loanCapacityConstants";
 import { CALCULATION_UI_DELAY_MS } from "@/lib/calculationUiDelay";
 import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { trackGaEvent } from "@/lib/trackGaEvent";
 
 const INCOME_SLIDER_MIN = 200_000;
 const INCOME_SLIDER_MAX = 2_500_000;
@@ -42,6 +43,7 @@ export default function HvadKanJegKoebeBoligForPage() {
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
+    trackGaEvent("calculator_beregn_klik", { beregner_type: "lanerum" });
     setResultPhase("calculating");
     window.setTimeout(() => {
       setResultPhase("ready");
