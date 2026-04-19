@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import { flushSync } from "react-dom";
 import Link from "next/link";
 import { CalculatorForm } from "@/components/CalculatorForm";
 import { ResultsPanel } from "@/components/ResultsPanel";
@@ -24,7 +25,8 @@ export default function BeregnPage() {
   const [firstErrorId, setFirstErrorId] = useState<string | undefined>();
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [resultPhase, setResultPhase] = useState<ResultPhase>("idle");
-  const resultRef = useRef<HTMLDivElement>(null);
+  const resultsAnchorRef = useRef<HTMLDivElement>(null);
+  const resultRef = useRef<HTMLElement>(null);
   const calculationTimeoutRef = useRef<number | null>(null);
   const pendingInputRef = useRef<CalcInput | null>(null);
 
@@ -64,7 +66,10 @@ export default function BeregnPage() {
     }
     setValidationErrors({});
     setFirstErrorId(undefined);
-    setResultPhase("calculating");
+    resultsAnchorRef.current?.scrollIntoView({ behavior: "auto", block: "start" });
+    flushSync(() => {
+      setResultPhase("calculating");
+    });
     pendingInputRef.current = validated.data;
 
     calculationTimeoutRef.current = window.setTimeout(() => {
@@ -101,14 +106,6 @@ export default function BeregnPage() {
       });
     }, CALCULATION_UI_DELAY_MS);
   }, []);
-
-  useEffect(() => {
-    if (resultPhase !== "ready") return;
-    const id = window.setTimeout(() => {
-      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 80);
-    return () => window.clearTimeout(id);
-  }, [resultPhase]);
 
   const handleDownloadPdf = useCallback(async () => {
     if (
@@ -175,11 +172,19 @@ export default function BeregnPage() {
           />
         </section>
 
+        {/* Fast anker: altid i DOM, så scroll kan skje i samme klik som timeren starter */}
+        <div
+          ref={resultsAnchorRef}
+          id="beregn-dine-boligomkostninger-resultat"
+          className="h-px w-full scroll-mt-24"
+          aria-hidden
+        />
+
         {/* Resultater / beregning */}
         {(resultPhase === "calculating" || resultPhase === "ready") && (
           <section
             ref={resultRef}
-            className="mt-12 md:mt-16 scroll-mt-24"
+            className="mt-12 md:mt-16"
             aria-live="polite"
           >
             {resultPhase === "calculating" && (

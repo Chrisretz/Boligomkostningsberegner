@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
+import { flushSync } from "react-dom";
 import Link from "next/link";
 import { LabelWithTooltip } from "@/components/LabelWithTooltip";
 import { LoanCapacityResultsGate } from "@/components/LoanCapacityResultsGate";
@@ -30,6 +31,7 @@ export default function HvadKanJegKoebeBoligForPage() {
   const [monthlyIncome, setMonthlyIncome] = useState(50_000);
   const [existingDebt, setExistingDebt] = useState(0);
   const [resultPhase, setResultPhase] = useState<ResultPhase>("idle");
+  const resultsAnchorRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const annualFromInput =
@@ -44,19 +46,14 @@ export default function HvadKanJegKoebeBoligForPage() {
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     trackGaEvent("calculator_beregn_klik", { beregner_type: "lanerum" });
-    setResultPhase("calculating");
+    resultsAnchorRef.current?.scrollIntoView({ behavior: "auto", block: "start" });
+    flushSync(() => {
+      setResultPhase("calculating");
+    });
     window.setTimeout(() => {
       setResultPhase("ready");
     }, CALCULATION_UI_DELAY_MS);
   }, []);
-
-  useEffect(() => {
-    if (resultPhase !== "ready") return;
-    const id = window.setTimeout(() => {
-      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 80);
-    return () => window.clearTimeout(id);
-  }, [resultPhase]);
 
   const syncFromAnnual = (v: number) => {
     setAnnualIncome(v);
@@ -267,10 +264,17 @@ export default function HvadKanJegKoebeBoligForPage() {
           </form>
         </section>
 
+        <div
+          ref={resultsAnchorRef}
+          id="hvad-kan-jeg-koebe-bolig-for-resultat"
+          className="h-px w-full scroll-mt-24"
+          aria-hidden
+        />
+
         {(resultPhase === "calculating" || resultPhase === "ready") && (
           <div
             ref={resultRef}
-            className="mt-12 md:mt-16 scroll-mt-24"
+            className="mt-12 md:mt-16"
             aria-live="polite"
           >
             {resultPhase === "calculating" && (
