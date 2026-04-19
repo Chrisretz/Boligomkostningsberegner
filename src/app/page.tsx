@@ -32,11 +32,11 @@ export default function HomePage() {
         }}
       />
       <section className="py-16 px-4 md:py-24">
-        <div className="container mx-auto max-w-4xl text-center">
+        <div className="container mx-auto max-w-7xl text-center">
           <h1 className="text-h1 text-text-primary mb-4">
             Boligberegner – hvad koster boligen reelt?
           </h1>
-          <p className="text-body text-text-secondary mb-8 max-w-2xl mx-auto">
+          <p className="text-body text-text-secondary mb-8 max-w-3xl lg:max-w-4xl mx-auto">
             Online boligomkostningsberegner til danske boligkøbere. Beregn alle vigtige omkostninger ved boligkøb – tinglysning, pant, engangsomkostninger, ejerudgifter, vedligehold og månedlig ydelse på realkreditlån og evt. banklån – samlet ét sted. Få samtidig en rentestest (+1% og +2%), så du kan se, om dit boligbudget også holder, hvis renten stiger.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -53,18 +53,18 @@ export default function HomePage() {
               Hvad kan jeg købe bolig for?
             </Link>
           </div>
-          <p className="text-small text-text-muted mt-4 max-w-md mx-auto">
+          <p className="text-small text-text-muted mt-4 max-w-xl mx-auto">
             Vælg den beregner, der passer til dit spørgsmål – du kan bruge begge til at få det fulde billede.
           </p>
         </div>
       </section>
 
       <section className="py-12 px-4 border-t border-border">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-7xl">
           <h2 className="text-h2 text-text-primary mb-6 text-center">
             Vælg din beregner
           </h2>
-          <p className="text-body text-text-secondary mb-8 max-w-3xl mx-auto text-center">
+          <p className="text-body text-text-secondary mb-8 max-w-4xl mx-auto text-center">
             Boligklarhed tilbyder to værktøjer: én der viser, hvad en given bolig koster at købe og eje, og én der viser, hvor meget du typisk kan låne og hvilken købspris det svarer til. Brug begge for at få det fulde billede.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -101,7 +101,7 @@ export default function HomePage() {
           <h2 className="text-h2 text-text-primary mb-6 text-center">
             Hvad inkluderer vi?
           </h2>
-          <p className="text-body text-text-secondary mb-8 max-w-3xl mx-auto text-center">
+          <p className="text-body text-text-secondary mb-8 max-w-4xl mx-auto text-center">
             Boligklarhed samler de vigtigste omkostninger ved boligkøb i én beregning, så du slipper for at regne i regneark eller gætte dig frem. Beregnerne følger de officielle satser og typiske tommelfingerregler, så du får et realistisk billede af, hvad det koster at købe og eje din bolig – både ved overtagelse og hver måned.
           </p>
           <InclusionCardsCarousel />
@@ -109,11 +109,11 @@ export default function HomePage() {
       </section>
 
       <section className="py-12 px-4 border-t border-border">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-7xl">
           <h2 className="text-h2 text-text-primary mb-6 text-center">
             Sådan virker det
           </h2>
-          <p className="text-body text-text-secondary mb-8 max-w-3xl mx-auto text-center">
+          <p className="text-body text-text-secondary mb-8 max-w-4xl mx-auto text-center">
             Boligklarhed er bygget til at være enkel nok til at bruge på få minutter, men detaljeret nok til at give dig et solidt beslutningsgrundlag. Du indtaster få nøgletal, hvorefter boligomkostningsberegneren regner engangsomkostninger, månedlig total og rentestest ud for dig – uden at du behøver forstå alle formler bag.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -149,11 +149,11 @@ export default function HomePage() {
       </section>
 
       <section className="py-12 px-4 border-t border-border">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-7xl">
           <h2 className="text-h2 text-text-primary mb-6 text-center">
             Hvad er Boligklarhed – og hvem er det til?
           </h2>
-          <div className="space-y-4 text-body text-text-secondary max-w-3xl mx-auto">
+          <div className="space-y-4 text-body text-text-secondary max-w-4xl mx-auto">
             <p>
               Boligklarhed er et uafhængigt værktøj til dig, der står over for et boligkøb og gerne vil forstå
               alle omkostninger ved boligkøbet, før du skriver under. I stedet for at sidde med et kompliceret
@@ -176,7 +176,7 @@ export default function HomePage() {
       </section>
 
       <section className="py-12 px-4 border-t border-border">
-        <div className="container mx-auto max-w-2xl">
+        <div className="container mx-auto max-w-4xl">
           <div className="bg-brand-surface rounded-md border border-border shadow-soft p-spacing-card text-center">
             <p className="text-body text-text-secondary">
               Vejledende beregning – ikke finansiel rådgivning.
@@ -189,7 +189,7 @@ export default function HomePage() {
         className="py-12 px-4 border-t border-border"
         aria-labelledby="faq-heading"
       >
-        <div className="container mx-auto max-w-2xl">
+        <div className="container mx-auto max-w-3xl">
           <h2
             id="faq-heading"
             className="text-h2 text-text-primary mb-6 text-center"

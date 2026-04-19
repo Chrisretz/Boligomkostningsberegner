@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function KontaktPage() {
   return (
     <main className="min-h-screen py-12 px-4">
-      <div className="container mx-auto max-w-2xl">
+      <div className="container mx-auto max-w-3xl">
         <h1 className="text-h1 text-text-primary mb-4">Kontakt os</h1>
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary mb-10 space-y-6">

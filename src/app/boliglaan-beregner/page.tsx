@@ -25,7 +25,7 @@ export default function BoliglaanBeregnerPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <div className="container mx-auto max-w-3xl min-w-0">
+      <div className="container mx-auto max-w-6xl min-w-0">
         <article>
           <h1 className="text-h1 text-text-primary mb-4 break-words">
             Boliglån beregner – beregn ydelse og omkostninger ved boligkøb

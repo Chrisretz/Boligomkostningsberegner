@@ -69,7 +69,7 @@ export default function HvadKanJegKoebeBoligForPage() {
 
   return (
     <main className="min-h-screen py-12 px-4 overflow-x-hidden pb-24">
-      <div className="container mx-auto max-w-5xl min-w-0">
+      <div className="container mx-auto max-w-7xl min-w-0">
         <header className="text-center mb-10">
           <h1 className="text-xl sm:text-2xl md:text-h1 text-text-primary mb-2 break-words">
             Hvad kan jeg købe bolig for?

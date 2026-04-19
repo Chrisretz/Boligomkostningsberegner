@@ -117,7 +117,7 @@ export function InclusionCardsCarousel() {
   }
 
   return (
-    <div ref={containerRef} className="mx-auto max-w-2xl">
+    <div ref={containerRef} className="mx-auto w-full max-w-4xl">
       <p
         id={announceId}
         role="status"

@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export default function BeregnerePage() {
   return (
     <main className="min-h-screen py-12 px-4">
-      <div className="container mx-auto max-w-3xl">
+      <div className="container mx-auto max-w-6xl">
         <h1 className="text-h1 text-text-primary mb-3 break-words">
           Beregnere til boligkøb
         </h1>

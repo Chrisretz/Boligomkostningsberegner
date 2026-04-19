@@ -41,7 +41,7 @@ export default function BoligbegreberPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <div className="container mx-auto max-w-3xl">
+      <div className="container mx-auto max-w-5xl">
         <p className="mb-4">
           <Link
             href="/artikler"
