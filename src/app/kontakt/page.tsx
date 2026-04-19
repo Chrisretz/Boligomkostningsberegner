@@ -11,7 +11,7 @@ import { socialMetadata } from "@/lib/social-metadata";
 
 const title = "Kontakt os";
 const description =
-  "Kontakt Boligklarhed om boligomkostninger, beregnere og indhold. Skriv på e-mail eller via formularen. CVR og virksomhedsoplysninger. Vi svarer på henvendelser om webstedet og værktøjerne.";
+  "Kontakt Boligklarhed om boligomkostninger, beregnere og indhold. Skriv på e-mail eller via formularen. CVR og virksomhedsoplysninger på siden.";
 const ogDescription =
   "Kontakt Boligklarhed om spørgsmål til boligomkostninger, beregnere og artikler – på e-mail eller via formularen.";
 
