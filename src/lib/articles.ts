@@ -20,13 +20,14 @@ export const articles = [
   { slug: "elforbrug-husstand", title: "Hvad bruger en husstand i strøm?", description: "Gennemsnitligt elforbrug for lejlighed og hus – efter antal personer. Kildehenvisninger til Energistyrelsen, EWII og elberegner.dk." },
   { slug: "energimaerker-og-boligokonomi", title: "Energimærker og boligbudget: A–G ved boligkøb", description: "Energimærke A–G: hvad det betyder for varme, el og månedlige omkostninger – og hvordan du bruger mærket i boligbudgettet." },
   { slug: "tvangsauktioner", title: "Tvangsauktioner: guide til muligheder og faldgruber", description: "Tvangsauktioner i Danmark: muligheder, risici og fogedret. Overblik over økonomi og finansiering – brug Boligklarhed til budget og beregning." },
+  { slug: "vaelg-ejendomsmaegler", title: "Vælg den rette ejendomsmægler til dit boligsalg", description: "Guide til at vælge ejendomsmægler: opgaver, salær, lokalkendskab og salgsstrategi. Brug Boligklarheds beregnere til økonomisk overblik før du underskriver." },
 ] as const;
 
 export const articleCategories = [
   { id: "engangsomkostninger", title: "Engangsomkostninger ved boligkøb", description: "Tinglysning, pant, forsikring og andre omkostninger ved overtagelse.", slugs: ["tinglysning", "ejerskifteforsikring", "eksisterende-pantebrev"] as const },
   { id: "finansiering", title: "Finansiering og lån", description: "Realkreditlån, banklån og hvad du har råd til at købe for.", slugs: ["realkreditlan", "realkreditlan-beregner", "sammenligning-af-laanetyper", "hvad-kan-jeg-koebe-bolig-for", "saadan-vurderer-banken-dit-boliglan"] as const },
   { id: "loebende", title: "Løbende omkostninger", description: "Vedligehold, ejerudgifter, el, energimærker, grundskyld, skat og forsikring.", slugs: ["vedligehold", "ejerudgifter", "elforbrug-husstand", "energimaerker-og-boligokonomi", "grundskyld-og-ejendomsskat", "indboforsikring"] as const },
-  { id: "overblik", title: "Overblik og vejledning", description: "Boligtyper, førstegangskøb, tvangsauktioner og generel guide til boligkøb.", slugs: ["ejerlejlighed", "boligkoeb-foerste-gang", "tvangsauktioner"] as const },
+  { id: "overblik", title: "Overblik og vejledning", description: "Boligtyper, førstegangskøb, ejendomsmægler, tvangsauktioner og generel guide til boligkøb.", slugs: ["ejerlejlighed", "boligkoeb-foerste-gang", "vaelg-ejendomsmaegler", "tvangsauktioner"] as const },
 ] as const;
 
 export type ArticleSlug = (typeof articles)[number]["slug"];
