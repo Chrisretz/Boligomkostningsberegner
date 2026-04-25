@@ -47,7 +47,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/hvad-kan-jeg-koebe-bolig-for": {
     datePublished: "2026-03-12T10:00:00+01:00",
-    dateModified: "2026-04-01T12:00:00+02:00",
+    dateModified: "2026-04-25T12:00:00+02:00",
   },
   "/artikler/indboforsikring": {
     datePublished: "2026-03-13T10:00:00+01:00",
