@@ -1,10 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  canonicalUrl,
-  PATH_BOLIGOMKOSTNINGER_BEREGNER,
-  PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
-} from "@/lib/site";
+import { canonicalUrl, PATH_BOLIGOMKOSTNINGER_BEREGNER, PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR } from "@/lib/site";
 import { getArticleDates } from "@/lib/article-dates";
 import { HAANDVAERKERTILBUD_FAQ } from "@/lib/artikel-faq/haandvaerkertilbud";
 import { socialMetadata } from "@/lib/social-metadata";
@@ -15,20 +11,15 @@ const ARTICLE_PATH = "/artikler/haandvaerkertilbud";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema(HAANDVAERKERTILBUD_FAQ);
 
-const title =
-  "H\u00e5ndv\u00e6rkertilbud: guide til boligk\u00f8b, renovering, budget og faldgruber";
+const title = "H�ndv�rkertilbud: guide til boligk�b, renovering, budget og faldgruber";
 const description =
-  "Hvad betyder h\u00e5ndv\u00e6rkertilbud? F\u00e5 overblik over pris, renoveringsbudget, tjekliste f\u00f8r k\u00f8b, finansiering, buffer til uforudsete udgifter \u2013 og hvordan du indhenter tilbud fra h\u00e5ndv\u00e6rkere.";
+  "Hvad betyder h�ndv�rkertilbud? F� overblik over pris, renoveringsbudget, tjekliste f�r k�b, finansiering, buffer til uforudsete udgifter � og hvordan du indhenter tilbud fra h�ndv�rkere.";
 
 export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: canonicalUrl(ARTICLE_PATH) },
-  ...socialMetadata({
-    path: ARTICLE_PATH,
-    title,
-    description,
-  }),
+  ...socialMetadata({ path: ARTICLE_PATH, title, description }),
 };
 
 export default function HaandvaerkertilbudPage() {
@@ -50,126 +41,180 @@ export default function HaandvaerkertilbudPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+
       <div className="container mx-auto max-w-2xl">
         <p className="mb-4">
-          <Link
-            href="/artikler"
-            className="text-body text-brand-primary hover:underline"
-          >
+          <Link href="/artikler" className="text-body text-brand-primary hover:underline">
             {"\u2190"} Tilbage til Artikler
           </Link>
         </p>
 
         <h1 className="text-h1 text-text-primary mb-3">
-          {"H\u00e5ndv\u00e6rkertilbud: guide til boligk\u00f8b, renovering, budget og faldgruber"}
+          H�ndv�rkertilbud: guide til boligk�b, renovering, budget og faldgruber
         </h1>
         <ArticleMeta {...dates} />
 
         <article className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
-            <strong className="text-text-primary">
-              {"H\u00e5ndv\u00e6rkertilbud"}
-            </strong>{" "}
-            kan betyde to ting i praksis: enten en bolig, der kr\u00e6ver
-            renovering, eller et pristilbud fra en h\u00e5ndv\u00e6rker. I denne
-            guide fokuserer vi prim\u00e6rt p\u00e5 h\u00e5ndv\u00e6rkertilbud som{" "}
-            <strong className="text-text-primary">boligtype</strong> \u2013 men
-            du f\u00e5r ogs\u00e5 en konkret metode til at indhente og sammenligne{" "}
-            <strong className="text-text-primary">
-              {"h\u00e5ndv\u00e6rkertilbud (tilbud fra fagfolk)"}
-            </strong>
-            , n\u00e5r du skal renovere.
+            <strong className="text-text-primary">H�ndv�rkertilbud</strong> kan betyde to
+            ting i praksis: enten en bolig, der kr�ver renovering, eller et
+            pristilbud fra en h�ndv�rker. I denne guide fokuserer vi prim�rt p�
+            h�ndv�rkertilbud som <strong className="text-text-primary">boligtype</strong>{" "}
+            � men du f�r ogs� en konkret metode til at indhente og sammenligne{" "}
+            <strong className="text-text-primary">tilbud fra fagfolk</strong>, n�r du
+            skal renovere.
           </p>
 
-          <section aria-labelledby="featured-snippet">
-            <h2
-              id="featured-snippet"
-              className="text-h2 text-text-primary scroll-mt-24"
-            >
-              {"Kort svar: hvad er et h\u00e5ndv\u00e6rkertilbud?"}
+          <section aria-labelledby="kort-svar">
+            <h2 id="kort-svar" className="text-h2 text-text-primary scroll-mt-24">
+              Kort svar: hvad er et h�ndv�rkertilbud?
             </h2>
             <p>
-              Et h\u00e5ndv\u00e6rkertilbud er typisk en bolig, der s\u00e6lges
-              billigere end en indflytningsklar bolig, fordi den kr\u00e6ver{" "}
+              Et h�ndv�rkertilbud er typisk en bolig, der s�lges billigere end en
+              indflytningsklar bolig, fordi den kr�ver{" "}
               <strong className="text-text-primary">
-                {"renovering, istands\u00e6ttelse eller modernisering"}
+                renovering, istands�ttelse eller modernisering
               </strong>
-              . Prisen kan v\u00e6re attraktiv, men du b\u00f8r altid medregne
-              renoveringsbudget, finansiering og en buffer til uforudsete
-              udgifter, f\u00f8r du beslutter dig.
+              . Den lave pris kan v�re fristende � men du b�r altid regne p�
+              total�konomien, f�r du k�ber.
             </p>
           </section>
 
-          <section aria-labelledby="hvad-betyder">
-            <h2
-              id="hvad-betyder"
-              className="text-h2 text-text-primary scroll-mt-24"
-            >
-              {"Hvad betyder \u201ch\u00e5ndv\u00e6rkertilbud\u201d? (to betydninger)"}
+          <section aria-labelledby="to-betydninger">
+            <h2 id="to-betydninger" className="text-h2 text-text-primary scroll-mt-24">
+              Hvad betyder �h�ndv�rkertilbud�? (to betydninger)
             </h2>
+
             <h3 className="text-h3 text-text-primary pt-2">
-              {"1) H\u00e5ndv\u00e6rkertilbud som bolig, du k\u00f8ber"}
+              1) H�ndv�rkertilbud som bolig, du k�ber
             </h3>
             <p>
-              {"I boligannoncer bruges \u201ch\u00e5ndv\u00e6rkertilbud\u201d ofte om et hus eller en lejlighed, der tr\u00e6nger til en k\u00e6rlig h\u00e5nd. Boligen kan fx have behov for nyt tag, opdateret el/VVS, energiforbedringer eller et nyt k\u00f8kken/bad."}
+              I boligannoncer bruges �h�ndv�rkertilbud� ofte om et hus eller en
+              lejlighed, der tr�nger til en k�rlig h�nd. Det kan d�kke alt fra
+              kosmetiske opdateringer til st�rre ting som tag, el/VVS og
+              energiforbedringer.
             </p>
             <p>
-              {"EDC peger fx p\u00e5, at h\u00e5ndv\u00e6rkertilbud/d\u00f8dsbo i perioder kan v\u00e6re markant billigere pr. kvm end mere indflytningsklare huse \u2013 men at du skal unders\u00f8ge renoveringsbehov og risiko grundigt f\u00f8r k\u00f8b. Se "}
+              Til inspiration kan du l�se{" "}
               <a
                 href="https://www.edc.dk/nyhedsartikler/har-du-kig-paa-et-haandvaerkertilbud/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-brand-primary underline hover:no-underline"
               >
-                {"EDC\u2019s guide til h\u00e5ndv\u00e6rkertilbud"}
+                EDC�s gennemgang af, hvad du b�r unders�ge
               </a>
               .
             </p>
 
             <h3 className="text-h3 text-text-primary pt-4">
-              {"2) H\u00e5ndv\u00e6rkertilbud som tilbud fra h\u00e5ndv\u00e6rkere"}
+              2) H�ndv�rkertilbud som tilbud fra h�ndv�rkere
             </h3>
             <p>
-              {"I h\u00e5ndv\u00e6rker-branchen betyder \u201ch\u00e5ndv\u00e6rkertilbud\u201d ofte bare et pristilbud p\u00e5 en opgave \u2013 fx maling, tag, k\u00f8kken, bad eller energirenovering. Hvis du k\u00f8ber en renoveringsbolig, ender du n\u00e6sten altid med at skulle indhente flere tilbud, s\u00e5 du kan sammenligne pris, materialer, tidsplan og forbehold."}
+              I h�ndv�rker-branchen betyder �h�ndv�rkertilbud� ofte et pristilbud
+              p� en opgave. N�r du k�ber en renoveringsbolig, er det ofte disse
+              tilbud, der afg�r om dit budget holder.
             </p>
           </section>
 
-          <section aria-labelledby="budget">
-            <h2 id="budget" className="text-h2 text-text-primary scroll-mt-24">
-              {"\u00d8konomisk overblik: mere end bare k\u00f8bsprisen"}
+          <section aria-labelledby="oekonomi">
+            <h2 id="oekonomi" className="text-h2 text-text-primary scroll-mt-24">
+              �konomi: s�dan regner du p� totalbudgettet
             </h2>
             <p>
-              {"Den st\u00f8rste fejl ved h\u00e5ndv\u00e6rkertilbud er at fokusere p\u00e5 den lave k\u00f8bspris \u2013 og undervurdere total\u00f8konomien."}
+              Den st�rste fejl ved et h�ndv�rkertilbud er at kigge p� k�bsprisen
+              alene. T�nk i stedet:
             </p>
+            <div className="rounded-md border border-border bg-brand-background/50 p-4 not-prose">
+              <p className="m-0 text-text-secondary">
+                <strong className="text-text-primary">
+                  K�bspris + renovering + buffer + handelsomkostninger
+                </strong>{" "}
+                = samlet investering.
+              </p>
+            </div>
             <p>
-              {"Vil du regne p\u00e5 den samlede bolig\u00f8konomi, kan du bruge "}
+              Vil du have overblik over engangsudgifter og l�bende m�nedlige
+              udgifter, kan du bruge{" "}
               <Link
                 href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
                 className="text-brand-primary underline hover:no-underline"
               >
                 boligomkostningsberegneren
               </Link>{" "}
-              {"og supplere med "}
+              og stress-teste renterne. Og hvis du er i startfasen, kan{" "}
               <Link
                 href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}
                 className="text-brand-primary underline hover:no-underline"
               >
-                {"\u201cHvad kan jeg k\u00f8be bolig for?\u201d"}
-              </Link>
+                �Hvad kan jeg k�be bolig for?�
+              </Link>{" "}
+              give en indikation af dit l�nerum.
+            </p>
+          </section>
+
+          <section aria-labelledby="tjekliste">
+            <h2 id="tjekliste" className="text-h2 text-text-primary scroll-mt-24">
+              Tjekliste f�r du k�ber et h�ndv�rkertilbud
+            </h2>
+            <ol className="list-decimal pl-6 space-y-2">
+              <li>Gennemg� tilstandsrapport og elinstallationsrapport.</li>
+              <li>
+                Tjek{" "}
+                <Link
+                  href="/artikler/energimaerker-og-boligokonomi"
+                  className="text-brand-primary underline hover:no-underline"
+                >
+                  energim�rket
+                </Link>{" "}
+                og medregn energiforbedringer.
+              </li>
+              <li>F� en byggesagkyndig med, hvis det er et st�rre projekt.</li>
+              <li>Indhent 2�3 tilbud p� de st�rste poster og l�g buffer p�.</li>
+              <li>Tal med banken om finansiering f�r du byder.</li>
+            </ol>
+          </section>
+
+          <section aria-labelledby="tilbud">
+            <h2 id="tilbud" className="text-h2 text-text-primary scroll-mt-24">
+              S�dan indhenter du tilbud fra h�ndv�rkere (kort metode)
+            </h2>
+            <ol className="list-decimal pl-6 space-y-2">
+              <li>Beskriv opgaven konkret og vedh�ft billeder/tegninger.</li>
+              <li>Indhent mindst 2�3 skriftlige tilbud med tydelige forbehold.</li>
+              <li>Sammenlign pris, materialer, tidsplan og garanti � ikke kun bel�b.</li>
+            </ol>
+            <p>
+              Hvis du vil indhente flere tilbud hurtigt, kan du fx bruge{" "}
+              <a
+                href="https://www.3byggetilbud.dk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                3byggetilbud.dk
+              </a>{" "}
+              eller{" "}
+              <a
+                href="https://www.haandvaerker.dk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                h�ndvaerker.dk
+              </a>
               .
             </p>
           </section>
 
           <section aria-labelledby="faq">
             <h2 id="faq" className="text-h2 text-text-primary scroll-mt-24">
-              {"Ofte stillede sp\u00f8rgsm\u00e5l om h\u00e5ndv\u00e6rkertilbud"}
+              Ofte stillede sp�rgsm�l om h�ndv�rkertilbud
             </h2>
             <div className="space-y-6 not-prose">
               {HAANDVAERKERTILBUD_FAQ.map((item) => (
                 <div key={item.question}>
-                  <h3 className="text-h3 text-text-primary mb-2">
-                    {item.question}
-                  </h3>
+                  <h3 className="text-h3 text-text-primary mb-2">{item.question}</h3>
                   <p className="text-body text-text-secondary leading-relaxed">
                     {item.answer}
                   </p>
@@ -180,10 +225,7 @@ export default function HaandvaerkertilbudPage() {
         </article>
 
         <p className="mt-8">
-          <Link
-            href="/artikler"
-            className="text-body text-brand-primary hover:underline"
-          >
+          <Link href="/artikler" className="text-body text-brand-primary hover:underline">
             Se alle artikler
           </Link>
         </p>
