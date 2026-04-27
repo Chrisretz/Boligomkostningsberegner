@@ -12,6 +12,7 @@ export const articles = [
   { slug: "eksisterende-pantebrev", title: "Spar på tinglysning: Udnyt eksisterende pantebrev", description: "Lær hvordan du reducerer omkostningerne til tinglysning af pant ved at overtage eller genbruge allerede tinglyste pantebreve." },
   { slug: "hvad-kan-jeg-koebe-bolig-for", title: "Hvad kan jeg købe bolig for?", description: "Få klarhed i 2026: indkomst, gæld, udbetaling, rådighedsbeløb, gældsfaktor og ejerudgifter – så du finder ud af, hvor meget bolig du har råd til." },
   { slug: "saadan-vurderer-banken-dit-boliglan", title: "Sådan vurderer banken hvad du kan låne til bolig", description: "Lær hvordan banken vurderer dit lånerum: gældsfaktor, rådighedsbeløb og kreditværdighed – og hvad det betyder for dit boligkøb." },
+  { slug: "haandvaerkertilbud", title: "Håndværkertilbud: guide til boligkøb, budget og faldgruber", description: "Hvad betyder håndværkertilbud? Guide til pris, renovering, tjekliste før køb, finansiering, buffer til uforudsete udgifter – og hvordan du indhenter tilbud fra håndværkere." },
   { slug: "ejerudgifter", title: "Hvad dækker ejerudgifter? Komplet guide til boligejere", description: "Ejerudgifter: grundskyld, ejendomsværdiskat, forsikring og ejerforening. Hus vs. lejlighed – indregn i boligomkostningsberegneren." },
   { slug: "ejerlejlighed", title: "Hvad er en ejerlejlighed?", description: "Få overblik over ejerskab, fællesudgifter og hvordan ejerlejlighed adskiller sig fra hus og andelsbolig." },
   { slug: "boligkoeb-foerste-gang", title: "Boligkøb første gang: Sådan gør du", description: "Guide til førstegangskøbere: spar op, beregn omkostninger, forstå tinglysning og træf et trygt valg." },
@@ -27,7 +28,7 @@ export const articleCategories = [
   { id: "engangsomkostninger", title: "Engangsomkostninger ved boligkøb", description: "Tinglysning, pant, forsikring og andre omkostninger ved overtagelse.", slugs: ["tinglysning", "ejerskifteforsikring", "eksisterende-pantebrev"] as const },
   { id: "finansiering", title: "Finansiering og lån", description: "Realkreditlån, banklån og hvad du har råd til at købe for.", slugs: ["realkreditlan", "realkreditlan-beregner", "sammenligning-af-laanetyper", "hvad-kan-jeg-koebe-bolig-for", "saadan-vurderer-banken-dit-boliglan"] as const },
   { id: "loebende", title: "Løbende omkostninger", description: "Vedligehold, ejerudgifter, el, energimærker, grundskyld, skat og forsikring.", slugs: ["vedligehold", "ejerudgifter", "elforbrug-husstand", "energimaerker-og-boligokonomi", "grundskyld-og-ejendomsskat", "indboforsikring"] as const },
-  { id: "overblik", title: "Overblik og vejledning", description: "Boligtyper, førstegangskøb, ejendomsmægler, tvangsauktioner og generel guide til boligkøb.", slugs: ["ejerlejlighed", "boligkoeb-foerste-gang", "vaelg-ejendomsmaegler", "tvangsauktioner"] as const },
+  { id: "overblik", title: "Overblik og vejledning", description: "Boligtyper, førstegangskøb, ejendomsmægler, håndværkertilbud, tvangsauktioner og generel guide til boligkøb.", slugs: ["ejerlejlighed", "boligkoeb-foerste-gang", "haandvaerkertilbud", "vaelg-ejendomsmaegler", "tvangsauktioner"] as const },
 ] as const;
 
 export type ArticleSlug = (typeof articles)[number]["slug"];
