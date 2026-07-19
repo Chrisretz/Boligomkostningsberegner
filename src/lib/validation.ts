@@ -28,6 +28,17 @@ export const calcInputSchema = z
       .min(0, "Ejerudgifter skal være 0 kr eller derover.")
       .max(100_000, "Ejerudgifter skal være under 100.000 kr."),
     otherMonthlyDKK: z.number().min(0).max(100_000).optional().default(0),
+    bidragRatePct: z
+      .number()
+      .min(0, "Bidragssats skal være mellem 0 og 3 %.")
+      .max(3, "Bidragssats skal være mellem 0 og 3 %.")
+      .optional(),
+    includePropertyTax: z.boolean().optional(),
+    propertyTaxMonthlyOverrideDKK: z
+      .number()
+      .min(0, "Ejendomsskat skal være 0 kr eller derover.")
+      .max(200_000, "Ejendomsskat pr. måned virker urealistisk høj.")
+      .optional(),
     includeMortgageRegistrationFee: z.boolean(),
     mortgagePrincipalDKK: z
       .number()

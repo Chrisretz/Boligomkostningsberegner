@@ -32,6 +32,10 @@ module.exports = {
           primaryHover: "#163047",
           background: "#F4F7FA",
           surface: "#FFFFFF",
+          /** Guld-accent fra logoet – brug sparsomt (badges, highlights) */
+          accent: "#B08A45",
+          /** Lysere guld til mørk baggrund */
+          accentLight: "#D4B26A",
         },
         text: {
           primary: "#1F2933",
@@ -51,9 +55,22 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "Segoe UI", "Roboto", "Arial", "sans-serif"],
+        sans: [
+          "var(--font-inter)",
+          "Inter",
+          "system-ui",
+          "Segoe UI",
+          "Roboto",
+          "Arial",
+          "sans-serif",
+        ],
       },
       fontSize: {
+        /** Hero-overskrifter – skalerer 36→52px med viewport */
+        display: [
+          "clamp(36px, 4.5vw, 52px)",
+          { lineHeight: "1.12", letterSpacing: "-0.02em", fontWeight: "700" },
+        ],
         h1: ["32px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "700" }],
         h2: ["24px", { lineHeight: "1.25", letterSpacing: "-0.01em", fontWeight: "700" }],
         h3: ["20px", { lineHeight: "1.3", letterSpacing: "-0.01em", fontWeight: "600" }],

@@ -6,8 +6,20 @@ import {
   PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
 } from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
-import { calculators } from "@/lib/calculators";
+import { calculators, type CalculatorId } from "@/lib/calculators";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
+import { BookOpen, Calculator, Wallet } from "lucide-react";
+
+const CALCULATOR_ICONS: Record<CalculatorId, React.ReactNode> = {
+  "boliglaan-beregner": <BookOpen size={22} strokeWidth={2} aria-hidden />,
+  boligomkostninger: <Calculator size={22} strokeWidth={2} aria-hidden />,
+  "hvad-kan-jeg-koebe-bolig-for": (
+    <Wallet size={22} strokeWidth={2} aria-hidden />
+  ),
+};
+
+/** Beregneren vi fremhæver som den mest brugte */
+const FEATURED_ID: CalculatorId = "boligomkostninger";
 
 const title = "Beregnere: boligomkostninger, lånerum og boliglån";
 const description =
@@ -117,16 +129,31 @@ export default function BeregnerePage() {
               <Link
                 key={calc.id}
                 href={calc.href}
-                className="block p-6 rounded-md border border-border bg-brand-surface shadow-soft hover:border-border-strong hover:bg-border/10 transition-colors group"
+                className="card-lift flex gap-5 p-6 rounded-lg border border-border bg-brand-surface shadow-soft hover:border-brand-primary group"
               >
-                <h3 className="text-h3 text-text-primary group-hover:text-brand-primary transition-colors">
-                  {calc.title}
-                </h3>
-                <p className="mt-2 text-body text-text-secondary">
-                  {calc.description}
-                </p>
-                <span className="mt-3 inline-block text-body font-medium text-brand-primary">
-                  Gå til beregneren →
+                <span
+                  className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-primary text-white"
+                  aria-hidden
+                >
+                  {CALCULATOR_ICONS[calc.id]}
+                </span>
+                <span className="min-w-0">
+                  <span className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-h3 text-text-primary group-hover:text-brand-primary transition-colors">
+                      {calc.title}
+                    </h3>
+                    {calc.id === FEATURED_ID && (
+                      <span className="rounded-full bg-brand-accent/15 px-2.5 py-0.5 text-small font-semibold text-brand-accent">
+                        Mest brugte
+                      </span>
+                    )}
+                  </span>
+                  <p className="mt-2 text-body text-text-secondary">
+                    {calc.description}
+                  </p>
+                  <span className="mt-3 inline-block text-body font-medium text-brand-primary">
+                    Gå til beregneren →
+                  </span>
                 </span>
               </Link>
             ))}

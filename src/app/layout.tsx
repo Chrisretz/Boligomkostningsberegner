@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 import { Topbar } from "@/components/Topbar";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
@@ -36,10 +43,10 @@ export const metadata: Metadata = {
       "Få overblik over, hvad din bolig reelt koster. Boligklarhed samler engangsomkostninger, månedlige udgifter til lån, ejerudgifter, vedligehold og rentestest ét sted.",
     images: [
       {
-        url: "/android-chrome-512x512.png",
-        width: 512,
-        height: 512,
-        alt: "Boligklarhed – boligomkostningsberegner",
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Boligklarhed – klarhed over din boligøkonomi",
       },
     ],
   },
@@ -48,7 +55,7 @@ export const metadata: Metadata = {
     title: "Beregn boligomkostninger – Hvad koster det reelt at købe bolig?",
     description:
       "Få overblik over, hvad din bolig reelt koster. Boligklarhed samler engangsomkostninger, månedlige udgifter til lån, ejerudgifter, vedligehold og rentestest ét sted.",
-    images: ["/android-chrome-512x512.png"],
+    images: ["/og-image.png"],
   },
 };
 
@@ -58,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="da">
+    <html lang="da" className={inter.variable}>
       <head>
         <link
           rel="sitemap"

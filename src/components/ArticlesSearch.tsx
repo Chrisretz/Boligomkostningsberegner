@@ -116,7 +116,7 @@ export function ArticlesSearch() {
                   <li key={article.slug}>
                     <Link
                       href={`/artikler/${article.slug}`}
-                      className="block p-3 rounded-lg border border-border bg-brand-background hover:border-border-strong hover:bg-border/20 transition-colors group"
+                      className="card-lift block p-3 rounded-lg border border-border bg-brand-background hover:border-brand-primary group"
                     >
                       <h3 className="text-body font-semibold text-text-primary group-hover:text-brand-primary transition-colors">
                         {article.title}

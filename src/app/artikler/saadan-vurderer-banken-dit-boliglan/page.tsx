@@ -160,7 +160,8 @@ export default function SaadanVurdererBankenDitBoliglanPage() {
               bruttoindtægt og evt. eksisterende gæld, og du får udregnet et
               vejledende lånerum ud fra forskellige gearing-tal (fx 3,5–5).
               Beregneren viser både maksimalt boliglån og et skøn over
-              maksimal købspris ved 80 % finansiering.
+              maksimal købspris ved 95 % finansiering (80 % realkredit + 15 %
+              banklån, mindst 5 % udbetaling).
             </p>
             <p>
               <Link

@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   persistCookieConsent,
   readCookieConsent,
+  shouldShowConsentBanner,
 } from "@/lib/cookieConsent";
 
 export function CookieBanner() {
@@ -14,8 +15,8 @@ export function CookieBanner() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = readCookieConsent();
-    if (!stored) setVisible(true);
+    // Vis ved første besøg – eller hvis en tidligere afvisning er over 6 mdr. gammel
+    if (shouldShowConsentBanner()) setVisible(true);
   }, []);
 
   const close = useCallback(() => {
@@ -75,15 +76,19 @@ export function CookieBanner() {
             id="cookie-banner-title"
             className="text-h3 text-text-primary mb-3 pr-8"
           >
-            Vi respekterer beskyttelse af personoplysninger
+            Hjælp os med at gøre beregnerne bedre
           </h2>
 
           {!expanded ? (
             <>
-              <p className="text-body text-text-secondary leading-relaxed mb-5">
-                Vi bruger teknisk nødvendige cookies, så siden fungerer. Hvis du
-                siger ja, må vi også bruge statistikcookies til at forbedre
-                beregnerne. Du kan altid ændre dit valg under{" "}
+              <p className="text-body text-text-secondary leading-relaxed mb-2">
+                Vi bruger teknisk nødvendige cookies, så siden fungerer. Siger
+                du ja til anonym statistik, kan vi se hvilke beregnere og
+                artikler der hjælper – og hvor vi skal forbedre. Ingen
+                reklamer, ingen videresalg af data.
+              </p>
+              <p className="text-small text-text-muted mb-5">
+                Du kan altid ændre dit valg under{" "}
                 <Link
                   href="/cookies"
                   className="text-brand-primary font-medium hover:underline"
@@ -91,20 +96,27 @@ export function CookieBanner() {
                 >
                   Cookies
                 </Link>{" "}
-                eller i bunden af siden.
+                i bunden af siden.
               </p>
               <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-1">
                 <button
                   type="button"
                   onClick={openDetails}
-                  className="min-h-[48px] w-full sm:w-auto px-5 py-3 text-body font-semibold text-text-primary bg-white border-2 border-border rounded-md hover:bg-brand-background transition-colors touch-manipulation uppercase tracking-wide text-small sm:text-body"
+                  className="min-h-[48px] w-full sm:w-auto px-4 py-3 text-small font-medium text-text-secondary hover:text-brand-primary underline-offset-2 hover:underline touch-manipulation"
                 >
-                  Flere muligheder
+                  Tilpas
+                </button>
+                <button
+                  type="button"
+                  onClick={rejectAll}
+                  className="min-h-[48px] w-full sm:w-auto px-5 py-3 text-body font-semibold text-text-primary bg-white border-2 border-border rounded-md hover:bg-brand-background transition-colors touch-manipulation"
+                >
+                  Kun nødvendige
                 </button>
                 <button
                   type="button"
                   onClick={acceptAll}
-                  className="min-h-[48px] w-full sm:w-auto px-5 py-3 text-body font-semibold text-white bg-status-success rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
+                  className="min-h-[48px] w-full sm:w-auto px-6 py-3 text-body font-semibold text-white bg-brand-primary rounded-md shadow-soft hover:bg-brand-primaryHover transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
                 >
                   Acceptér alle
                 </button>
@@ -219,7 +231,7 @@ export function CookieBanner() {
                 <button
                   type="button"
                   onClick={saveAndClose}
-                  className="order-1 sm:order-2 min-h-[48px] w-full sm:w-auto px-6 py-3 text-body font-semibold text-white bg-status-success rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
+                  className="order-1 sm:order-2 min-h-[48px] w-full sm:w-auto px-6 py-3 text-body font-semibold text-white bg-brand-primary rounded-md hover:bg-brand-primaryHover transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
                 >
                   Gem &amp; luk
                 </button>

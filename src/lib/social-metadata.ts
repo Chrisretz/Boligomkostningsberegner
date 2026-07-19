@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { canonicalUrl } from "@/lib/site";
 
 const DEFAULT_OG_IMAGE = {
-  url: "/android-chrome-512x512.png",
-  width: 512,
-  height: 512,
-  alt: "Boligklarhed – boligomkostningsberegner",
+  url: "/og-image.png",
+  width: 1200,
+  height: 630,
+  alt: "Boligklarhed – klarhed over din boligøkonomi",
 } as const;
 
 /**

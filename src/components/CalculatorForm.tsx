@@ -4,16 +4,24 @@ import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import type { CalcInput, HouseholdSize } from "@/lib/types";
 import type { ValidationErrors } from "@/lib/validation";
-import { DEFAULTS } from "@/lib/constants";
+import { DEFAULTS, PROPERTY_TAX } from "@/lib/constants";
 import { estimateMonthlyElDKK, getEstimatedYearlyKWh } from "@/lib/electricity";
+import { estimatePropertyTax } from "@/lib/propertyTax";
 import { trackGaEvent } from "@/lib/trackGaEvent";
 
 interface CalculatorFormProps {
   onSubmit: (input: CalcInput) => void;
+  /** Kaldes ved hver ændring med det aktuelle input – bruges til live-resumé */
+  onInputChange?: (input: CalcInput) => void;
   validationErrors?: ValidationErrors;
   firstErrorId?: string;
   isCalculating?: boolean;
+  /** Startværdier, fx fra URL-parametre (?pris=&udbetaling=) */
+  initialPurchasePriceDKK?: number;
+  initialDownPaymentDKK?: number;
 }
+
+export const CALCULATOR_FORM_ID = "boligberegner-form";
 
 const TERM_OPTIONS = Array.from({ length: 40 }, (_, i) => i + 1);
 const PURCHASE_PRICE_SLIDER_MIN = 1_000_000;
@@ -63,12 +71,19 @@ function LabelWithTooltip({
 
 export function CalculatorForm({
   onSubmit,
+  onInputChange,
   validationErrors = {},
   firstErrorId,
   isCalculating = false,
+  initialPurchasePriceDKK,
+  initialDownPaymentDKK,
 }: CalculatorFormProps) {
-  const [purchasePriceDKK, setPurchasePriceDKK] = useState(5_000_000);
-  const [downPaymentDKK, setDownPaymentDKK] = useState(250_000);
+  const [purchasePriceDKK, setPurchasePriceDKK] = useState(
+    initialPurchasePriceDKK ?? 5_000_000
+  );
+  const [downPaymentDKK, setDownPaymentDKK] = useState(
+    initialDownPaymentDKK ?? 250_000
+  );
   const [interestRateAnnualPct, setInterestRateAnnualPct] = useState(2.5);
   const [termYears, setTermYears] = useState<number>(DEFAULTS.TERM_YEARS);
   const [propertyType, setPropertyType] = useState<"house" | "apartment">(
@@ -91,6 +106,13 @@ export function CalculatorForm({
   const [bankLoanInterestRatePct, setBankLoanInterestRatePct] = useState(4);
   const [bankLoanTermYears, setBankLoanTermYears] = useState(10);
   const [bankLoanInterestOnly, setBankLoanInterestOnly] = useState(false);
+  const [bidragRatePct, setBidragRatePct] = useState<number>(
+    DEFAULTS.BIDRAG_RATE_PCT
+  );
+  const [includePropertyTax, setIncludePropertyTax] = useState(true);
+  const [propertyTaxOverrideDKK, setPropertyTaxOverrideDKK] = useState(0);
+  const [isBidragFocused, setIsBidragFocused] = useState(false);
+  const [bidragInputValue, setBidragInputValue] = useState("");
   const [isRenteFocused, setIsRenteFocused] = useState(false);
   const [renteInputValue, setRenteInputValue] = useState("");
   const [isBankRenteFocused, setIsBankRenteFocused] = useState(false);
@@ -194,13 +216,8 @@ export function CalculatorForm({
       ? Math.round((downPaymentDKK / purchasePriceDKK) * 100)
       : 0;
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      trackGaEvent("calculator_beregn_klik", {
-        beregner_type: "boligomkostninger",
-      });
-      const input: CalcInput = {
+  const buildInput = useCallback((): CalcInput => {
+    return {
         purchasePriceDKK,
         downPaymentDKK,
         interestRateAnnualPct,
@@ -211,6 +228,12 @@ export function CalculatorForm({
         householdSize: householdSize ?? undefined,
         ownerExpensesMonthlyDKK,
         otherMonthlyDKK: otherMonthlyDKK || 0,
+        bidragRatePct,
+        includePropertyTax,
+        propertyTaxMonthlyOverrideDKK:
+          includePropertyTax && propertyTaxOverrideDKK > 0
+            ? propertyTaxOverrideDKK
+            : undefined,
         includeMortgageRegistrationFee,
         mortgagePrincipalDKK:
           includeMortgageRegistrationFee && realkreditAmountDKK > 0
@@ -222,9 +245,8 @@ export function CalculatorForm({
         bankLoanInterestRatePct: bankLoanAmountDKK > 0 ? bankLoanInterestRatePct : undefined,
         bankLoanTermYears: bankLoanAmountDKK > 0 ? bankLoanTermYears : undefined,
         bankLoanInterestOnly: bankLoanAmountDKK > 0 ? bankLoanInterestOnly : undefined,
-      };
-      onSubmit(input);
-    },
+    };
+  },
     [
       purchasePriceDKK,
       downPaymentDKK,
@@ -236,6 +258,9 @@ export function CalculatorForm({
       householdSize,
       ownerExpensesMonthlyDKK,
       otherMonthlyDKK,
+      bidragRatePct,
+      includePropertyTax,
+      propertyTaxOverrideDKK,
       includeMortgageRegistrationFee,
       mortgagePrincipalDKK,
       realkreditAmountDKK,
@@ -244,9 +269,23 @@ export function CalculatorForm({
       bankLoanInterestRatePct,
       bankLoanTermYears,
       bankLoanInterestOnly,
-      termYears,
-      onSubmit,
     ]
+  );
+
+  // Live-resumé: giv forælderen det aktuelle input ved hver ændring
+  useEffect(() => {
+    onInputChange?.(buildInput());
+  }, [buildInput, onInputChange]);
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      trackGaEvent("calculator_beregn_klik", {
+        beregner_type: "boligomkostninger",
+      });
+      onSubmit(buildInput());
+    },
+    [buildInput, onSubmit]
   );
 
   const inputClass = (field: string) =>
@@ -271,9 +310,14 @@ export function CalculatorForm({
   const sectionTitle = "text-sm font-semibold text-text-primary uppercase tracking-wide mb-3";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-16" noValidate>
+    <form
+      id={CALCULATOR_FORM_ID}
+      onSubmit={handleSubmit}
+      className="space-y-6 md:space-y-8"
+      noValidate
+    >
       {/* Generel information */}
-      <section className="space-y-4">
+      <section className="space-y-4 rounded-lg border border-border bg-white p-5 md:p-6 shadow-soft">
         <h2 className={sectionTitle}>Generel information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div>
@@ -356,7 +400,7 @@ export function CalculatorForm({
       </section>
 
       {/* Købspris og udbetaling */}
-      <section className="space-y-4">
+      <section className="space-y-4 rounded-lg border border-border bg-white p-5 md:p-6 shadow-soft">
         <h2 className={sectionTitle}>Købspris og udbetaling</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div>
@@ -470,7 +514,7 @@ export function CalculatorForm({
       </section>
 
       {/* Finansiering (Realkreditlån) */}
-      <section className="space-y-4">
+      <section className="space-y-4 rounded-lg border border-border bg-white p-5 md:p-6 shadow-soft">
         <div className="flex flex-col gap-1">
           <h2 className={sectionTitle}>Finansiering (Realkreditlån)</h2>
           <p className="text-small text-text-secondary">
@@ -659,6 +703,78 @@ export function CalculatorForm({
             )}
           </div>
         </div>
+        {/* Række 3: Bidragssats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+          <div>
+            <LabelWithTooltip
+              htmlFor="bidragRatePct"
+              tooltip="Bidrag er realkreditinstituttets løbende gebyr oven i renten, beregnet som en procent pr. år af restgælden. Satsen afhænger af institut, belåningsgrad og lånetype – typisk ca. 0,5-1,0 % ved 80 % belåning. Bidraget indgår i din månedlige ydelse men påvirkes ikke af renteændringer."
+              className="block text-label text-text-secondary mb-1.5"
+            >
+              Bidragssats (realkredit)
+            </LabelWithTooltip>
+            <input
+              id="bidragRatePct"
+              type="text"
+              inputMode="decimal"
+              value={
+                isBidragFocused
+                  ? bidragInputValue
+                  : bidragRatePct === 0
+                    ? "0,00 %"
+                    : formatRente(bidragRatePct)
+              }
+              onChange={(e) => {
+                if (isBidragFocused) {
+                  setBidragInputValue(e.target.value);
+                } else {
+                  setBidragRatePct(parseRente(e.target.value));
+                }
+              }}
+              onFocus={(e) => {
+                setIsBidragFocused(true);
+                setBidragInputValue(
+                  bidragRatePct === 0
+                    ? ""
+                    : bidragRatePct.toFixed(2).replace(".", ",")
+                );
+                setTimeout(() => e.target.select(), 0);
+              }}
+              onBlur={() => {
+                setBidragRatePct(parseRente(bidragInputValue));
+                setIsBidragFocused(false);
+              }}
+              className={inputClass("bidragRatePct")}
+              placeholder="0,75 %"
+              aria-invalid={!!validationErrors.bidragRatePct}
+            />
+            <div className="flex gap-2 mt-1.5">
+              {[0.5, 0.75, 1.0].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setBidragRatePct(r)}
+                  className={`px-3 py-1.5 text-small rounded hover:bg-border-strong ${
+                    bidragRatePct === r
+                      ? "bg-brand-primary text-white"
+                      : "bg-border text-text-secondary"
+                  }`}
+                >
+                  {formatRente(r)}
+                </button>
+              ))}
+            </div>
+            {validationErrors.bidragRatePct && (
+              <p className="mt-1.5 text-small text-status-danger" role="alert">
+                {validationErrors.bidragRatePct}
+              </p>
+            )}
+            <p className="mt-1.5 text-small text-text-muted">
+              Vejledende standard 0,75 % pr. år. Tjek din egen sats hos
+              instituttet.
+            </p>
+          </div>
+        </div>
         {interestOnly && (
           <p className="text-small text-text-muted">
             Ved afdragsfrihed betaler du kun renter; der afdrages ikke på gælden i den valgte periode.
@@ -667,7 +783,7 @@ export function CalculatorForm({
       </section>
 
       {/* Finansiering (bolig- / banklån) */}
-      <section className="space-y-4">
+      <section className="space-y-4 rounded-lg border border-border bg-white p-5 md:p-6 shadow-soft">
         <h2 className={sectionTitle}>Finansiering (bolig- / banklån)</h2>
         {/* Række 1: Lånebeløb (beregnet) og Afdragsfrihed */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -792,14 +908,78 @@ export function CalculatorForm({
         )}
       </section>
 
+      {/* Ejendomsskat */}
+      <section className="space-y-4 rounded-lg border border-border bg-white p-5 md:p-6 shadow-soft">
+        <h2 className={sectionTitle}>Ejendomsskat</h2>
+        <div className="flex items-center gap-3">
+          <input
+            id="includePropertyTax"
+            type="checkbox"
+            checked={includePropertyTax}
+            onChange={(e) => setIncludePropertyTax(e.target.checked)}
+            className="w-4 h-4 rounded border-border text-brand-primary focus:ring-brand-primary"
+          />
+          <LabelWithTooltip
+            htmlFor="includePropertyTax"
+            tooltip="Ejendomsværdiskat og grundskyld betales løbende som boligejer og opkræves via forskudsopgørelsen. Beregneren estimerer beløbet ud fra købsprisen med 2026-satser: ejendomsværdiskat 0,51 % af 80 % af værdien (1,4 % over progressionsgrænsen) plus grundskyld med landsgennemsnitlig promille. Kender du det faktiske beløb fra salgsopstillingen, kan du indtaste det i stedet."
+            className="text-body text-text-secondary"
+          >
+            Medtag ejendomsskat (ejendomsværdiskat + grundskyld)
+          </LabelWithTooltip>
+        </div>
+        {includePropertyTax && (
+          <>
+            {purchasePriceDKK > 0 && propertyTaxOverrideDKK === 0 && (
+              <p className="text-small text-text-muted">
+                Estimeret ejendomsskat: ca.{" "}
+                {formatDKK(
+                  estimatePropertyTax(purchasePriceDKK, propertyType)
+                    .totalMonthlyDKK
+                )}{" "}
+                kr/md (vejledende, 2026-satser, verificeret{" "}
+                {PROPERTY_TAX.RATES_VERIFIED}). Grundskyld varierer efter
+                kommune – tjek det konkrete beløb i salgsopstillingen.
+              </p>
+            )}
+            <div className="max-w-xs">
+              <LabelWithTooltip
+                htmlFor="propertyTaxOverrideDKK"
+                tooltip="Hvis du kender den faktiske ejendomsskat fra salgsopstillingen eller vurderingsportalen, kan du indtaste det månedlige beløb her. Så bruges dit tal i stedet for estimatet."
+                className="block text-label text-text-secondary mb-1.5"
+              >
+                Eget beløb pr. måned (DKK){" "}
+                <span className="text-text-muted">– valgfrit</span>
+              </LabelWithTooltip>
+              <input
+                id="propertyTaxOverrideDKK"
+                type="text"
+                inputMode="numeric"
+                {...makeDkkInputProps(
+                  "propertyTaxOverrideDKK",
+                  propertyTaxOverrideDKK,
+                  setPropertyTaxOverrideDKK,
+                  "0"
+                )}
+                className={inputClass("propertyTaxMonthlyOverrideDKK")}
+              />
+              {propertyTaxOverrideDKK > 0 && (
+                <p className="mt-1.5 text-small text-text-muted">
+                  Dit beløb bruges i stedet for estimatet.
+                </p>
+              )}
+            </div>
+          </>
+        )}
+      </section>
+
       {/* El, varme og vand */}
-      <section className="space-y-4">
+      <section className="space-y-4 rounded-lg border border-border bg-white p-5 md:p-6 shadow-soft">
         <h2 className={sectionTitle}>El, varme og vand</h2>
         <div className="space-y-4">
           <div className="max-w-xs">
             <LabelWithTooltip
               htmlFor="ownerExpensesMonthlyDKK"
-              tooltip="Månedlige faste udgifter som ejer: fællesudgifter (for lejlighed), varme, vand, forsikring, grundskyld, ejendomsskat m.m. Indtast et gennemsnitligt beløb pr. måned, så det indgår i den samlede omkostningsberegning."
+              tooltip="Månedlige faste udgifter som ejer: fællesudgifter (for lejlighed), varme, vand, forsikring m.m. Ejendomsskat medregnes separat ovenfor, så den skal ikke indgå her. Indtast et gennemsnitligt beløb pr. måned, så det indgår i den samlede omkostningsberegning."
               className="block text-label text-text-secondary mb-1.5"
             >
               Ejerudgifter pr. måned (DKK)
@@ -827,14 +1007,15 @@ export function CalculatorForm({
             </p>
           )}
           <p className="mt-1.5 text-small text-text-muted">
-            Fx fællesudgifter, varme, vand, forsikring, grundskyld.
+            Fx fællesudgifter, varme, vand, forsikring. Ejendomsskat medregnes
+            separat ovenfor.
           </p>
           </div>
         </div>
       </section>
 
       {/* Andre omkostninger */}
-      <section className="space-y-4">
+      <section className="space-y-4 rounded-lg border border-border bg-white p-5 md:p-6 shadow-soft">
         <h2 className={sectionTitle}>Andre omkostninger</h2>
         <div className="space-y-4">
           <div className="max-w-xs">
@@ -959,7 +1140,7 @@ export function CalculatorForm({
           type="submit"
           disabled={isCalculating}
           aria-busy={isCalculating}
-          className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-opacity touch-manipulation disabled:opacity-70 disabled:cursor-wait"
+          className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-brand-primary rounded-md shadow-soft hover:bg-brand-primaryHover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-colors touch-manipulation disabled:opacity-70 disabled:cursor-wait"
         >
           {isCalculating ? "Beregner…" : "Beregn omkostninger"}
         </button>

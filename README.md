@@ -53,12 +53,25 @@ Datoerne i artikel-layout og JSON-LD kommer fra `src/lib/article-dates.ts`.
 
 Se `.env.example`. Sæt `AFFILIATE_BASE_URL` før produktionsdeploy.
 
-## Beregningslogik (jf. PRD)
+## Beregningslogik (jf. PRD + udvidelser)
 
 - **Skøde:** 1.850 kr + 0,6% af købspris (variabel del oprundes til nærmeste 100 kr)
-- **Pant:** 1.825 kr + 1,25% af pantsikret beløb
+- **Pant:** 1.825 kr + 1,25% af pantsikret beløb (2026-sats)
 - **Vedligehold:** Hus 1,5%, lejlighed 1,0% af købspris pr. år
 - **Lån:** Annuitetsformel
+- **Bidrag (realkredit):** % pr. år af hovedstol (default 0,75%, kan justeres i formularen)
+- **Ejendomsskat (2026-satser):** Ejendomsværdiskat 0,51% af 80% af købsprisen (1,4% over progressionsgrænsen 9.007.000 kr) + grundskyld med landsgennemsnitlig promille (7,4‰) af 80% af skønnet grundværdi (hus 25% / lejlighed 10% af købspris). Brugeren kan overskrive med eget beløb eller fravælge. Se `src/lib/propertyTax.ts`.
+- **Lånerum → købspris:** maks. boliglån / 0,95 (80% realkredit + 15% banklån, mindst 5% udbetaling)
+
+**Vigtigt:** Satser (tinglysning, ejendomsskat, elpris) ligger i `src/lib/constants.ts` og skal verificeres årligt – senest verificeret juli 2026.
+
+## Tests
+
+Beregningsmotoren er dækket af unit tests (Vitest):
+
+```bash
+npm test
+```
 
 ## Design
 

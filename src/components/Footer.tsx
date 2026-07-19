@@ -44,6 +44,22 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-white/15 bg-brand-primary text-text-inverse">
       <div className="container mx-auto py-14 px-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 border-b border-white/10 pb-10 mb-10">
+          <div>
+            <p className="text-small font-semibold uppercase tracking-[0.15em] text-brand-accentLight mb-1.5">
+              Gratis og uden login
+            </p>
+            <p className="text-h3 text-white">
+              Klar til at regne på dit boligkøb?
+            </p>
+          </div>
+          <Link
+            href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
+            className="inline-flex items-center justify-center min-h-[48px] px-6 py-3 text-body font-semibold text-brand-primary bg-white rounded-md shadow-soft hover:bg-brand-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary shrink-0"
+          >
+            Beregn boligomkostninger
+          </Link>
+        </div>
         <div className="grid grid-cols-1 gap-10 border-b border-white/10 pb-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">
             <div className="text-small font-semibold text-white/90">

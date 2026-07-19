@@ -5,6 +5,30 @@
 import type { CalcInput, CalcOutput, ScenarioOutput } from "./types";
 import { CONSTANTS, DEFAULTS } from "./constants";
 import { estimateMonthlyElDKK } from "./electricity";
+import { estimatePropertyTax } from "./propertyTax";
+
+/** Månedlig ejendomsskat: manuel værdi, auto-estimat eller 0 hvis fravalgt. */
+function resolvePropertyTaxMonthly(input: CalcInput): {
+  monthlyDKK: number;
+  isEstimate: boolean;
+} {
+  if (input.includePropertyTax === false) {
+    return { monthlyDKK: 0, isEstimate: false };
+  }
+  if (input.propertyTaxMonthlyOverrideDKK != null) {
+    return {
+      monthlyDKK: input.propertyTaxMonthlyOverrideDKK,
+      isEstimate: false,
+    };
+  }
+  return {
+    monthlyDKK: estimatePropertyTax(
+      input.purchasePriceDKK,
+      input.propertyType
+    ).totalMonthlyDKK,
+    isEstimate: true,
+  };
+}
 
 function ceilToNearest100(x: number): number {
   return Math.ceil(x / 100) * 100;
@@ -84,6 +108,14 @@ function scenario(
       ? calcMonthlyPayment(bankAmount, bankRate, bankTerm, bankInterestOnly)
       : 0;
   const payment = roundDKK(realkreditPayment + bankPayment);
+  // Bidrag: % pr. år af realkredit-hovedstol (forenkling: restgæld ≈ hovedstol).
+  // Bidraget afhænger ikke af renten og er derfor ens i alle rentescenarier.
+  const bidragRate = input.bidragRatePct ?? DEFAULTS.BIDRAG_RATE_PCT;
+  const bidragMonthly =
+    realkreditPrincipal > 0
+      ? (realkreditPrincipal * (bidragRate / 100)) / 12
+      : 0;
+  const propertyTaxMonthly = resolvePropertyTaxMonthly(input).monthlyDKK;
   const otherMonthly = input.otherMonthlyDKK ?? 0;
   const maintenance = calcMaintenanceMonthly(
     input.purchasePriceDKK,
@@ -99,6 +131,8 @@ function scenario(
       : 0;
   const monthlyTotal =
     payment +
+    bidragMonthly +
+    propertyTaxMonthly +
     input.ownerExpensesMonthlyDKK +
     estimatedEl +
     maintenance +
@@ -109,6 +143,7 @@ function scenario(
     monthlyTotalDKK: roundDKK(monthlyTotal),
     realkreditMonthlyDKK: roundDKK(realkreditPayment),
     bankLoanMonthlyDKK: roundDKK(bankPayment),
+    bidragMonthlyDKK: roundDKK(bidragMonthly),
   };
 }
 
@@ -141,6 +176,8 @@ export function calculate(input: CalcInput): CalcOutput {
           DEFAULTS.EL_PRICE_KR_PER_KWH
         )
       : 0;
+  const propertyTax = resolvePropertyTaxMonthly(input);
+  const bidragRate = input.bidragRatePct ?? DEFAULTS.BIDRAG_RATE_PCT;
 
   const base = scenario(input, input.interestRateAnnualPct);
   const plus1 = scenario(input, input.interestRateAnnualPct + 1);
@@ -164,11 +201,20 @@ export function calculate(input: CalcInput): CalcOutput {
       maintenanceMonthlyDKK: roundDKK(maintenanceMonthly),
       realkreditMonthlyDKK: base.realkreditMonthlyDKK,
       bankLoanMonthlyDKK: base.bankLoanMonthlyDKK,
+      bidragMonthlyDKK: base.bidragMonthlyDKK,
+      propertyTaxMonthlyDKK: roundDKK(propertyTax.monthlyDKK),
     },
+    propertyTaxIsEstimate: propertyTax.isEstimate,
     assumptions: [
       input.interestOnly
         ? "Låneydelsen er kun rente (afdragsfrihed); der afdrages ikke på hovedstolen."
         : "Låneydelse beregnes som én annuitet (forenkling).",
+      `Bidrag på realkreditlån beregnes som ${String(bidragRate).replace(".", ",")} % pr. år af lånebeløbet (forenkling: restgæld ≈ hovedstol). Den faktiske sats afhænger af institut, belåningsgrad og lånetype.`,
+      ...(propertyTax.isEstimate && propertyTax.monthlyDKK > 0
+        ? [
+            `Ejendomsskat er et vejledende estimat ud fra købsprisen (2026-satser: ejendomsværdiskat 0,51 %/1,4 % af 80 % af værdien, grundskyld med landsgennemsnitlig promille). Den faktiske skat afhænger af den offentlige vurdering og kommunen.`,
+          ]
+        : []),
       "Vedligehold estimeres som en fast procent af købspris pr. år (vejledende).",
       "Pantafgift beregnes af pantsikret beløb (default: lånebeløb).",
       ...(input.householdSize != null
@@ -178,8 +224,11 @@ export function calculate(input: CalcInput): CalcOutput {
         : []),
     ],
     exclusions: [
-      "Skattefradrag og individuelle skatteforhold er ikke medregnet.",
-      "Ejendomsskatter (grundskyld/ejendomsværdiskat) beregnes ikke automatisk i MVP.",
+      "Skattefradrag (rentefradrag) og individuelle skatteforhold er ikke medregnet.",
+      ...(input.includePropertyTax === false
+        ? ["Ejendomsskat (grundskyld/ejendomsværdiskat) er fravalgt i denne beregning."]
+        : []),
+      "Kursskæring, kurstab og lånesagsgebyrer er ikke automatisk medregnet – tilføj dem under engangsomkostninger.",
       input.householdSize == null
         ? "Forsyning (el/vand/varme) er kun med, hvis du indtaster det i Øvrige månedlige omkostninger eller vælger antal personer til el-estimat."
         : "El-estimat er vejledende; elvarme og elbil kan give højere forbrug.",

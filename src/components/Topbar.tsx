@@ -244,17 +244,17 @@ export function Topbar() {
         <div className="flex items-center justify-between gap-4 md:flex-row">
           <Link
             href="/"
-            className="flex items-center shrink-0 rounded-xl bg-white px-3 py-2 shadow-soft ring-1 ring-black/[0.06] transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary"
+            className="flex items-center shrink-0 rounded-md py-1 transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary"
             aria-label="Boligklarhed – forsiden"
           >
             <Image
-              src="/boligklarhed-logo.svg"
+              src="/boligklarhed-logo-dark.svg"
               alt="Boligklarhed logo"
-              width={280}
-              height={56}
+              width={308}
+              height={48}
               priority
-              sizes="(min-width: 1024px) 280px, 200px"
-              className="h-10 md:h-14 w-auto object-contain"
+              sizes="(min-width: 1024px) 260px, 200px"
+              className="h-9 md:h-11 w-auto object-contain"
             />
           </Link>
 

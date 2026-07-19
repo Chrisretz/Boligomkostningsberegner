@@ -36,7 +36,7 @@ export default function BoligbegreberPage() {
   });
 
   return (
-    <main className="min-h-screen py-12 px-4 overflow-x-hidden pb-24">
+    <main className="min-h-screen py-12 px-4 overflow-x-clip pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}

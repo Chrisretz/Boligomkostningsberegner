@@ -1,6 +1,8 @@
 "use client";
 
 import type { CalcOutput } from "@/lib/types";
+import { CountUpNumber } from "@/components/CountUpNumber";
+import { MonthlyBreakdownChart, RateStressBars } from "@/components/ResultsCharts";
 
 function formatKr(val: number): string {
   return val.toLocaleString("da-DK");
@@ -31,7 +33,7 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
           Ca. pr. måned (ydelse, ejerudgifter og løbende poster)
         </p>
         <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-text-primary tracking-tight tabular-nums break-words leading-tight">
-          {formatKr(base.monthlyTotalDKK)} kr
+          <CountUpNumber value={base.monthlyTotalDKK} /> kr
         </p>
         <p className="text-body text-text-secondary mt-5 max-w-xl mx-auto">
           Kontantbehov ved køb:{" "}
@@ -45,7 +47,9 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
         </p>
       </div>
 
-      <div className="grid items-stretch grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+      <MonthlyBreakdownChart output={output} />
+
+      <div className="stagger-reveal grid items-stretch grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
       {/* Etableringsomkostninger – hvad du skal have op af lommen ved køb */}
       <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
         <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-4 break-words">
@@ -103,6 +107,20 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
               <span className="shrink-0">{formatKr(base.monthlyPaymentDKK)}</span>
             </li>
           )}
+          {output.breakdownMonthly.bidragMonthlyDKK > 0 && (
+            <li className="flex justify-between gap-4">
+              <span className="min-w-0">Bidrag (realkredit)</span>
+              <span className="shrink-0">{formatKr(output.breakdownMonthly.bidragMonthlyDKK)}</span>
+            </li>
+          )}
+          {output.breakdownMonthly.propertyTaxMonthlyDKK > 0 && (
+            <li className="flex justify-between gap-4">
+              <span className="min-w-0">
+                Ejendomsskat{output.propertyTaxIsEstimate ? " (estimat)" : ""}
+              </span>
+              <span className="shrink-0">{formatKr(output.breakdownMonthly.propertyTaxMonthlyDKK)}</span>
+            </li>
+          )}
           <li className="flex justify-between gap-4">
             <span className="min-w-0">Ejerudgifter</span>
             <span className="shrink-0">{formatKr(output.breakdownMonthly.ownerExpensesMonthlyDKK)}</span>
@@ -136,23 +154,13 @@ export function ResultsPanel({ output }: ResultsPanelProps) {
 
       {/* Rentestest */}
       <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
-        <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-4 break-words">
+        <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-1 break-words">
           Rentestest
         </h3>
-        <ul className="space-y-4 text-body text-text-secondary">
-          <li className="flex justify-between gap-4 items-baseline">
-            <span className="min-w-0 font-medium text-text-primary">+1% rente</span>
-            <span className="text-lg sm:text-xl font-bold text-text-primary shrink-0 whitespace-nowrap tabular-nums">
-              {formatKr(plus1.monthlyTotalDKK)} kr/md
-            </span>
-          </li>
-          <li className="flex justify-between gap-4 items-baseline">
-            <span className="min-w-0 font-medium text-text-primary">+2% rente</span>
-            <span className="text-lg sm:text-xl font-bold text-text-primary shrink-0 whitespace-nowrap tabular-nums">
-              {formatKr(plus2.monthlyTotalDKK)} kr/md
-            </span>
-          </li>
-        </ul>
+        <p className="text-small text-text-muted mb-4">
+          Holder budgettet, hvis renten stiger?
+        </p>
+        <RateStressBars output={output} />
       </div>
     </div>
     </div>

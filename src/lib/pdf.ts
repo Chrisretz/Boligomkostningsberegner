@@ -182,6 +182,24 @@ export function generateBeregningPdf(
     "Månedlige udgifter",
     [
       ...monthlyLoanLines,
+      ...(output.breakdownMonthly.bidragMonthlyDKK > 0
+        ? [
+            {
+              label: "Bidrag (realkredit)",
+              value: formatKr(output.breakdownMonthly.bidragMonthlyDKK),
+            },
+          ]
+        : []),
+      ...(output.breakdownMonthly.propertyTaxMonthlyDKK > 0
+        ? [
+            {
+              label: output.propertyTaxIsEstimate
+                ? "Ejendomsskat (estimat)"
+                : "Ejendomsskat",
+              value: formatKr(output.breakdownMonthly.propertyTaxMonthlyDKK),
+            },
+          ]
+        : []),
       {
         label: "Ejerudgifter",
         value: formatKr(

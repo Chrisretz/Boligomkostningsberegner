@@ -17,7 +17,74 @@
   animation: loan-capacity-hero-reveal 0.65s ease-out both;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* Artikel-typografi: roligere læserytme og guld-detalje under H2 */
+.prose p {
+  line-height: 1.75;
+}
+.prose h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  border-radius: 9999px;
+  background: theme("colors.brand.accent");
+  margin-top: 8px;
+}
+.prose ul li::marker,
+.prose ol li::marker {
+  color: theme("colors.brand.accent");
+}
+
+/* Diskret hover-løft til klikbare kort */
+.card-lift {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: theme("boxShadow.card");
+}
+
+/* Forskudt reveal til resultatkort */
+.stagger-reveal > * {
+  animation: loan-capacity-hero-reveal 0.5s ease-out both;
+}
+.stagger-reveal > *:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.stagger-reveal > *:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+/* Bar-segmenter vokser ind */
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.bar-grow {
+  transform-origin: left;
+  animation: bar-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Respekter brugerens ønske om mindre bevægelse */
+@media (prefers-reduced-motion: reduce) {
+  .loan-capacity-hero-reveal,
+  .stagger-reveal > *,
+  .bar-grow {
+    animation: none;
+  }
+  .card-lift,
+  .card-lift:hover {
+    transition: none;
+    transform: none;
+  }
+}
 
 /* Range slider – ens udseende på tværs af browsere */
 input[type="range"].range-slider {

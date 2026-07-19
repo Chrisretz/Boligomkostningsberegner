@@ -6,7 +6,7 @@ import Link from "next/link";
 import { LabelWithTooltip } from "@/components/LabelWithTooltip";
 import { LoanCapacityResultsGate } from "@/components/LoanCapacityResultsGate";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
-import { GEARING_DEFAULT } from "@/lib/loanCapacityConstants";
+import { GEARING_DEFAULT, FINANCING_SHARE } from "@/lib/loanCapacityConstants";
 import { CALCULATION_UI_DELAY_MS } from "@/lib/calculationUiDelay";
 import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
 import { trackGaEvent } from "@/lib/trackGaEvent";
@@ -41,7 +41,7 @@ export default function HvadKanJegKoebeBoligForPage() {
 
   const maxLoanCapacityDefault = Math.round(annualFromInput * GEARING_DEFAULT);
   const maxLoanDefault = Math.max(0, maxLoanCapacityDefault - existingDebt);
-  const estimatedPurchaseDefault = Math.round(maxLoanDefault / 0.8);
+  const estimatedPurchaseDefault = Math.round(maxLoanDefault / FINANCING_SHARE);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -65,18 +65,24 @@ export default function HvadKanJegKoebeBoligForPage() {
   };
 
   return (
-    <main className="min-h-screen py-12 px-4 overflow-x-hidden pb-24">
+    <main className="min-h-screen py-12 px-4 overflow-x-clip pb-24">
       <div className="container mx-auto max-w-7xl min-w-0">
         <header className="text-center mb-10">
           <h1 className="text-xl sm:text-2xl md:text-h1 text-text-primary mb-2 break-words">
             Hvad kan jeg købe bolig for?
           </h1>
+          <p className="mb-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-brand-surface px-3 py-1 text-small text-text-secondary">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-primary" aria-hidden />
+              Vejledende tommelfingerregel – gearing 4
+            </span>
+          </p>
           <p className="text-body text-text-secondary max-w-2xl mx-auto">
             Beregn dit lånerum ud fra din indtægt og en gearing på 4 (typisk
-            tommelfingerregel). Efter beregning får du et kort resumé med det
-            samme; den fulde tabel med gearinger 3,5–5 og den udvidede forklaring
-            vises, når du har indtastet e-mail og accepteret vilkårene herfor.
-            Resultatet er vejledende – banken vurderer din konkrete situation.{" "}
+            tommelfingerregel). Du får hele resultatet med det samme – inkl.
+            følsomhedsanalyse med gearinger 3,5–5 – og kan valgfrit få
+            beregningen tilsendt på e-mail. Resultatet er vejledende – banken
+            vurderer din konkrete situation.{" "}
             <a
               href="https://www.finanstilsynet.dk/finansielle-temaer/forbruger-og-investorinformation"
               target="_blank"
@@ -257,7 +263,7 @@ export default function HvadKanJegKoebeBoligForPage() {
               type="submit"
               disabled={resultPhase === "calculating"}
               aria-busy={resultPhase === "calculating"}
-              className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-status-success rounded-md shadow-soft hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation disabled:opacity-70 disabled:cursor-wait"
+              className="min-h-[48px] px-8 py-3 text-body font-semibold text-white bg-brand-primary rounded-md shadow-soft hover:bg-brand-primaryHover transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation disabled:opacity-70 disabled:cursor-wait"
             >
               {resultPhase === "calculating" ? "Beregner…" : "Beregn lånerum"}
             </button>
@@ -287,7 +293,7 @@ export default function HvadKanJegKoebeBoligForPage() {
                   Beregner dit lånerum…
                 </p>
                 <p className="text-small text-text-muted text-center mt-1">
-                  Vi sammenholder indtægt, gearing og gæld
+                  Et øjeblik
                 </p>
               </div>
             )}

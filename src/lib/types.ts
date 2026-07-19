@@ -20,6 +20,12 @@ export interface CalcInput {
   householdSize?: HouseholdSize;
   ownerExpensesMonthlyDKK: number;
   otherMonthlyDKK?: number;
+  /** Bidragssats på realkreditlån i % pr. år af restgæld (vejledende default 0,75) */
+  bidragRatePct?: number;
+  /** Medtag ejendomsskat (ejendomsværdiskat + grundskyld) i den månedlige total */
+  includePropertyTax?: boolean;
+  /** Manuel månedlig ejendomsskat; hvis udeladt bruges auto-estimat fra købspris */
+  propertyTaxMonthlyOverrideDKK?: number;
   includeMortgageRegistrationFee: boolean;
   mortgagePrincipalDKK?: number;
   otherUpfrontDKK?: number;
@@ -38,6 +44,8 @@ export interface ScenarioOutput {
   monthlyTotalDKK: number;
   realkreditMonthlyDKK: number;
   bankLoanMonthlyDKK: number;
+  /** Bidrag på realkreditlån pr. måned (uændret ved rentestest) */
+  bidragMonthlyDKK: number;
 }
 
 export interface CalcOutput {
@@ -59,7 +67,13 @@ export interface CalcOutput {
     maintenanceMonthlyDKK: number;
     realkreditMonthlyDKK: number;
     bankLoanMonthlyDKK: number;
+    /** Bidrag på realkreditlån pr. måned */
+    bidragMonthlyDKK: number;
+    /** Ejendomsskat pr. måned (estimat eller manuel), 0 hvis fravalgt */
+    propertyTaxMonthlyDKK: number;
   };
+  /** True hvis ejendomsskat er auto-estimeret (ikke manuelt indtastet) */
+  propertyTaxIsEstimate: boolean;
   assumptions: string[];
   exclusions: string[];
 }

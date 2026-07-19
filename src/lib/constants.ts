@@ -13,9 +13,33 @@ export const CONSTANTS = {
   MORTGAGE_RATE: 0.0125, // 1,25% af pantsikret beløb
 } as const;
 
+/**
+ * Ejendomsskat (boligskattereformen, satser for 2026).
+ * Kilder: Skatteministeriet / Vurderingsportalen. Verificér årligt.
+ */
+export const PROPERTY_TAX = {
+  /** Ejendomsværdiskat: 0,51 % af beskatningsgrundlag op til progressionsgrænsen */
+  EVS_RATE_LOW: 0.0051,
+  /** 1,4 % af beskatningsgrundlag over progressionsgrænsen */
+  EVS_RATE_HIGH: 0.014,
+  /** Progressionsgrænse 2026 (beskatningsgrundlag) */
+  EVS_PROGRESSION_LIMIT_DKK: 9_007_000,
+  /** Beskatningsgrundlag = 80 % af vurderingen (forsigtighedsnedslag) */
+  VALUATION_BASE_FACTOR: 0.8,
+  /** Gennemsnitlig grundskyldspromille i Danmark efter reformen (vejledende) */
+  GRUNDSKYLD_AVG_PROMILLE: 7.4,
+  /** Antaget grundværdi-andel af købspris (vejledende skøn til estimat) */
+  LAND_SHARE_HOUSE: 0.25,
+  LAND_SHARE_APT: 0.1,
+  /** Satser senest verificeret */
+  RATES_VERIFIED: "juli 2026",
+} as const;
+
 export const DEFAULTS = {
   TERM_YEARS: 30,
   INTEREST_RATE_PCT: 4.0,
+  /** Vejledende bidragssats på realkreditlån (% pr. år af restgæld) ved ca. 80 % belåning */
+  BIDRAG_RATE_PCT: 0.75,
   /** Hus: 1,5% af købspris pr. år (antagelse) */
   MAINT_HOUSE_RATE: 0.015,
   /** Lejlighed: 1,0% af købspris pr. år (antagelse) */

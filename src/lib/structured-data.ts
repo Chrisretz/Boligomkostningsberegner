@@ -35,7 +35,7 @@ export const organizationSchema = {
   ...(organizationSameAs.length > 0 ? { sameAs: organizationSameAs } : {}),
   description:
     "Klarhed over din boligøkonomi. Beregn engangsomkostninger, månedlige udgifter og stress test ved boligkøb.",
-  logo: `${SITE_URL}/boligklarhed-logo.svg`,
+  logo: `${SITE_URL}/android-chrome-512x512.png`,
 };
 
 export const websiteSchema = {
@@ -50,7 +50,7 @@ export const websiteSchema = {
     name: "Boligklarhed",
     logo: {
       "@type": "ImageObject",
-      url: `${SITE_URL}/boligklarhed-logo.svg`,
+      url: `${SITE_URL}/android-chrome-512x512.png`,
     },
   },
   inLanguage: "da-DK",
@@ -145,7 +145,7 @@ export function getArticleSchema({
       name: "Boligklarhed",
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/boligklarhed-logo.svg`,
+        url: `${SITE_URL}/android-chrome-512x512.png`,
       },
     },
     inLanguage: "da-DK",

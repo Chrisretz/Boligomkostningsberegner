@@ -1,4 +1,5 @@
 import { ArtiklerArticleFeedbackGate } from "@/components/ArtiklerArticleFeedbackGate";
+import { ArticleExtras } from "@/components/ArticleExtras";
 
 export default function ArtiklerLayout({
   children,
@@ -8,6 +9,7 @@ export default function ArtiklerLayout({
   return (
     <>
       {children}
+      <ArticleExtras />
       <ArtiklerArticleFeedbackGate />
     </>
   );

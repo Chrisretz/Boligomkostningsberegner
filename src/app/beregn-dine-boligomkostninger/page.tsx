@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { flushSync } from "react-dom";
 import Link from "next/link";
 import { CalculatorForm } from "@/components/CalculatorForm";
+import { LiveSummary } from "@/components/LiveSummary";
 import { ResultsPanel } from "@/components/ResultsPanel";
 import { AffiliateCta } from "@/components/AffiliateCta";
 import { calculate } from "@/lib/calc";
@@ -25,10 +26,33 @@ export default function BeregnPage() {
   const [firstErrorId, setFirstErrorId] = useState<string | undefined>();
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [resultPhase, setResultPhase] = useState<ResultPhase>("idle");
+  const [liveInput, setLiveInput] = useState<CalcInput | null>(null);
+  const [initialVals, setInitialVals] = useState<{
+    p: number;
+    d: number;
+  } | null>(null);
   const resultsAnchorRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLElement>(null);
   const calculationTimeoutRef = useRef<number | null>(null);
   const pendingInputRef = useRef<CalcInput | null>(null);
+  const hasCalculatedRef = useRef(false);
+
+  // Startværdier fra URL (?pris=&udbetaling=) – fx fra forsidens mini-beregner
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const p = Number(sp.get("pris"));
+    const d = Number(sp.get("udbetaling"));
+    if (p > 0) {
+      setInitialVals({ p, d: d > 0 ? d : Math.round(p * 0.05) });
+    }
+  }, []);
+
+  // Live-beregning til sticky resumé (kun når input er gyldigt)
+  const liveOutput = useMemo(() => {
+    if (!liveInput) return null;
+    const validated = validateCalcInput(liveInput);
+    return validated.success ? calculate(validated.data) : null;
+  }, [liveInput]);
 
   useEffect(() => {
     return () => {
@@ -72,6 +96,10 @@ export default function BeregnPage() {
     });
     pendingInputRef.current = validated.data;
 
+    // Fuld delay kun ved første beregning; derefter næsten øjeblikkeligt
+    const delay = hasCalculatedRef.current ? 200 : CALCULATION_UI_DELAY_MS;
+    hasCalculatedRef.current = true;
+
     calculationTimeoutRef.current = window.setTimeout(() => {
       calculationTimeoutRef.current = null;
       const data = pendingInputRef.current;
@@ -104,7 +132,7 @@ export default function BeregnPage() {
                 : "35k+",
         ratePct: result.base.interestRateAnnualPct,
       });
-    }, CALCULATION_UI_DELAY_MS);
+    }, delay);
   }, []);
 
   const handleDownloadPdf = useCallback(async () => {
@@ -126,13 +154,19 @@ export default function BeregnPage() {
   }, [isGeneratingPdf, lastInput, output, resultPhase]);
 
   return (
-    <main className="min-h-screen py-12 px-4 overflow-x-hidden pb-24">
+    <main className="min-h-screen py-12 px-4 overflow-x-clip pb-24">
       <div className="container mx-auto max-w-7xl min-w-0">
         {/* Centreret header */}
         <header className="text-center mb-10">
           <h1 className="text-xl sm:text-2xl md:text-h1 text-text-primary mb-2 break-words">
             Beregn dine boligomkostninger
           </h1>
+          <p className="mb-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-brand-surface px-3 py-1 text-small text-text-secondary">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-primary" aria-hidden />
+              Satser verificeret juli 2026
+            </span>
+          </p>
           <p className="text-body text-text-secondary max-w-2xl mx-auto">
             Brug boligomkostningsberegneren til at se, hvad det reelt koster at
             købe og eje din bolig. Du kan teste forskellige scenarier for
@@ -162,15 +196,24 @@ export default function BeregnPage() {
           </p>
         </header>
 
-        {/* Input-kort */}
-        <section className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 mb-16">
-          <CalculatorForm
-            onSubmit={handleSubmit}
-            validationErrors={validationErrors}
-            firstErrorId={firstErrorId}
-            isCalculating={resultPhase === "calculating"}
-          />
-        </section>
+        {/* Input + sticky live-resumé */}
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start mb-16">
+          <section aria-label="Beregner-formular">
+            <CalculatorForm
+              key={
+                initialVals ? `${initialVals.p}-${initialVals.d}` : "default"
+              }
+              onSubmit={handleSubmit}
+              onInputChange={setLiveInput}
+              validationErrors={validationErrors}
+              firstErrorId={firstErrorId}
+              isCalculating={resultPhase === "calculating"}
+              initialPurchasePriceDKK={initialVals?.p}
+              initialDownPaymentDKK={initialVals?.d}
+            />
+          </section>
+          <LiveSummary output={liveOutput} />
+        </div>
 
         {/* Fast anker: altid i DOM, så scroll kan skje i samme klik som timeren starter */}
         <div
