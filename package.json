@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "article:touch": "node scripts/article-date.mjs touch",
-    "article:new": "node scripts/article-date.mjs new"
+    "article:new": "node scripts/article-date.mjs new",
+    "reading-time": "node scripts/reading-time.mjs"
   },
   "dependencies": {
     "date-fns": "^4.1.0",

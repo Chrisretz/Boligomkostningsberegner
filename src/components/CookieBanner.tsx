@@ -98,25 +98,25 @@ export function CookieBanner() {
                 </Link>{" "}
                 i bunden af siden.
               </p>
-              <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-1">
+              <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end sm:gap-5 gap-3 pt-1">
                 <button
                   type="button"
                   onClick={openDetails}
-                  className="min-h-[48px] w-full sm:w-auto px-4 py-3 text-small font-medium text-text-secondary hover:text-brand-primary underline-offset-2 hover:underline touch-manipulation"
+                  className="min-h-[44px] text-small font-medium text-text-muted hover:text-brand-primary underline-offset-2 hover:underline touch-manipulation"
                 >
                   Tilpas
                 </button>
                 <button
                   type="button"
                   onClick={rejectAll}
-                  className="min-h-[48px] w-full sm:w-auto px-5 py-3 text-body font-semibold text-text-primary bg-white border-2 border-border rounded-md hover:bg-brand-background transition-colors touch-manipulation"
+                  className="min-h-[44px] text-small font-medium text-text-muted hover:text-brand-primary underline-offset-2 hover:underline touch-manipulation"
                 >
                   Kun nødvendige
                 </button>
                 <button
                   type="button"
                   onClick={acceptAll}
-                  className="min-h-[48px] w-full sm:w-auto px-6 py-3 text-body font-semibold text-white bg-brand-primary rounded-md shadow-soft hover:bg-brand-primaryHover transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
+                  className="min-h-[52px] w-full sm:w-auto px-8 py-3.5 text-body font-semibold text-white bg-brand-primary rounded-md shadow-card hover:bg-brand-primaryHover transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 touch-manipulation"
                 >
                   Acceptér alle
                 </button>

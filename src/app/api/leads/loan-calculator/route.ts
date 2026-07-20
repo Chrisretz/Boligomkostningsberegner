@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Pool } from "pg";
+import { Resend } from "resend";
+import {
+  buildLeadEmailHtml,
+  buildLeadEmailSubject,
+  buildLeadEmailText,
+  type LeadEmailData,
+} from "@/lib/leadEmail";
 import {
   bucketAnnualIncome,
   bucketExistingDebt,
@@ -35,6 +42,36 @@ const bodySchema = z.object({
 });
 
 let pool: Pool | null = null;
+
+/**
+ * Sender beregningen til brugeren. Fejler lydløst (logges), så en
+ * mailfejl ikke får hele indsendelsen til at fremstå mislykket.
+ */
+async function sendLeadEmail(to: string, data: LeadEmailData): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from =
+    process.env.LEAD_FROM_EMAIL?.trim() ||
+    process.env.ARTICLE_FEEDBACK_FROM_EMAIL?.trim();
+  if (!apiKey || !from) {
+    console.warn(
+      "[api/leads/loan-calculator] RESEND_API_KEY eller afsender mangler – beregning ikke sendt på e-mail."
+    );
+    return;
+  }
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from,
+      to: [to],
+      subject: buildLeadEmailSubject(),
+      text: buildLeadEmailText(data),
+      html: buildLeadEmailHtml(data),
+    });
+    if (error) console.error("[api/leads/loan-calculator] Resend:", error);
+  } catch (e) {
+    console.error("[api/leads/loan-calculator] Mail-fejl:", e);
+  }
+}
 
 function getPool(): Pool | null {
   const url = getDatabaseUrl();
@@ -137,6 +174,14 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+
+  await sendLeadEmail(body.email, {
+    firstName: body.firstName,
+    annualIncomeDkk: body.annualIncomeDkk,
+    existingDebtDkk: body.existingDebtDkk,
+    maxLoanDkk: body.maxLoanDkk,
+    estimatedPurchaseDkk: body.estimatedPurchaseDkk,
+  });
 
   return NextResponse.json({ ok: true });
 }

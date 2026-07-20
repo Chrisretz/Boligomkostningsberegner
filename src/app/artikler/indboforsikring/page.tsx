@@ -6,6 +6,7 @@ import { getArticleDates } from "@/lib/article-dates";
 import { INDBOFORSIKRING_FAQ } from "@/lib/artikel-faq/indboforsikring";
 import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
 import { ArticleMeta } from "@/components/ArticleMeta";
+import { PartnerCta } from "@/components/PartnerCta";
 
 const ARTICLE_PATH = "/artikler/indboforsikring";
 const dates = getArticleDates(ARTICLE_PATH);
@@ -60,7 +61,7 @@ export default function IndboforsikringPage() {
         <h1 className="text-h1 text-text-primary mb-3">
           Hvad er en indboforsikring?
         </h1>
-        <ArticleMeta {...dates} />
+        <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -152,6 +153,13 @@ export default function IndboforsikringPage() {
               få et tilbud fra et forsikringsselskab eller sammenligne priser
               online og bruge et gennemsnitligt beløb i din budgetberegning.
             </p>
+            <PartnerCta
+              partnerSlug="forsikring"
+              heading="Sammenlign priser på din indboforsikring"
+              body="Findforsikring.dk indhenter tre gratis og uforpligtende tilbud, så du kan se, om du betaler for meget. Prisen på indbo- og husforsikring varierer betydeligt mellem selskaberne."
+              buttonLabel="Få 3 gratis forsikringstilbud"
+              placement="artikel-indboforsikring"
+            />
           </section>
 
           <section>

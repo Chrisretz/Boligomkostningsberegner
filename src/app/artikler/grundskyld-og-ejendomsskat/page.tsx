@@ -60,7 +60,7 @@ export default function GrundskyldOgEjendomsskatPage() {
         <h1 className="text-h1 text-text-primary mb-3">
           Hvad er grundskyld og ejendomsskat?
         </h1>
-        <ArticleMeta {...dates} />
+        <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>

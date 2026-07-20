@@ -58,7 +58,7 @@ export default function BoligkoebFoersteGangPage() {
         <h1 className="text-h1 text-text-primary mb-3">
           Boligkøb første gang: Sådan gør du
         </h1>
-        <ArticleMeta {...dates} />
+        <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>

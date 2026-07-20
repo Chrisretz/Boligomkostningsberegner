@@ -232,6 +232,7 @@ export function Topbar() {
     <>
     <header
       ref={headerRef}
+      id="site-header"
       className={[
         "fixed top-0 left-0 right-0 z-[55] border-b border-white/15 bg-brand-primary",
         "transition-transform duration-300 ease-out motion-reduce:transition-none",

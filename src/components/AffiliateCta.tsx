@@ -9,6 +9,10 @@ interface AffiliateCtaProps {
 }
 
 export function AffiliateCta({ placement = "result_top" }: AffiliateCtaProps) {
+  // Vis kun CTA'en når en rigtig lånepartner er konfigureret – ellers ville
+  // knappen føre til placeholder-URL'en i /go/loan.
+  if (!process.env.NEXT_PUBLIC_AFFILIATE_LOAN_ENABLED) return null;
+
   const href = `${DEFAULTS.REDIRECT_ROUTE}?src=beregn&variant=v1&placement=${placement}`;
 
   const handleClick = () => {

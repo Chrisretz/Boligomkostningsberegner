@@ -10,6 +10,7 @@ import { VAELG_EJENDOMSMAEGLER_FAQ } from "@/lib/artikel-faq/vaelg-ejendomsmaegl
 import { socialMetadata } from "@/lib/social-metadata";
 import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
 import { ArticleMeta } from "@/components/ArticleMeta";
+import { PartnerCta } from "@/components/PartnerCta";
 
 const ARTICLE_PATH = "/artikler/vaelg-ejendomsmaegler";
 const dates = getArticleDates(ARTICLE_PATH);
@@ -62,7 +63,7 @@ export default function VaelgEjendomsmaeglerPage() {
         <h1 className="text-h1 text-text-primary mb-3">
           Vælg den rette ejendomsmægler til dit boligsalg
         </h1>
-        <ArticleMeta {...dates} />
+        <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
         <article className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -183,6 +184,19 @@ export default function VaelgEjendomsmaeglerPage() {
               Det danske boligmarked har mange dygtige mæglere, men du skal
               finde den, der passer til dig og din bolig. Her er de vigtigste
               kriterier at vurdere.
+            </p>
+            <PartnerCta
+              partnerSlug="boligvurdering"
+              heading="Kend din boligs værdi, før du taler med mægleren"
+              body="Med et uafhængigt prisestimat i hånden står du stærkere, når mæglerne kommer med hver deres salgsvurdering. Valuea.dk sender dig en gratis og uforpligtende vurderingsrapport."
+              buttonLabel="Få en gratis vurderingsrapport"
+              placement="artikel-vaelg-ejendomsmaegler"
+            />
+            <p>
+              Bemærk at mæglerens egen salgsvurdering både er et prisestimat og
+              et salgsargument. Derfor er det en fordel at kende et uafhængigt
+              skøn på forhånd, så du kan vurdere, om vurderingen er realistisk
+              eller sat højt for at vinde opgaven.
             </p>
             <h3 className="text-h3 text-text-primary pt-2">
               Lokalkendskab og erfaring

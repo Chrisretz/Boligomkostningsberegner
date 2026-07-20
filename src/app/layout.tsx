@@ -8,6 +8,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 import { Topbar } from "@/components/Topbar";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
@@ -89,6 +90,7 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-brand-background text-text-primary flex flex-col min-h-screen">
         <GoogleAnalytics />
         <Topbar />
+        <ScrollProgress />
         <div id="site-content-bounce-root" className="flex-1">
           {children}
         </div>

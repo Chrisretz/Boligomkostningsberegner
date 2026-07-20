@@ -6,6 +6,7 @@ import { getArticleDates } from "@/lib/article-dates";
 import { EJERSKIFTE_FAQ } from "@/lib/artikel-faq/ejerskifteforsikring";
 import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
 import { ArticleMeta } from "@/components/ArticleMeta";
+import { PartnerCta } from "@/components/PartnerCta";
 
 const ARTICLE_PATH = "/artikler/ejerskifteforsikring";
 const dates = getArticleDates(ARTICLE_PATH);
@@ -58,7 +59,7 @@ export default function EjerskifteforsikringPage() {
         <h1 className="text-h1 text-text-primary mb-3">
           Hvad er en ejerskifteforsikring?
         </h1>
-        <ArticleMeta {...dates} />
+        <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <p>
@@ -166,6 +167,13 @@ export default function EjerskifteforsikringPage() {
               din økonomi er stram, kan det være ekstra vigtigt at sikre sig
               mod store enkeltstående regninger, der kan vælte boligbudgettet.
             </p>
+            <PartnerCta
+              partnerSlug="forsikring"
+              heading="Indhent tilbud på dine boligforsikringer"
+              body="Findforsikring.dk giver dig tre gratis og uforpligtende tilbud, så du kan sammenligne dækning og pris på husforsikring, indboforsikring og ejerskifteforsikring."
+              buttonLabel="Få 3 gratis forsikringstilbud"
+              placement="artikel-ejerskifteforsikring"
+            />
           </section>
 
           <section>
