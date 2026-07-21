@@ -30,7 +30,24 @@ export default function KontaktPage() {
   return (
     <main className="min-h-screen py-12 px-4">
       <div className="container mx-auto max-w-3xl">
+        <p className="text-small font-semibold uppercase tracking-[0.18em] text-brand-accent mb-2">
+          Skriv til os
+        </p>
         <h1 className="text-h1 text-text-primary mb-4">Kontakt os</h1>
+        <div className="not-prose mb-8 rounded-lg border border-border bg-brand-background p-5">
+          <p className="text-body text-text-primary font-medium mb-1">
+            <a
+              href={`mailto:${COMPANY_CONTACT_EMAIL}`}
+              className="text-brand-primary hover:underline"
+            >
+              {COMPANY_CONTACT_EMAIL}
+            </a>
+          </p>
+          <p className="text-small text-text-secondary">
+            Vi læser alle henvendelser og svarer typisk inden for få hverdage.
+            Vi giver ikke personlig finansiel rådgivning.
+          </p>
+        </div>
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary mb-10 space-y-6">
           <p>

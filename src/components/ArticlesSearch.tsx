@@ -2,138 +2,158 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { articleCategories, articles, getArticlesBySlugs } from "@/lib/articles";
+import {
+  articleCategories,
+  articles,
+  getArticlesBySlugs,
+  STARTER_SLUGS,
+} from "@/lib/articles";
+import { getReadingTime } from "@/lib/article-reading-time";
 
 const normalize = (val: string) =>
   val
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    .replace(/[̀-ͯ]/g, "");
+
+function ArticleCard({
+  slug,
+  title,
+  description,
+}: {
+  slug: string;
+  title: string;
+  description: string;
+}) {
+  const minutes = getReadingTime(`/artikler/${slug}`);
+  return (
+    <Link
+      href={`/artikler/${slug}`}
+      className="card-lift flex h-full flex-col p-4 rounded-lg border border-border bg-white shadow-soft hover:border-brand-primary group"
+    >
+      <h3 className="text-body font-semibold text-text-primary group-hover:text-brand-primary transition-colors leading-snug break-words hyphens-auto">
+        {title}
+      </h3>
+      <p className="mt-1.5 text-small text-text-secondary leading-relaxed flex-1 break-words hyphens-auto line-clamp-4">
+        {description}
+      </p>
+      {minutes != null && (
+        <p className="mt-3 text-small text-text-muted">
+          {minutes} min. læsning
+        </p>
+      )}
+    </Link>
+  );
+}
 
 export function ArticlesSearch() {
   const [query, setQuery] = useState("");
 
-  const normalizedQuery = useMemo(
-    () => normalize(query.trim()),
-    [query]
-  );
+  const normalizedQuery = useMemo(() => normalize(query.trim()), [query]);
 
   const matchedBySlug = useMemo(() => {
     if (!normalizedQuery) return null;
-
-    const matched = new Set(
+    return new Set(
       articles
-        .filter((a) => {
-          const haystack = normalize(
-            `${a.title} ${a.description} ${a.slug}`
-          );
-          return haystack.includes(normalizedQuery);
-        })
+        .filter((a) =>
+          normalize(`${a.title} ${a.description} ${a.slug}`).includes(
+            normalizedQuery
+          )
+        )
         .map((a) => a.slug)
     );
-
-    return matched;
   }, [normalizedQuery]);
 
-  const resultsCount = useMemo(() => {
-    if (!matchedBySlug) return articles.length;
-    return matchedBySlug.size;
-  }, [matchedBySlug]);
+  const resultsCount = matchedBySlug ? matchedBySlug.size : articles.length;
+  const isSearching = normalizedQuery.length > 0;
+  const starters = getArticlesBySlugs([...STARTER_SLUGS]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div className="bg-brand-surface rounded-md border border-border shadow-soft p-5">
-        <div className="flex flex-col gap-1">
-          <div className="min-w-0">
-            <label
-              htmlFor="artikel-search"
-              className="block text-small text-text-secondary mb-1"
+        <label
+          htmlFor="artikel-search"
+          className="block text-small text-text-secondary mb-1"
+        >
+          Søg i artikler
+        </label>
+        <div className="relative w-full md:w-[520px]">
+          <input
+            id="artikel-search"
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Skriv fx tinglysning, realkreditlån eller ejerskifteforsikring…"
+            className="w-full px-4 py-2.5 bg-white border border-border rounded-md pr-12 text-body text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          />
+          {query.trim().length > 0 && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="Ryd søgning"
+              className="absolute right-3 inset-y-0 my-auto flex items-center justify-center w-8 h-8 text-[18px] text-text-muted hover:text-text-primary rounded focus:outline-none focus:ring-2 focus:ring-brand-primary leading-none"
             >
-              Søg i artikler
-            </label>
-            <div className="relative w-full md:w-[520px]">
-              <input
-                id="artikel-search"
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Skriv fx tinglysning, realkreditlån eller ejerskifteforsikring…"
-                className="w-full px-4 py-2.5 bg-white border border-border rounded-md pr-12 text-body text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary"
-              />
-              {query.trim().length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setQuery("")}
-                  aria-label="Ryd søgning"
-                  className="absolute right-3 inset-y-0 my-auto flex items-center justify-center w-8 h-8 text-[18px] text-text-muted hover:text-text-primary rounded focus:outline-none focus:ring-2 focus:ring-brand-primary leading-none"
-                >
-                  ×
-                </button>
-              )}
-            </div>
-
-            <div className="mt-2 text-small text-text-muted text-left">
-              {resultsCount} resultat{resultsCount === 1 ? "" : "er"}
-            </div>
-          </div>
+              ×
+            </button>
+          )}
         </div>
+        <p className="mt-2 text-small text-text-muted">
+          {resultsCount} resultat{resultsCount === 1 ? "" : "er"}
+        </p>
       </div>
 
-      <div className="space-y-4" role="list">
-        {articleCategories.map((category) => {
-          const categoryArticles = getArticlesBySlugs([...category.slugs]);
-          const filteredArticles =
-            matchedBySlug === null
-              ? categoryArticles
-              : categoryArticles.filter((a) => matchedBySlug.has(a.slug));
+      {/* Start her – kun når man ikke søger */}
+      {!isSearching && (
+        <section
+          aria-labelledby="start-her-heading"
+          className="rounded-xl border border-border bg-brand-background p-5 md:p-6"
+        >
+          <p className="text-small font-semibold uppercase tracking-[0.15em] text-brand-accent mb-1">
+            Ny på Boligklarhed?
+          </p>
+          <h2
+            id="start-her-heading"
+            className="text-h3 text-text-primary mb-4"
+          >
+            Start her
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            {starters.map((a) => (
+              <ArticleCard key={a.slug} {...a} />
+            ))}
+          </div>
+        </section>
+      )}
 
-          const showCategory = filteredArticles.length > 0;
-          if (!showCategory) return null;
+      {articleCategories.map((category) => {
+        const categoryArticles = getArticlesBySlugs([...category.slugs]);
+        const filtered =
+          matchedBySlug === null
+            ? categoryArticles
+            : categoryArticles.filter((a) => matchedBySlug.has(a.slug));
+        if (filtered.length === 0) return null;
 
-          return (
-            <details
-              key={category.id}
-              open={normalizedQuery.length > 0}
-              className="group rounded-md border border-border bg-brand-surface shadow-soft overflow-hidden"
+        return (
+          <section key={category.id} aria-labelledby={`cat-${category.id}`}>
+            <h2
+              id={`cat-${category.id}`}
+              className="text-h3 text-text-primary mb-1"
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 text-left hover:bg-border/30 transition-colors">
-                <div>
-                  <h2 className="text-h3 text-text-primary">{category.title}</h2>
-                  <p className="mt-1 text-small text-text-secondary">
-                    {category.description}
-                  </p>
-                </div>
-                <span className="text-xl text-text-muted shrink-0 group-open:hidden">
-                  +
-                </span>
-                <span className="text-xl text-text-muted shrink-0 hidden group-open:inline">
-                  −
-                </span>
-              </summary>
+              {category.title}
+            </h2>
+            <p className="text-small text-text-secondary mb-4">
+              {category.description}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filtered.map((a) => (
+                <ArticleCard key={a.slug} {...a} />
+              ))}
+            </div>
+          </section>
+        );
+      })}
 
-              <ul className="border-t border-border px-4 pb-4 pt-2 space-y-3">
-                {filteredArticles.map((article) => (
-                  <li key={article.slug}>
-                    <Link
-                      href={`/artikler/${article.slug}`}
-                      className="card-lift block p-3 rounded-lg border border-border bg-brand-background hover:border-brand-primary group"
-                    >
-                      <h3 className="text-body font-semibold text-text-primary group-hover:text-brand-primary transition-colors">
-                        {article.title}
-                      </h3>
-                      <p className="mt-1 text-small text-text-secondary">
-                        {article.description}
-                      </p>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </details>
-          );
-        })}
-      </div>
-
-      {normalizedQuery.length > 0 && resultsCount === 0 && (
+      {isSearching && resultsCount === 0 && (
         <div className="bg-brand-surface rounded-md border border-border shadow-soft p-6 text-center text-text-muted">
           Ingen artikler matcher din søgning.
         </div>
@@ -141,4 +161,3 @@ export function ArticlesSearch() {
     </div>
   );
 }
-

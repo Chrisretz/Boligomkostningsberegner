@@ -93,6 +93,10 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
     datePublished: "2026-04-23T12:00:00+02:00",
     dateModified: "2026-04-23T12:00:00+02:00",
   },
+  "/artikler/koeb-bolig-sammen-ugift": {
+    datePublished: "2026-07-21T12:00:00+02:00",
+    dateModified: "2026-07-21T12:00:00+02:00",
+  },
 };
 
 export function getArticleDates(path: string): ArticleDates {

@@ -64,10 +64,10 @@ export function ArticleExtras() {
                   href={`/artikler/${a.slug}`}
                   className="card-lift block p-4 rounded-lg border border-border bg-white shadow-soft hover:border-brand-primary group"
                 >
-                  <p className="text-body font-semibold text-text-primary group-hover:text-brand-primary leading-snug mb-1.5">
+                  <p className="text-body font-semibold text-text-primary group-hover:text-brand-primary leading-snug mb-1.5 break-words hyphens-auto">
                     {a.title}
                   </p>
-                  <p className="text-small text-text-secondary leading-relaxed line-clamp-3">
+                  <p className="text-small text-text-secondary leading-relaxed line-clamp-3 break-words hyphens-auto">
                     {a.description}
                   </p>
                 </Link>

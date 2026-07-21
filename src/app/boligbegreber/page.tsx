@@ -51,6 +51,9 @@ export default function BoligbegreberPage() {
           </Link>
         </p>
 
+        <p className="text-small font-semibold uppercase tracking-[0.18em] text-brand-accent mb-2">
+          Ordliste
+        </p>
         <h1 className="text-h1 text-text-primary mb-3">Boligbegreber</h1>
         <ArticleMeta {...dates} />
         <p className="text-body text-text-secondary mb-8">

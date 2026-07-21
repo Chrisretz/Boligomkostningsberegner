@@ -13,13 +13,14 @@ export const readingTimeByPath: Record<string, number> = {
   "/artikler/grundskyld-og-ejendomsskat": 4, // ca. 731 ord
   "/artikler/hvad-kan-jeg-koebe-bolig-for": 7, // ca. 1427 ord
   "/artikler/indboforsikring": 3, // ca. 594 ord
+  "/artikler/koeb-bolig-sammen-ugift": 4, // ca. 875 ord
   "/artikler/realkreditlan": 3, // ca. 678 ord
   "/artikler/realkreditlan-beregner": 4, // ca. 867 ord
   "/artikler/saadan-vurderer-banken-dit-boliglan": 3, // ca. 690 ord
   "/artikler/sammenligning-af-laanetyper": 3, // ca. 584 ord
   "/artikler/tinglysning": 3, // ca. 505 ord
   "/artikler/tvangsauktioner": 5, // ca. 1098 ord
-  "/artikler/vaelg-ejendomsmaegler": 7, // ca. 1363 ord
+  "/artikler/vaelg-ejendomsmaegler": 7, // ca. 1402 ord
   "/artikler/vedligehold": 3, // ca. 636 ord
 };
 

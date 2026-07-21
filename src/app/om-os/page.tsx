@@ -30,7 +30,35 @@ export default function OmOsPage() {
   return (
     <main className="min-h-screen py-12 px-4">
       <div className="container mx-auto max-w-3xl">
-        <h1 className="text-h1 text-text-primary mb-6">Om os</h1>
+        <p className="text-small font-semibold uppercase tracking-[0.18em] text-brand-accent mb-2">
+          Om Boligklarhed
+        </p>
+        <h1 className="text-h1 text-text-primary mb-4">
+          Klarhed over din boligøkonomi
+        </h1>
+        <p className="text-body text-text-secondary mb-8 leading-relaxed">
+          Vi er et uafhængigt værktøj, ikke en bank, en mægler eller en
+          låneformidler. Vores eneste opgave er at give dig de tal, du har brug
+          for, før du skriver under.
+        </p>
+
+        <ul className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+          {[
+            { label: "Gratis og uden login", value: "Alle beregnere" },
+            { label: "Satser verificeret", value: "Juli 2026" },
+            { label: "CVR", value: COMPANY_CVR },
+          ].map((item) => (
+            <li
+              key={item.label}
+              className="rounded-lg border border-border bg-white shadow-soft p-4"
+            >
+              <p className="text-small text-text-muted mb-1">{item.label}</p>
+              <p className="text-body font-semibold text-text-primary">
+                {item.value}
+              </p>
+            </li>
+          ))}
+        </ul>
 
         <div className="prose prose-lg max-w-none text-body text-text-secondary space-y-6">
           <section>

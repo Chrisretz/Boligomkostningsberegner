@@ -21,13 +21,26 @@ export const articles = [
   { slug: "energimaerker-og-boligokonomi", title: "Energimærker og boligbudget: A–G ved boligkøb", description: "Energimærke A–G: hvad det betyder for varme, el og månedlige omkostninger – og hvordan du bruger mærket i boligbudgettet." },
   { slug: "tvangsauktioner", title: "Tvangsauktioner: guide til muligheder og faldgruber", description: "Tvangsauktioner i Danmark: muligheder, risici og fogedret. Overblik over økonomi og finansiering – brug Boligklarhed til budget og beregning." },
   { slug: "vaelg-ejendomsmaegler", title: "Vælg den rette ejendomsmægler til dit boligsalg", description: "Guide til at vælge ejendomsmægler: opgaver, salær, lokalkendskab og salgsstrategi. Brug Boligklarheds beregnere til økonomisk overblik før du underskriver." },
+  { slug: "koeb-bolig-sammen-ugift", title: "Køb bolig sammen som ugifte: det skal I have styr på", description: "Ugifte samlevende arver ikke hinanden. Få styr på samejeoverenskomst, gældsbrev, testamente og forsikring, før I køber bolig sammen." },
 ] as const;
 
+/**
+ * Kategorier følger købsrejsen: før du køber → finansiering → ved købet →
+ * når du ejer. Rækkefølgen bruges direkte i artikeloversigten.
+ */
 export const articleCategories = [
-  { id: "engangsomkostninger", title: "Engangsomkostninger ved boligkøb", description: "Tinglysning, pant, forsikring og andre omkostninger ved overtagelse.", slugs: ["tinglysning", "ejerskifteforsikring", "eksisterende-pantebrev"] as const },
-  { id: "finansiering", title: "Finansiering og lån", description: "Realkreditlån, banklån og hvad du har råd til at købe for.", slugs: ["realkreditlan", "realkreditlan-beregner", "sammenligning-af-laanetyper", "hvad-kan-jeg-koebe-bolig-for", "saadan-vurderer-banken-dit-boliglan"] as const },
-  { id: "loebende", title: "Løbende omkostninger", description: "Vedligehold, ejerudgifter, el, energimærker, grundskyld, skat og forsikring.", slugs: ["vedligehold", "ejerudgifter", "elforbrug-husstand", "energimaerker-og-boligokonomi", "grundskyld-og-ejendomsskat", "indboforsikring"] as const },
-  { id: "overblik", title: "Overblik og vejledning", description: "Boligtyper, førstegangskøb, ejendomsmægler, tvangsauktioner og generel guide til boligkøb.", slugs: ["ejerlejlighed", "boligkoeb-foerste-gang", "vaelg-ejendomsmaegler", "tvangsauktioner"] as const },
+  { id: "overblik", title: "1. Før du køber", description: "Boligtyper, førstegangskøb, fælles køb, ejendomsmægler og tvangsauktioner.", slugs: ["boligkoeb-foerste-gang", "ejerlejlighed", "koeb-bolig-sammen-ugift", "vaelg-ejendomsmaegler", "tvangsauktioner"] as const },
+  { id: "finansiering", title: "2. Finansiering og lån", description: "Realkreditlån, banklån og hvad du har råd til at købe for.", slugs: ["realkreditlan", "realkreditlan-beregner", "sammenligning-af-laanetyper", "hvad-kan-jeg-koebe-bolig-for", "saadan-vurderer-banken-dit-boliglan"] as const },
+  { id: "engangsomkostninger", title: "3. Ved købet: engangsomkostninger", description: "Tinglysning, pant, forsikring og andre omkostninger ved overtagelse.", slugs: ["tinglysning", "ejerskifteforsikring", "eksisterende-pantebrev"] as const },
+  { id: "loebende", title: "4. Når du ejer boligen", description: "Vedligehold, ejerudgifter, el, energimærker, grundskyld, skat og forsikring.", slugs: ["vedligehold", "ejerudgifter", "elforbrug-husstand", "energimaerker-og-boligokonomi", "grundskyld-og-ejendomsskat", "indboforsikring"] as const },
+] as const;
+
+/** Artikler vi anbefaler nye besøgende at starte med. */
+export const STARTER_SLUGS = [
+  "boligkoeb-foerste-gang",
+  "hvad-kan-jeg-koebe-bolig-for",
+  "tinglysning",
+  "ejerudgifter",
 ] as const;
 
 export type ArticleSlug = (typeof articles)[number]["slug"];
