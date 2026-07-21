@@ -6,7 +6,7 @@ export const articles = [
   { slug: "tinglysning", title: "Hvad er tinglysning?", description: "Lær hvordan tinglysning sikrer dit ejerskab og hvilke afgifter der betales ved køb af bolig." },
   { slug: "ejerskifteforsikring", title: "Hvad er en ejerskifteforsikring?", description: "Få overblik over hvad ejerskifteforsikring dækker, hvad den koster og om den er nødvendig for dig." },
   { slug: "realkreditlan", title: "Realkreditlån: Sådan fungerer det", description: "Få overblik over realkreditlån, annuitetslån, F1/F3/F5 og hvordan din månedlige ydelse beregnes." },
-  { slug: "realkreditlan-beregner", title: "Realkreditlån beregner og boligomkostninger", description: "Realkreditlån beregner i boligomkostningsberegneren: ydelse, 80/15/5, banklån, tinglysning og vedligehold – gratis uden login." },
+  { slug: "realkreditlan-beregner", title: "Hvad koster et realkreditlån? Regneeksempel", description: "Regneeksempel på et realkreditlån: ydelse, bidrag, 80/15/5 og engangsomkostninger – med link til den fulde beregner." },
   { slug: "sammenligning-af-laanetyper", title: "Lånetyper ved boligkøb: overblik og sammenligning", description: "Alle lånetyper forklaret: fast rente, F1/F3/F5, afdragsfrihed og banklån. Se forskellen på ydelse og risiko." },
   { slug: "vedligehold", title: "Hvad koster vedligehold af hus og bolig?", description: "Vedligeholdelse koster typisk 1,5 % af husets værdi om året, 1 % for lejlighed. Se hvad beløbet dækker." },
   { slug: "eksisterende-pantebrev", title: "Spar på tinglysning: Udnyt eksisterende pantebrev", description: "Lær hvordan du reducerer omkostningerne til tinglysning af pant ved at overtage eller genbruge allerede tinglyste pantebreve." },

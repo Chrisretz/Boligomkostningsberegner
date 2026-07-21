@@ -59,7 +59,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/realkreditlan-beregner": {
     datePublished: "2026-04-30T10:00:00+02:00",
-    dateModified: "2026-04-18T12:00:00+02:00",
+    dateModified: "2026-07-21T12:00:00+02:00",
   },
   "/artikler/sammenligning-af-laanetyper": {
     datePublished: "2026-04-01T14:00:00+02:00",

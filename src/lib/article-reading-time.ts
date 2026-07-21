@@ -15,7 +15,7 @@ export const readingTimeByPath: Record<string, number> = {
   "/artikler/indboforsikring": 3, // ca. 594 ord
   "/artikler/koeb-bolig-sammen-ugift": 4, // ca. 875 ord
   "/artikler/realkreditlan": 3, // ca. 678 ord
-  "/artikler/realkreditlan-beregner": 4, // ca. 867 ord
+  "/artikler/realkreditlan-beregner": 4, // ca. 879 ord
   "/artikler/saadan-vurderer-banken-dit-boliglan": 3, // ca. 690 ord
   "/artikler/sammenligning-af-laanetyper": 5, // ca. 1002 ord
   "/artikler/tinglysning": 3, // ca. 505 ord

@@ -16,9 +16,9 @@ const ARTICLE_PATH = "/artikler/realkreditlan-beregner";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema([...REALKREDITLAN_BEREGNER_FAQ]);
 
-const title = "Realkreditlån beregner og boligomkostninger";
+const title = "Hvad koster et realkreditlån? Regneeksempel og ydelse";
 const description =
-  "Realkreditlån beregner i boligomkostningsberegneren: ydelse, 80/15/5, banklån, tinglysning og vedligehold – gratis uden login.";
+  "Regneeksempel på et realkreditlån: ydelse, bidrag, 80/15/5-finansiering og engangsomkostninger. Se hvad et lån koster om måneden, og beregn dit eget.";
 
 export const metadata: Metadata = {
   title,
@@ -107,10 +107,10 @@ export default function RealkreditlanBeregnerArticlePage() {
 
           <div className="flex flex-col sm:flex-row gap-3 not-prose my-4">
             <Link
-              href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
+              href={PATH_BOLIGLAAN_BEREGNER}
               className="inline-flex justify-center items-center min-h-[48px] px-6 py-3 text-body font-semibold text-white bg-brand-primary rounded-md shadow-soft hover:opacity-90"
             >
-              Åbn boligomkostningsberegner
+              Åbn realkreditlån beregner
             </Link>
             <Link
               href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}

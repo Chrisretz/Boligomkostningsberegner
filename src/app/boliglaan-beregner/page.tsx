@@ -3,21 +3,55 @@ import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import { RealkreditBeregner } from "@/components/RealkreditBeregner";
 import { BOLIGLAAN_BEREGNER_FAQ } from "@/lib/artikel-faq/boliglaan-beregner";
 import {
+  PATH_BOLIGLAAN_BEREGNER,
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
   PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
 } from "@/lib/site";
-import { getFaqPageSchema } from "@/lib/structured-data";
+import {
+  getBreadcrumbSchema,
+  getCalculatorSchema,
+  getFaqPageSchema,
+} from "@/lib/structured-data";
 
 const faqSchema = getFaqPageSchema([...BOLIGLAAN_BEREGNER_FAQ]);
+const calculatorSchema = getCalculatorSchema({
+  name: "Realkreditlån beregner",
+  description:
+    "Beregn realkreditlån med aktuelle kurser: lånetype, afdrag, bidrag, kurstab, ÅOP og etableringsomkostninger.",
+  path: PATH_BOLIGLAAN_BEREGNER,
+});
+const breadcrumbSchema = getBreadcrumbSchema([
+  { name: "Forside", path: "/" },
+  { name: "Beregnere", path: "/beregnere" },
+  { name: "Realkreditlån beregner", path: PATH_BOLIGLAAN_BEREGNER },
+]);
 
 export default function BoliglaanBeregnerPage() {
   return (
     <main className="min-h-screen py-12 px-4 overflow-x-clip pb-24">
       <script
         type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="container mx-auto max-w-4xl min-w-0">
+        <nav aria-label="Sti" className="mb-4 text-small text-text-muted">
+          <Link href="/" className="hover:text-brand-primary">
+            Forside
+          </Link>{" "}
+          /{" "}
+          <Link href="/beregnere" className="hover:text-brand-primary">
+            Beregnere
+          </Link>{" "}
+          / <span className="text-text-secondary">Realkreditlån beregner</span>
+        </nav>
         <header className="mb-8">
           <p className="text-small font-semibold uppercase tracking-[0.18em] text-brand-accent mb-2">
             Realkreditlån beregner

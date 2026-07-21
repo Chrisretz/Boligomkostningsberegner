@@ -1,43 +1,43 @@
-/** FAQ til siden «Boliglån beregner» – synlig tekst + FAQPage JSON-LD. */
+/** FAQ til realkreditlån-beregneren – synlig tekst + FAQPage JSON-LD. */
 export const BOLIGLAAN_BEREGNER_FAQ = [
   {
-    question: "Hvad er et boliglån?",
+    question: "Hvad koster et realkreditlån på 1 mio. kr.?",
     answer:
-      "Et boliglån er lån, der er knyttet til køb af bolig og typisk sikret med pant i ejendommen. I Danmark finansieres de fleste boligkøb med en kombination af realkreditlån (op til 80 % af købsprisen), eventuelt banklån og mindst 5 % i udbetaling.",
+      "Det afhænger af lånetype, rente, løbetid og om lånet er afdragsfrit. Ved fast rente omkring 4 % og bidrag på cirka 0,74 % ligger ydelsen typisk på 5.000-5.500 kr. om måneden for et 30-årigt lån med afdrag. Indtast dit eget lånebeløb i beregneren for et konkret tal med aktuelle kurser.",
   },
   {
-    question: "Hvad er en boliglånsberegner?",
+    question: "Hvad er ÅOP på et realkreditlån?",
     answer:
-      "En boliglånsberegner estimerer, hvad det koster at finansiere en bolig – typisk ud fra købspris, udbetaling, rente og løbetid. Resultatet er vejledende og erstatter ikke bankens kreditvurdering.",
+      "ÅOP (årlige omkostninger i procent) samler rente, bidrag, kurstab og etableringsgebyrer i ét tal, så du kan sammenligne lån på tværs. ÅOP er derfor altid højere end den nominelle rente. Beregneren viser ÅOP for det valgte lån. Bemærk, at ÅOP for variable lån antager, at den aktuelle rente fortsætter hele løbetiden.",
   },
   {
-    question: "Hvor meget skal man lægge i udbetaling?",
+    question: "Hvad er bidrag, og hvorfor betaler jeg det?",
     answer:
-      "Som udgangspunkt skal du mindst lægge 5 % af købsprisen i udbetaling. Mange vælger højere udbetaling for at reducere lånebehov og månedlig ydelse.",
+      "Bidrag er realkreditinstituttets løbende gebyr oven i renten. Det beregnes som en procent pr. år af restgælden og stiger med belåningsgraden: den del af lånet, der ligger over 60 % af boligens værdi, koster mest. Bidraget indgår i din månedlige ydelse, men påvirkes ikke af renteændringer.",
   },
   {
-    question: "Kan man låne 100 % til bolig?",
+    question: "Hvilken lånetype er billigst – fast rente, F3 eller F-kort?",
     answer:
-      "Nej, i praksis kræver boligfinansiering i Danmark som minimum egen udbetaling (typisk mindst 5 % af købsprisen). Resten kan oftest deles mellem realkredit (op til 80 % af købsprisen) og eventuelt banklån.",
+      "Målt på startydelse er de korteste variable lån som F-kort billigst, fordi du bærer hele renterisikoen. Fast rente er dyrest i starten, men kan aldrig stige. Hvilken der er billigst over hele løbetiden afhænger af renteudviklingen, som ingen kender på forhånd. Vælg ud fra, hvor meget en rentestigning må påvirke din økonomi.",
   },
   {
-    question: "Hvad er forskellen på realkreditlån og banklån til bolig?",
+    question: "Hvad er kurstab, og hvornår rammer det mig?",
     answer:
-      "Realkreditlån er det dominerende boliglån i Danmark med pant i boligen og typisk længere løbetid. Banklån (boliglån i bank) bruges ofte til den del af finansieringen, der ligger ud over realkreditgrænsen, og kan have kortere løbetid og anden prisstruktur.",
+      "Kurstab opstår, når obligationen bag et fastforrentet lån har en kurs under 100. Så får du udbetalt mindre end lånets pålydende, selvom du skylder det fulde beløb. Det er ikke en kontant regning, men betyder, at lånet skal være tilsvarende større for at dække dit behov. Variable lån ligger typisk nær kurs 100 og har derfor lille eller intet kurstab.",
   },
   {
-    question: "Hvad koster det at låne 1 mio. kr.?",
+    question: "Bør jeg vælge afdragsfrihed?",
     answer:
-      "Den månedlige ydelse afhænger af rente, løbetid og om lånet er afdragsfrit. Som tommelfingerregel stiger ydelsen, hvis renten er høj, løbetiden er kort, eller udbetalingen er lav. Brug beregneren med dit eget renteskøn for et konkret tal.",
+      "Afdragsfrihed sænker ydelsen i en periode, men gælden står stille, og ydelsen stiger, når friheden udløber, fordi det samme beløb skal afdrages over færre år. Samlet set bliver lånet dyrere. Det giver mest mening ved midlertidigt pres på økonomien, sjældent som permanent løsning.",
   },
   {
-    question: "Er beregningen fra Boligklarhed præcis?",
+    question: "Hvad koster det at etablere et realkreditlån?",
     answer:
-      "Nej – tallene er vejledende. Bank og realkredit vurderer dit rådighedsbeløb, bidragssatser og individuelle vilkår. Brug resultaterne som overblik før dialog med rådgiver.",
+      "De typiske engangsomkostninger er tinglysning af pant (1.825 kr. plus 1,25 % af lånet), et lånesagsgebyr på op til 4.000 kr. og en afregningsprovision på 0,15 % af kursværdien. Dit pengeinstitut kan opkræve yderligere gebyrer for at formidle lånet. Beregneren viser de samlede etableringsomkostninger for dit lån.",
   },
   {
-    question: "Hvad påvirker min månedlige boligydelse mest?",
+    question: "Er beregningen et lånetilbud?",
     answer:
-      "Købspris og hvor meget du låner, renten på realkredit og eventuelt banklån, løbetid og afdragsprofil. Også faste ejerudgifter og vedligehold løftes den samlede månedlige udgift ud over selve låneydelsen.",
+      "Nej. Tallene er vejledende og bygger på aktuelle obligationskurser og Totalkredits prisblad. Den endelige rente afhænger af kursen på handelsdagen, og bank og realkredit vurderer desuden dit rådighedsbeløb og din konkrete situation. Brug beregningen som overblik før dialog med en rådgiver.",
   },
 ] as const;

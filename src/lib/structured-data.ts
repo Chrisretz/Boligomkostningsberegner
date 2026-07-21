@@ -93,6 +93,46 @@ export const faqSchema = {
   })),
 };
 
+/** WebApplication JSON-LD til en beregnerside. Signalerer at siden er et værktøj. */
+export function getCalculatorSchema({
+  name,
+  description,
+  path,
+}: {
+  name: string;
+  description: string;
+  path: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name,
+    description,
+    url: `${SITE_URL}${path}`,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "All",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "DKK" },
+    isAccessibleForFree: true,
+    inLanguage: "da-DK",
+  } as const;
+}
+
+/** BreadcrumbList JSON-LD. Trin angives som par af navn og sti. */
+export function getBreadcrumbSchema(
+  trail: readonly { name: string; path: string }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((step, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: step.name,
+      item: `${SITE_URL}${step.path}`,
+    })),
+  } as const;
+}
+
 /** FAQPage JSON-LD til artikler med synlig FAQ-sektion. */
 export function getFaqPageSchema(
   items: readonly { question: string; answer: string }[]
