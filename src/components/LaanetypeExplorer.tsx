@@ -192,6 +192,52 @@ export function LaanetypeExplorer() {
         </button>
       </div>
 
+      {/* Nøgletal – står lige over diagrammet, så tal og graf ændrer sig
+          samlet, når man skifter lånetype */}
+      <dl className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div>
+          <dt className="text-small text-text-muted">Rente</dt>
+          <dd className="text-h3 text-text-primary tabular-nums">
+            {pct(ratePct)}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-small text-text-muted">Bidrag</dt>
+          <dd className="text-h3 text-text-primary tabular-nums">
+            {pct(bidragPct)}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-small text-text-muted">Ydelse pr. måned, år 1</dt>
+          <dd className="text-h3 text-text-primary tabular-nums">
+            {kr(result.firstPaymentDKK)} kr
+          </dd>
+          <dd className="text-small text-text-muted mt-0.5 leading-snug">
+            {interestOnly ? (
+              <>
+                Efter {IO_YEARS} år:{" "}
+                <span className="font-medium text-text-secondary tabular-nums">
+                  {kr(result.paymentAfterInterestOnlyDKK)} kr
+                </span>
+              </>
+            ) : (
+              <>
+                Sidste år:{" "}
+                <span className="font-medium text-text-secondary tabular-nums">
+                  {kr(Math.round(result.yearly[result.yearly.length - 1].totalDKK / 12))} kr
+                </span>
+              </>
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-small text-text-muted">Restgæld efter 10 år</dt>
+          <dd className="text-h3 text-text-primary tabular-nums">
+            {kr(result.balanceAfter10YearsDKK)} kr
+          </dd>
+        </div>
+      </dl>
+
       {/* Stablet søjlediagram */}
       <figure>
         <figcaption className="flex flex-wrap gap-x-4 gap-y-1 mb-2">
@@ -273,51 +319,6 @@ export function LaanetypeExplorer() {
         </p>
       </figure>
 
-      {/* Nøgletal */}
-      <dl className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-6">
-        <div>
-          <dt className="text-small text-text-muted">Rente</dt>
-          <dd className="text-h3 text-text-primary tabular-nums">
-            {pct(ratePct)}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-small text-text-muted">Bidrag</dt>
-          <dd className="text-h3 text-text-primary tabular-nums">
-            {pct(bidragPct)}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-small text-text-muted">Ydelse pr. måned, år 1</dt>
-          <dd className="text-h3 text-text-primary tabular-nums">
-            {kr(result.firstPaymentDKK)} kr
-          </dd>
-          <dd className="text-small text-text-muted mt-0.5 leading-snug">
-            {interestOnly ? (
-              <>
-                Efter {IO_YEARS} år:{" "}
-                <span className="font-medium text-text-secondary tabular-nums">
-                  {kr(result.paymentAfterInterestOnlyDKK)} kr
-                </span>
-              </>
-            ) : (
-              <>
-                Sidste år:{" "}
-                <span className="font-medium text-text-secondary tabular-nums">
-                  {kr(Math.round(result.yearly[result.yearly.length - 1].totalDKK / 12))} kr
-                </span>
-              </>
-            )}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-small text-text-muted">Restgæld efter 10 år</dt>
-          <dd className="text-h3 text-text-primary tabular-nums">
-            {kr(result.balanceAfter10YearsDKK)} kr
-          </dd>
-        </div>
-      </dl>
-
       {/* Konsekvens */}
       <div className="mt-6 rounded-lg border border-border p-4">
         <p className="text-small text-text-secondary leading-relaxed">
@@ -344,7 +345,7 @@ export function LaanetypeExplorer() {
 
       {/* Forklaring – står efter tallene, så diagrammet er synligt, når
           man skifter lånetype på mobil */}
-      <div className="rounded-lg bg-brand-background p-4">
+      <div className="mt-8 rounded-lg bg-brand-background p-4 md:p-5">
         <p className="text-body font-semibold text-text-primary mb-1">
           {info.headline}
         </p>
