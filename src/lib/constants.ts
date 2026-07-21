@@ -14,6 +14,22 @@ export const CONSTANTS = {
 } as const;
 
 /**
+ * Etableringsomkostninger ved optagelse af realkreditlån.
+ * Kilde: Totalkredits prisblad for privatkunder, gældende pr. 1. juli 2026.
+ * Vejledende – låneformidler (pengeinstitut) kan opkræve yderligere gebyrer.
+ */
+export const REALKREDIT_FEES = {
+  /** Lånesagsgebyr til realkreditinstituttet (op til) */
+  LOAN_CASE_FEE_DKK: 4000,
+  /** Afregningsprovision: % af kursværdien, minimum 150 kr */
+  SETTLEMENT_RATE: 0.0015,
+  SETTLEMENT_MIN_DKK: 150,
+  /** Kursfradrag ved udbetaling (kurspoint) – trækkes fra obligationskursen */
+  PRICE_DEDUCTION_POINTS: 0.2,
+  RATES_VERIFIED: "juli 2026",
+} as const;
+
+/**
  * Ejendomsskat (boligskattereformen, satser for 2026).
  * Kilder: Skatteministeriet / Vurderingsportalen. Verificér årligt.
  */

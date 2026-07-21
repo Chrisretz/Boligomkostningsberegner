@@ -83,10 +83,11 @@ function entries(table: BondTable | null): BondEntry[] {
  * kursen tættest på 100. Lån lukkes for tilbud over kurs 99,80, så den
  * højeste åbne kurs er den, en køber reelt får.
  */
-function leadingFixedRate(
+/** Toneangivende fastforrentede lån: rente og kurs samlet. */
+function leadingFixed(
   table: BondTable | null,
   interestOnly: boolean
-): number | null {
+): { rate: number; price: number } | null {
   const wanted = interestOnly ? "afdragsfrihed" : "med afdrag";
   const candidates = entries(table)
     .filter(
@@ -103,7 +104,7 @@ function leadingFixedRate(
         c.rate !== null && c.price !== null
     )
     .sort((a, b) => b.price - a.price);
-  return candidates[0]?.rate ?? null;
+  return candidates[0] ?? null;
 }
 
 /** Kontantrente for fx "F3" eller "F5" med/uden afdragsfrihed. */
@@ -132,6 +133,11 @@ export interface LiveRates {
   /** Rente pr. lånetype, delt op efter afdragsfrihed. null = ingen data */
   medAfdrag: Partial<Record<LoanType, number>>;
   afdragsfri: Partial<Record<LoanType, number>>;
+  /**
+   * Kurs på den toneangivende fastforrentede obligation. Bruges til at
+   * estimere kurstab. Variable lån ligger nær kurs 100 og udelades.
+   */
+  kursFast: { medAfdrag: number | null; afdragsfri: number | null };
   /** ISO-tidsstempel fra kilden */
   updatedAt: string | null;
 }
@@ -166,8 +172,10 @@ export async function fetchLiveRates(): Promise<LiveRates | null> {
     if (value !== null) target[key] = value;
   };
 
-  set(medAfdrag, "fast", leadingFixedRate(fast, false));
-  set(afdragsfri, "fast", leadingFixedRate(fast, true));
+  const fixedMed = leadingFixed(fast, false);
+  const fixedIo = leadingFixed(fast, true);
+  set(medAfdrag, "fast", fixedMed?.rate ?? null);
+  set(afdragsfri, "fast", fixedIo?.rate ?? null);
   set(medAfdrag, "f3f4", tilpasningRate(tilpasning, "F3", false));
   set(afdragsfri, "f3f4", tilpasningRate(tilpasning, "F3", true));
   set(medAfdrag, "renteMaxF5F10", tilpasningRate(tilpasning, "F5", false));
@@ -192,6 +200,10 @@ export async function fetchLiveRates(): Promise<LiveRates | null> {
   const rates: LiveRates = {
     medAfdrag,
     afdragsfri,
+    kursFast: {
+      medAfdrag: fixedMed?.price ?? null,
+      afdragsfri: fixedIo?.price ?? null,
+    },
     // Ældste tidsstempel er det ærligste: så gammelt er det dårligste tal
     updatedAt: timestamps[0] ?? null,
   };

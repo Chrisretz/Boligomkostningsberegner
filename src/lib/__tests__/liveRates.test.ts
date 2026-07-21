@@ -153,6 +153,18 @@ describe("fetchLiveRates", () => {
     expect(rates?.afdragsfri.renteMaxF5F10).toBe(2.94);
   });
 
+  it("returnerer kursen på den toneangivende fastforrentede obligation", async () => {
+    mockFetch({
+      "privat-udbetaling-af-laan-aktuelle-kurser-kunder": FAST,
+      kontantrenter: TILPASNING,
+      "af-variabel-laan": VARIABEL,
+    });
+    const rates = await fetchLiveRates();
+    // 4 % 2056 med afdrag, kurs 98,36; med afdragsfrihed 97,58
+    expect(rates?.kursFast.medAfdrag).toBe(98.36);
+    expect(rates?.kursFast.afdragsfri).toBe(97.58);
+  });
+
   it("bruger dagens beregningsrente for F-kort", async () => {
     mockFetch({
       "privat-udbetaling-af-laan-aktuelle-kurser-kunder": FAST,

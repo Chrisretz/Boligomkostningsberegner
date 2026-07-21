@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { canonicalUrl, PATH_BOLIGLAAN_BEREGNER } from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
 
-const title = "Boliglån beregner – beregn ydelse og boligbudget";
+const title = "Realkreditlån beregner – ydelse, bidrag og kurstab";
 const description =
-  "Gratis boliglånsberegner og guide: 80/15/5, månedlig ydelse og typiske omkostninger. Beregn boliglån og boligbudget på Boligklarhed.";
+  "Beregn dit realkreditlån med aktuelle kurser: vælg lånetype, afdrag eller afdragsfrihed, og se månedlig ydelse, etableringsomkostninger og afdragsprofil.";
 
 export const metadata: Metadata = {
   title,

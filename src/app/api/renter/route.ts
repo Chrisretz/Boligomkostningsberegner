@@ -25,6 +25,7 @@ export async function GET() {
         updatedLabel: RATE_SOURCE.updated,
         medAfdrag: RATE_BY_LOAN_TYPE,
         afdragsfri: RATE_BY_LOAN_TYPE,
+        kursFast: { medAfdrag: null, afdragsfri: null },
       },
       { headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=172800" } }
     );
@@ -38,6 +39,7 @@ export async function GET() {
       updatedLabel: null,
       medAfdrag: { ...RATE_BY_LOAN_TYPE, ...live.medAfdrag },
       afdragsfri: { ...RATE_BY_LOAN_TYPE, ...live.afdragsfri },
+      kursFast: live.kursFast,
     },
     { headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=172800" } }
   );
