@@ -32,6 +32,12 @@ export const AFFILIATE_PARTNERS: Record<string, AffiliatePartner> = {
     url: "https://www.partner-ads.com/dk/klikbanner.php?partnerid=57153&bannerid=71154",
     network: "partner-ads",
   },
+  "juridiske-dokumenter": {
+    slug: "juridiske-dokumenter",
+    name: "Jura-Docs",
+    url: "https://www.partner-ads.com/dk/klikbanner.php?partnerid=57153&bannerid=99220",
+    network: "partner-ads",
+  },
 };
 
 export function getPartner(slug: string): AffiliatePartner | null {

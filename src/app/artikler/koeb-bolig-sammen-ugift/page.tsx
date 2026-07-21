@@ -118,6 +118,14 @@ export default function KoebBoligSammenUgiftPage() {
             </p>
           </section>
 
+          <PartnerCta
+            partnerSlug="juridiske-dokumenter"
+            heading="Få testamentet på plads, inden I skriver under"
+            body="Jura-Docs leverer testamente, fremtidsfuldmagt og andre juridiske dokumenter til private på e-mail. I svarer på spørgsmål online og modtager dokumentet med det samme."
+            buttonLabel="Se juridiske dokumenter"
+            placement="artikel-koeb-bolig-sammen-ugift"
+          />
+
           <section>
             <h2 className="text-h3 text-text-primary">
               Samejeoverenskomsten: jeres vigtigste aftale
@@ -165,14 +173,6 @@ export default function KoebBoligSammenUgiftPage() {
               lav.
             </p>
           </section>
-
-          <PartnerCta
-            partnerSlug="boligvurdering"
-            heading="Få et uafhængigt skøn over boligens værdi"
-            body="Skal den ene købe den anden ud, er en uafhængig vurdering et godt udgangspunkt for forhandlingen. Valuea.dk sender en gratis og uforpligtende vurderingsrapport."
-            buttonLabel="Få en gratis vurderingsrapport"
-            placement="artikel-koeb-bolig-sammen-ugift"
-          />
 
           <section>
             <h2 className="text-h3 text-text-primary">
