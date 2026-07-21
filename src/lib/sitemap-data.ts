@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { articles } from "@/lib/articles";
+import { articleDatesByPath } from "@/lib/article-dates";
 import {
   PATH_BOLIGLAAN_BEREGNER,
   PATH_BOLIGOMKOSTNINGER_BEREGNER,
@@ -24,6 +25,7 @@ const SITEMAP_SUFFIX_PATHS = [
   "/om-os",
   PATH_KONTAKT,
   "/boligbegreber",
+  "/sitemap",
 ] as const;
 
 /** Alle paths i XML-sitemap: kerne + én URL per artikel (fra `articles.ts`) + juridisk/kontakt. */
@@ -40,12 +42,26 @@ export type SitemapRow = {
   priority: number;
 };
 
+/**
+ * Reel sidst-ændret-dato pr. side.
+ *
+ * Artikler og begrebssider har eksplicitte datoer i `article-dates.ts`, og
+ * dem bruger vi, så lastmod afspejler faktiske indholdsændringer. For
+ * øvrige sider falder vi tilbage til build-tidspunktet. Sender man samme
+ * dags dato på alle URL'er ved hvert deploy, holder Google op med at stole
+ * på lastmod og ignorerer feltet.
+ */
+function getLastModified(path: string, fallback: Date): Date {
+  const dates = articleDatesByPath[path];
+  return dates ? new Date(dates.dateModified) : fallback;
+}
+
 export function getSitemapRows(): SitemapRow[] {
-  const lastModified = new Date();
+  const buildDate = new Date();
 
   return SITEMAP_PATHS.map((path) => ({
     url: `${SITE_URL}${path}`,
-    lastModified,
+    lastModified: getLastModified(path, buildDate),
     changeFrequency:
       path === "" ||
       path === PATH_BOLIGOMKOSTNINGER_BEREGNER ||
