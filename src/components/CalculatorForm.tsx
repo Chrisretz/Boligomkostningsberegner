@@ -121,6 +121,13 @@ export function CalculatorForm({
   const [bidragAuto, setBidragAuto] = useState(true);
   /** Samme for renten: følger lånetypen, indtil brugeren selv skriver et tal. */
   const [renteAuto, setRenteAuto] = useState(true);
+  /** Aktuelle kurser hentet fra /api/renter; null indtil de er hentet. */
+  const [liveRates, setLiveRates] = useState<{
+    source: "live" | "static";
+    updatedAt: string | null;
+    medAfdrag: Record<string, number>;
+    afdragsfri: Record<string, number>;
+  } | null>(null);
   const [includePropertyTax, setIncludePropertyTax] = useState(true);
   const [propertyTaxOverrideDKK, setPropertyTaxOverrideDKK] = useState(0);
   const [isBidragFocused, setIsBidragFocused] = useState(false);
@@ -149,11 +156,33 @@ export function CalculatorForm({
     }
   }, [bidragAuto, autoBidrag.ratePct]);
 
+  // Hent aktuelle kurser én gang. Fejler kaldet, bruges de statiske niveauer.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/renter")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled && data) setLiveRates(data);
+      })
+      .catch(() => {
+        /* stille fallback til statiske niveauer */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /** Rente for valgt lånetype: aktuel kurs hvis vi har den, ellers statisk. */
+  const suggestedRate = (() => {
+    const table = interestOnly ? liveRates?.afdragsfri : liveRates?.medAfdrag;
+    return table?.[loanType] ?? getSuggestedRate(loanType);
+  })();
+
   useEffect(() => {
     if (renteAuto) {
-      setInterestRateAnnualPct(getSuggestedRate(loanType));
+      setInterestRateAnnualPct(suggestedRate);
     }
-  }, [renteAuto, loanType]);
+  }, [renteAuto, suggestedRate]);
 
   // Hold udbetaling mindst 5 % af købspris (realkredit og udbetaling er uafhængige)
   useEffect(() => {
@@ -708,9 +737,24 @@ export function CalculatorForm({
             )}
             {renteAuto ? (
               <p className="mt-1.5 text-small text-text-muted leading-relaxed">
-                Vejledende niveau for{" "}
-                {LOAN_TYPE_LABELS[loanType].toLowerCase()} pr.{" "}
-                {RATE_SOURCE.updated}. {RATE_SOURCE.note}
+                {liveRates?.source === "live" ? (
+                  <>
+                    Aktuel rente for{" "}
+                    {LOAN_TYPE_LABELS[loanType].toLowerCase()}
+                    {interestOnly ? " med afdragsfrihed" : " med afdrag"} fra
+                    Totalkredits kursliste
+                    {liveRates.updatedAt
+                      ? `, opdateret ${new Date(liveRates.updatedAt).toLocaleDateString("da-DK", { day: "numeric", month: "long", year: "numeric" })}`
+                      : ""}
+                    . {RATE_SOURCE.note}
+                  </>
+                ) : (
+                  <>
+                    Vejledende niveau for{" "}
+                    {LOAN_TYPE_LABELS[loanType].toLowerCase()} pr.{" "}
+                    {RATE_SOURCE.updated}. {RATE_SOURCE.note}
+                  </>
+                )}
               </p>
             ) : (
               <p className="mt-1.5 text-small text-text-muted">
