@@ -221,9 +221,26 @@ export function LaanetypeExplorer() {
           </dd>
         </div>
         <div>
-          <dt className="text-small text-text-muted">Ydelse pr. måned</dt>
+          <dt className="text-small text-text-muted">Ydelse pr. måned, år 1</dt>
           <dd className="text-h3 text-text-primary tabular-nums">
             {kr(result.firstPaymentDKK)} kr
+          </dd>
+          <dd className="text-small text-text-muted mt-0.5 leading-snug">
+            {interestOnly ? (
+              <>
+                Efter {IO_YEARS} år:{" "}
+                <span className="font-medium text-text-secondary tabular-nums">
+                  {kr(result.paymentAfterInterestOnlyDKK)} kr
+                </span>
+              </>
+            ) : (
+              <>
+                Sidste år:{" "}
+                <span className="font-medium text-text-secondary tabular-nums">
+                  {kr(Math.round(result.yearly[result.yearly.length - 1].totalDKK / 12))} kr
+                </span>
+              </>
+            )}
           </dd>
         </div>
         <div>
