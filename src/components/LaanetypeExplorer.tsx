@@ -120,10 +120,18 @@ export function LaanetypeExplorer() {
   const barX = (year: number) => PAD.left + (year - 1) * (barW + barGap);
   const barH = (amount: number) => (amount / maxYear) * plotH;
 
+  /**
+   * Rækkefølgen er nedefra og op: afdrag, renter, bidrag.
+   *
+   * Det er ikke tilfældigt. Afdrag og renter udgør tilsammen annuiteten,
+   * som er konstant ved fast rente, så grænsen mellem renter og bidrag
+   * bliver en vandret linje gennem hele forløbet. Bidraget ovenpå er så
+   * det eneste, der skrumper, i takt med at restgælden falder.
+   */
   const SEGMENTS = [
+    { key: "principalDKK" as const, label: "Afdrag", color: "#B08A45" },
     { key: "interestDKK" as const, label: "Renter", color: "#1E3A5F" },
     { key: "bidragDKK" as const, label: "Bidrag", color: "#6F91BA" },
-    { key: "principalDKK" as const, label: "Afdrag", color: "#B08A45" },
   ];
 
   return (
@@ -302,8 +310,8 @@ export function LaanetypeExplorer() {
         <p className="text-small text-text-muted mt-2 leading-relaxed">
           Årlige betalinger pr. lånt million.{" "}
           {interestOnly
-            ? `Den røde streg markerer, hvor afdragsfriheden udløber efter ${IO_YEARS} år, og afdragene begynder.`
-            : "Renter og afdrag udgør tilsammen præcis det samme beløb hvert år, men fordelingen vender undervejs. Den samlede søjle falder alligevel lidt, fordi bidraget beregnes af restgælden og derfor skrumper, i takt med at gælden gør det."}
+            ? `Den røde streg markerer, hvor afdragsfriheden udløber efter ${IO_YEARS} år. Frem til da er der intet afdrag, og gælden står stille.`
+            : "Læg mærke til den vandrette grænse mellem renter og bidrag: afdrag og renter udgør tilsammen præcis det samme beløb hvert år, selvom fordelingen vender undervejs. Det eneste, der falder, er bidraget, fordi det beregnes af restgælden."}
         </p>
       </figure>
 
