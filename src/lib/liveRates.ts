@@ -62,8 +62,9 @@ function parseNum(raw: string | undefined): number | null {
 async function fetchTable(tableId: string): Promise<BondTable | null> {
   try {
     const res = await fetch(`${BASE}${tableId}`, {
-      // Kurserne opdateres få gange dagligt; en time er rigeligt.
-      next: { revalidate: 3600 },
+      // Kurserne opdateres få gange dagligt, og tallene bruges til
+      // budgettering. Ét døgn er rigeligt og belaster kilden mindst muligt.
+      next: { revalidate: 86_400 },
       headers: { Accept: "application/json" },
     });
     if (!res.ok) return null;
@@ -135,6 +136,14 @@ export interface LiveRates {
   updatedAt: string | null;
 }
 
+/**
+ * Sidste vellykkede hentning. Bruges hvis kilden midlertidigt fejler, så
+ * en enkelt dårlig dag ikke sender brugerne tilbage til statiske tal.
+ * Kasseres efter en uge, hvor tallene er for gamle til at bruge.
+ */
+let lastGood: { rates: LiveRates; fetchedAt: number } | null = null;
+const LAST_GOOD_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
 export async function fetchLiveRates(): Promise<LiveRates | null> {
   const [fast, tilpasning, variabel] = await Promise.all([
     fetchTable(TABLES.fast),
@@ -142,7 +151,7 @@ export async function fetchLiveRates(): Promise<LiveRates | null> {
     fetchTable(TABLES.variabel),
   ]);
 
-  if (!fast && !tilpasning && !variabel) return null;
+  if (!fast && !tilpasning && !variabel) return recentLastGood();
 
   const fkort = fKortRate(variabel);
 
@@ -172,7 +181,7 @@ export async function fetchLiveRates(): Promise<LiveRates | null> {
     Object.keys(medAfdrag).length === 0 &&
     Object.keys(afdragsfri).length === 0
   ) {
-    return null;
+    return recentLastGood();
   }
 
   const timestamps = [fast, tilpasning, variabel]
@@ -180,10 +189,23 @@ export async function fetchLiveRates(): Promise<LiveRates | null> {
     .filter((t): t is string => Boolean(t))
     .sort();
 
-  return {
+  const rates: LiveRates = {
     medAfdrag,
     afdragsfri,
     // Ældste tidsstempel er det ærligste: så gammelt er det dårligste tal
     updatedAt: timestamps[0] ?? null,
   };
+  lastGood = { rates, fetchedAt: Date.now() };
+  return rates;
+}
+
+/** Kun til brug i tests, hvor modulets tilstand skal nulstilles. */
+export function __resetLastGoodCache(): void {
+  lastGood = null;
+}
+
+function recentLastGood(): LiveRates | null {
+  if (!lastGood) return null;
+  if (Date.now() - lastGood.fetchedAt > LAST_GOOD_MAX_AGE_MS) return null;
+  return lastGood.rates;
 }

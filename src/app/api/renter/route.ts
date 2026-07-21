@@ -3,8 +3,8 @@ import { fetchLiveRates } from "@/lib/liveRates";
 import { RATE_BY_LOAN_TYPE, RATE_SOURCE } from "@/lib/renter";
 
 export const runtime = "nodejs";
-/** Genvalideres hver time; kurserne opdateres kun få gange dagligt. */
-export const revalidate = 3600;
+/** Genvalideres én gang i døgnet; kurserne opdateres kun få gange dagligt. */
+export const revalidate = 86_400;
 
 /**
  * GET /api/renter
@@ -26,7 +26,7 @@ export async function GET() {
         medAfdrag: RATE_BY_LOAN_TYPE,
         afdragsfri: RATE_BY_LOAN_TYPE,
       },
-      { headers: { "Cache-Control": "public, s-maxage=3600" } }
+      { headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=172800" } }
     );
   }
 
@@ -39,6 +39,6 @@ export async function GET() {
       medAfdrag: { ...RATE_BY_LOAN_TYPE, ...live.medAfdrag },
       afdragsfri: { ...RATE_BY_LOAN_TYPE, ...live.afdragsfri },
     },
-    { headers: { "Cache-Control": "public, s-maxage=3600" } }
+    { headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=172800" } }
   );
 }

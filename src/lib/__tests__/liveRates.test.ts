@@ -6,8 +6,8 @@
  * ændrede felter, urealistiske tal og manglende data.
  */
 
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { fetchLiveRates } from "../liveRates";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
+import { fetchLiveRates, __resetLastGoodCache } from "../liveRates";
 
 const FAST = {
   groups: [
@@ -119,6 +119,10 @@ function mockFetch(
   );
 }
 
+beforeEach(() => {
+  __resetLastGoodCache();
+});
+
 afterEach(() => {
   vi.unstubAllGlobals();
 });
@@ -210,5 +214,20 @@ describe("fetchLiveRates", () => {
     const rates = await fetchLiveRates();
     expect(rates?.medAfdrag.fast).toBeUndefined();
     expect(rates?.medAfdrag.f3f4).toBe(2.79);
+  });
+
+  it("bruger sidste vellykkede hentning hvis kilden falder ud", async () => {
+    mockFetch({
+      "privat-udbetaling-af-laan-aktuelle-kurser-kunder": FAST,
+      kontantrenter: TILPASNING,
+      "af-variabel-laan": VARIABEL,
+    });
+    const first = await fetchLiveRates();
+    expect(first?.medAfdrag.f3f4).toBe(2.79);
+
+    // Alle kilder fejler nu – men vi har stadig gårsdagens tal
+    mockFetch({ x: null });
+    const second = await fetchLiveRates();
+    expect(second?.medAfdrag.f3f4).toBe(2.79);
   });
 });
