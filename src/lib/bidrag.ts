@@ -31,10 +31,22 @@ export type LoanType =
 
 export const LOAN_TYPE_LABELS: Record<LoanType, string> = {
   fast: "Fast rente",
-  renteMaxF5F10: "RenteMax / F5-F10",
+  renteMaxF5F10: "F5-F10 / RenteMax",
   fKort: "F-kort",
   f3f4: "F3-F4",
   f1f2: "F1-F2",
+};
+
+/**
+ * Korte etiketter til knapper, hvor pladsen er trang. Renten, vi henter,
+ * er netop F5's og F3's kontantrente, så det er også de mest ærlige navne.
+ */
+export const LOAN_TYPE_SHORT_LABELS: Record<LoanType, string> = {
+  fast: "Fast rente",
+  renteMaxF5F10: "F5",
+  fKort: "F-kort",
+  f3f4: "F3",
+  f1f2: "F1",
 };
 
 /** Belåningsintervaller i procent af boligens værdi. */

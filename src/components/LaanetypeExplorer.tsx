@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { LOAN_TYPE_LABELS, type LoanType } from "@/lib/bidrag";
+import {
+  BIDRAG_SOURCE,
+  LOAN_TYPE_LABELS,
+  LOAN_TYPE_SHORT_LABELS,
+  type LoanType,
+} from "@/lib/bidrag";
 import { LAANETYPE_INFO } from "@/lib/laanetypeInfo";
 import { beregnForloeb, LOAN_PER_MILLION } from "@/lib/laaneforloeb";
 import { RATE_BY_LOAN_TYPE } from "@/lib/renter";
@@ -87,18 +92,28 @@ export function LaanetypeExplorer() {
 
   const info = LAANETYPE_INFO[loanType];
 
-  // Diagram
+  // Stablet søjlediagram: ét år pr. søjle, delt i renter, bidrag og afdrag
   const W = 640;
-  const H = 200;
-  const PAD = { left: 8, right: 8, top: 12, bottom: 24 };
+  const H = 220;
+  const PAD = { left: 8, right: 8, top: 12, bottom: 26 };
   const plotW = W - PAD.left - PAD.right;
   const plotH = H - PAD.top - PAD.bottom;
-  const x = (year: number) => PAD.left + (year / TERM_YEARS) * plotW;
-  const y = (balance: number) =>
-    PAD.top + plotH - (balance / LOAN_PER_MILLION) * plotH;
+  const barGap = 2;
+  const barW = plotW / TERM_YEARS - barGap;
+  /** Højeste årsbetaling afgør skalaen; sammenlign mod referencen, så
+   *  skiftet mellem afdrag og afdragsfrihed ikke ændrer y-aksen. */
+  const maxYear = Math.max(
+    ...result.yearly.map((y) => y.totalDKK),
+    ...reference.yearly.map((y) => y.totalDKK)
+  );
+  const barX = (year: number) => PAD.left + (year - 1) * (barW + barGap);
+  const barH = (amount: number) => (amount / maxYear) * plotH;
 
-  const line = (points: { year: number; balanceDKK: number }[]) =>
-    points.map((p, i) => `${i === 0 ? "M" : "L"}${x(p.year).toFixed(1)},${y(p.balanceDKK).toFixed(1)}`).join(" ");
+  const SEGMENTS = [
+    { key: "interestDKK" as const, label: "Renter", color: "#1E3A5F" },
+    { key: "bidragDKK" as const, label: "Bidrag", color: "#6F91BA" },
+    { key: "principalDKK" as const, label: "Afdrag", color: "#B08A45" },
+  ];
 
   return (
     <div className="not-prose my-8 rounded-xl border border-border bg-white shadow-soft p-5 md:p-7">
@@ -127,7 +142,7 @@ export function LaanetypeExplorer() {
                 : "bg-border/60 text-text-secondary hover:bg-border"
             }`}
           >
-            {LOAN_TYPE_LABELS[t]}
+            {LOAN_TYPE_SHORT_LABELS[t]}
           </button>
         ))}
       </div>
@@ -200,63 +215,85 @@ export function LaanetypeExplorer() {
         </div>
       </dl>
 
-      {/* Diagram */}
+      {/* Stablet søjlediagram */}
       <figure>
+        <figcaption className="flex flex-wrap gap-x-4 gap-y-1 mb-2">
+          {SEGMENTS.map((s) => (
+            <span
+              key={s.key}
+              className="inline-flex items-center gap-1.5 text-small text-text-secondary"
+            >
+              <span
+                className="inline-block h-2.5 w-2.5 rounded-sm"
+                style={{ backgroundColor: s.color }}
+                aria-hidden
+              />
+              {s.label}
+            </span>
+          ))}
+        </figcaption>
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="w-full h-auto"
           role="img"
-          aria-label={`Restgæld pr. lånt million over ${TERM_YEARS} år. Efter 10 år er restgælden ${kr(result.balanceAfter10YearsDKK)} kr.`}
+          aria-label={`Årlige betalinger pr. lånt million fordelt på renter, bidrag og afdrag over ${TERM_YEARS} år. Første år betales ${kr(result.yearly[0].interestDKK)} kr i renter, ${kr(result.yearly[0].bidragDKK)} kr i bidrag og ${kr(result.yearly[0].principalDKK)} kr i afdrag.`}
         >
-          {/* Vandrette hjælpelinjer ved 0, 500.000 og 1 mio. */}
-          {[0, 0.5, 1].map((f) => (
-            <line
-              key={f}
-              x1={PAD.left}
-              x2={W - PAD.right}
-              y1={y(f * LOAN_PER_MILLION)}
-              y2={y(f * LOAN_PER_MILLION)}
-              stroke="#E5E7EB"
-              strokeWidth={1}
-            />
-          ))}
-          {/* Reference: samme lån med afdrag fra start */}
+          {result.yearly.map((yr) => {
+            let offset = 0;
+            return (
+              <g key={yr.year}>
+                {SEGMENTS.map((s) => {
+                  const h = barH(yr[s.key]);
+                  const yPos = PAD.top + plotH - offset - h;
+                  offset += h;
+                  if (h <= 0) return null;
+                  return (
+                    <rect
+                      key={s.key}
+                      x={barX(yr.year)}
+                      y={yPos}
+                      width={barW}
+                      height={h}
+                      fill={s.color}
+                    >
+                      <title>{`År ${yr.year}: ${s.label} ${kr(yr[s.key])} kr`}</title>
+                    </rect>
+                  );
+                })}
+              </g>
+            );
+          })}
+          {/* Markering af hvor afdragsfriheden slutter */}
           {interestOnly && (
-            <path
-              d={line(reference.points)}
-              fill="none"
-              stroke="#CBD5E1"
-              strokeWidth={2}
-              strokeDasharray="4 4"
+            <line
+              x1={barX(IO_YEARS + 1) - barGap / 2}
+              x2={barX(IO_YEARS + 1) - barGap / 2}
+              y1={PAD.top}
+              y2={PAD.top + plotH}
+              stroke="#B91C1C"
+              strokeWidth={1.5}
+              strokeDasharray="3 3"
             />
           )}
-          <path
-            d={line(result.points)}
-            fill="none"
-            stroke="#1E3A5F"
-            strokeWidth={2.5}
-            strokeLinejoin="round"
-          />
-          {/* Årstal */}
-          {[0, 10, 20, 30].map((yr) => (
+          {[1, 10, 20, 30].map((yr) => (
             <text
               key={yr}
-              x={x(yr)}
-              y={H - 6}
-              textAnchor={yr === 0 ? "start" : yr === 30 ? "end" : "middle"}
+              x={barX(yr) + barW / 2}
+              y={H - 8}
+              textAnchor="middle"
               className="fill-text-muted"
               style={{ fontSize: 11 }}
             >
-              {yr === 0 ? "Start" : `${yr} år`}
+              {yr === 1 ? "År 1" : `${yr}`}
             </text>
           ))}
         </svg>
-        <figcaption className="text-small text-text-muted mt-2 leading-relaxed">
-          Restgæld pr. lånt million.{" "}
+        <p className="text-small text-text-muted mt-2 leading-relaxed">
+          Årlige betalinger pr. lånt million.{" "}
           {interestOnly
-            ? "Den stiplede linje viser samme lån med afdrag fra start."
-            : "Gælden falder langsomt i begyndelsen, fordi det meste af ydelsen går til renter."}
-        </figcaption>
+            ? `Den røde streg markerer, hvor afdragsfriheden udløber efter ${IO_YEARS} år, og afdragene begynder.`
+            : "Bemærk hvordan renterne fylder mest i begyndelsen og afdragene overtager med tiden, selvom den samlede ydelse er næsten uændret."}
+        </p>
       </figure>
 
       {/* Konsekvens */}
@@ -283,24 +320,69 @@ export function LaanetypeExplorer() {
         </p>
       </div>
 
-      <p className="text-small text-text-muted mt-4 leading-relaxed">
-        {rates?.source === "live"
-          ? "Renterne er hentet fra Totalkredits kursliste"
-          : "Renterne er vejledende niveauer"}
-        {rates?.updatedAt
-          ? `, opdateret ${new Date(rates.updatedAt).toLocaleDateString("da-DK", { day: "numeric", month: "long", year: "numeric" })}`
-          : ""}
-        . Bidrag er beregnet ved 80 % belåning. Beregningen antager fast
-        rente i hele forløbet og medregner ikke kurstab, gebyrer eller
-        rentefradrag. Vil du regne på din egen bolig, så brug{" "}
-        <Link
-          href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
-          className="text-brand-primary underline hover:no-underline"
-        >
-          boligomkostningsberegneren
-        </Link>
-        .
-      </p>
+      <details className="mt-5 rounded-lg border border-border bg-brand-background/60 px-4 py-3">
+        <summary className="cursor-pointer text-small font-semibold text-text-primary">
+          Hvilke tal bruger beregningen?
+        </summary>
+        <div className="mt-3 space-y-2 text-small text-text-secondary leading-relaxed">
+          <p>
+            <strong className="text-text-primary">Rente:</strong>{" "}
+            {pct(ratePct)} for {LOAN_TYPE_LABELS[loanType].toLowerCase()}{" "}
+            {interestOnly ? "med afdragsfrihed" : "med afdrag"}.{" "}
+            {rates?.source === "live" ? (
+              <>
+                Hentet automatisk fra Totalkredits offentlige kursliste
+                {rates.updatedAt
+                  ? `, senest opdateret ${new Date(rates.updatedAt).toLocaleDateString("da-DK", { day: "numeric", month: "long", year: "numeric" })}`
+                  : ""}
+                . For fastforrentede lån bruges den effektive rente på den
+                toneangivende åbne obligation; for tilpasningslån bruges
+                kontantrenten; for F-kort dagens beregningsrente inklusive
+                rentetillæg.
+              </>
+            ) : (
+              <>
+                Vejledende niveau, da den automatiske hentning ikke er
+                tilgængelig lige nu.
+              </>
+            )}
+          </p>
+          <p>
+            <strong className="text-text-primary">Bidragssats:</strong>{" "}
+            {pct(bidragPct)}, beregnet ved 80 % belåning ud fra{" "}
+            <a
+              href={BIDRAG_SOURCE.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-primary underline hover:no-underline"
+            >
+              {BIDRAG_SOURCE.institute}s prisblad
+            </a>{" "}
+            pr. {BIDRAG_SOURCE.validFrom}
+            {interestOnly ? ", inklusive tillæg for afdragsfrihed" : ""}. Ved
+            lavere belåning er satsen mærkbart lavere.
+          </p>
+          <p>
+            <strong className="text-text-primary">Sådan skal tallene læses:</strong>{" "}
+            Der er tale om estimater fra ét institut, ikke et lånetilbud, og
+            andre institutter har andre satser. Beregningen antager, at renten
+            er uændret i hele løbetiden, hvilket for variable lån netop ikke er
+            realistisk; den viser, hvad du betaler i dag, ikke hvad du ender
+            med. Kurstab, gebyrer, KundeKroner-rabat og rentefradrag indgår
+            ikke.
+          </p>
+          <p>
+            Vil du regne på din egen bolig med din egen belåningsgrad, så brug{" "}
+            <Link
+              href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
+              className="text-brand-primary underline hover:no-underline"
+            >
+              boligomkostningsberegneren
+            </Link>
+            .
+          </p>
+        </div>
+      </details>
     </div>
   );
 }

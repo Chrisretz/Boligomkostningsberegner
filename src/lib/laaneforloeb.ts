@@ -34,6 +34,17 @@ export interface ForloebPoint {
   balanceDKK: number;
 }
 
+/** Årets betalinger fordelt på de tre bestanddele – til søjlediagrammet. */
+export interface ForloebYear {
+  /** Årets nummer, 1 = første år */
+  year: number;
+  interestDKK: number;
+  bidragDKK: number;
+  principalDKK: number;
+  /** Summen af de tre */
+  totalDKK: number;
+}
+
 export interface ForloebResult {
   /** Ydelse første måned inkl. bidrag */
   firstPaymentDKK: number;
@@ -47,6 +58,8 @@ export interface ForloebResult {
   totalCostDKK: number;
   /** Restgæld år for år, til diagrammet */
   points: ForloebPoint[];
+  /** Årets betalinger fordelt på renter, bidrag og afdrag */
+  yearly: ForloebYear[];
 }
 
 /** Månedlig annuitetsydelse (kun renter og afdrag, ikke bidrag). */
@@ -80,8 +93,13 @@ export function beregnForloeb(input: ForloebInput): ForloebResult {
   let balance = principalDKK;
   let totalPaid = 0;
   const points: ForloebPoint[] = [{ year: 0, balanceDKK: balance }];
+  const yearly: ForloebYear[] = [];
 
   let firstPayment = 0;
+  let yearInterest = 0;
+  let yearBidrag = 0;
+  let yearPrincipal = 0;
+
   for (let m = 1; m <= totalMonths; m++) {
     const interest = balance * monthlyRate;
     const bidrag = balance * monthlyBidragRate;
@@ -96,8 +114,27 @@ export function beregnForloeb(input: ForloebInput): ForloebResult {
     balance = Math.max(balance - principalPart, 0);
     totalPaid += payment;
 
+    yearInterest += interest;
+    yearBidrag += bidrag;
+    yearPrincipal += principalPart;
+
     if (m % 12 === 0) {
       points.push({ year: m / 12, balanceDKK: Math.round(balance) });
+      // Delene rundes hver for sig, og totalen er deres sum, så
+      // søjlesegmenterne altid stemmer med søjlens højde.
+      const i = Math.round(yearInterest);
+      const b = Math.round(yearBidrag);
+      const p = Math.round(yearPrincipal);
+      yearly.push({
+        year: m / 12,
+        interestDKK: i,
+        bidragDKK: b,
+        principalDKK: p,
+        totalDKK: i + b + p,
+      });
+      yearInterest = 0;
+      yearBidrag = 0;
+      yearPrincipal = 0;
     }
   }
 
@@ -117,5 +154,6 @@ export function beregnForloeb(input: ForloebInput): ForloebResult {
     totalPaidDKK: Math.round(totalPaid),
     totalCostDKK: Math.round(totalPaid - principalDKK),
     points,
+    yearly,
   };
 }

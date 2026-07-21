@@ -96,6 +96,51 @@ describe("beregnForloeb", () => {
     expect(r.points[0]).toEqual({ year: 0, balanceDKK: LOAN_PER_MILLION });
   });
 
+  it("fordeler årets betalinger på renter, bidrag og afdrag", () => {
+    const r = beregnForloeb({
+      ratePct: 4,
+      bidragPct: 0.74,
+      termYears: 30,
+      interestOnlyYears: 0,
+    });
+    const y1 = r.yearly[0];
+    expect(y1.year).toBe(1);
+    // Summen skal stemme med delene
+    expect(y1.totalDKK).toBe(
+      y1.interestDKK + y1.bidragDKK + y1.principalDKK
+    );
+    // Første år går langt det meste til renter
+    expect(y1.interestDKK).toBeGreaterThan(y1.principalDKK);
+    // Sidste år er det omvendt
+    const last = r.yearly[r.yearly.length - 1];
+    expect(last.principalDKK).toBeGreaterThan(last.interestDKK);
+  });
+
+  it("har intet afdrag i afdragsfrihedsperioden", () => {
+    const r = beregnForloeb({
+      ratePct: 4,
+      bidragPct: 0.91,
+      termYears: 30,
+      interestOnlyYears: 10,
+    });
+    for (const y of r.yearly.slice(0, 10)) {
+      expect(y.principalDKK).toBe(0);
+    }
+    expect(r.yearly[10].principalDKK).toBeGreaterThan(0);
+  });
+
+  it("summen af alle års betalinger svarer til totalen", () => {
+    const r = beregnForloeb({
+      ratePct: 3.5,
+      bidragPct: 0.6,
+      termYears: 30,
+      interestOnlyYears: 0,
+    });
+    const sum = r.yearly.reduce((acc, y) => acc + y.totalDKK, 0);
+    // Afrunding pr. år kan give nogle få kroners forskel
+    expect(Math.abs(sum - r.totalPaidDKK)).toBeLessThan(60);
+  });
+
   it("håndterer 0 % rente som lineært afdrag", () => {
     const r = beregnForloeb({
       ratePct: 0,
