@@ -60,6 +60,8 @@ export interface ForloebResult {
   points: ForloebPoint[];
   /** Årets betalinger fordelt på renter, bidrag og afdrag */
   yearly: ForloebYear[];
+  /** Hver måneds samlede ydelse (rente + bidrag + afdrag), til ÅOP */
+  monthlyPayments: number[];
 }
 
 /** Månedlig annuitetsydelse (kun renter og afdrag, ikke bidrag). */
@@ -94,6 +96,7 @@ export function beregnForloeb(input: ForloebInput): ForloebResult {
   let totalPaid = 0;
   const points: ForloebPoint[] = [{ year: 0, balanceDKK: balance }];
   const yearly: ForloebYear[] = [];
+  const monthlyPayments: number[] = [];
 
   let firstPayment = 0;
   let yearInterest = 0;
@@ -113,6 +116,7 @@ export function beregnForloeb(input: ForloebInput): ForloebResult {
     if (m === 1) firstPayment = payment;
     balance = Math.max(balance - principalPart, 0);
     totalPaid += payment;
+    monthlyPayments.push(payment);
 
     yearInterest += interest;
     yearBidrag += bidrag;
@@ -155,5 +159,6 @@ export function beregnForloeb(input: ForloebInput): ForloebResult {
     totalCostDKK: Math.round(totalPaid - principalDKK),
     points,
     yearly,
+    monthlyPayments,
   };
 }

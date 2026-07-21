@@ -11,7 +11,7 @@ import {
 } from "@/lib/bidrag";
 import { LAANETYPE_INFO } from "@/lib/laanetypeInfo";
 import { beregnForloeb } from "@/lib/laaneforloeb";
-import { beregnEtablering } from "@/lib/realkredit";
+import { beregnEtablering, beregnAaop } from "@/lib/realkredit";
 import { RATE_BY_LOAN_TYPE, RATE_SOURCE } from "@/lib/renter";
 import { REALKREDIT_FEES } from "@/lib/constants";
 import {
@@ -109,6 +109,17 @@ export function RealkreditBeregner() {
   const etablering = useMemo(
     () => beregnEtablering({ loanDKK, kurs }),
     [loanDKK, kurs]
+  );
+
+  const aaop = useMemo(
+    () =>
+      beregnAaop({
+        loanDKK,
+        effectiveKurs: etablering.effectiveKurs,
+        feesDKK: etablering.totalFeesDKK,
+        monthlyPayments: forloeb.monthlyPayments,
+      }),
+    [loanDKK, etablering.effectiveKurs, etablering.totalFeesDKK, forloeb.monthlyPayments]
   );
 
   const info = LAANETYPE_INFO[loanType];
@@ -390,6 +401,16 @@ export function RealkreditBeregner() {
           {" · "}Samlede renter og bidrag over {termYears} år:{" "}
           <span className="font-semibold">{kr(forloeb.totalCostDKK)} kr</span>
         </p>
+        {aaop != null && (
+          <div className="mt-4 pt-4 border-t border-white/20 flex items-baseline justify-between gap-4">
+            <span className="text-small text-white/80">
+              ÅOP – årlige omkostninger i procent
+            </span>
+            <span className="text-2xl font-bold tabular-nums">
+              {pct(aaop)}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Diagram */}

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { beregnEtablering } from "../realkredit";
+import { beregnEtablering, beregnAaop } from "../realkredit";
+import { beregnForloeb } from "../laaneforloeb";
 
 describe("beregnEtablering", () => {
   it("tinglysning af pant: 1.825 kr + 1,25 % oprundet til nærmeste 100", () => {
@@ -44,5 +45,73 @@ describe("beregnEtablering", () => {
 
   it("returnerer nul uden lån", () => {
     expect(beregnEtablering({ loanDKK: 0 }).totalFeesDKK).toBe(0);
+  });
+});
+
+describe("beregnAaop", () => {
+  it("ÅOP = den nominelle rente ved kurs 100, ingen gebyrer og intet bidrag", () => {
+    const f = beregnForloeb({
+      ratePct: 4,
+      bidragPct: 0,
+      termYears: 30,
+      interestOnlyYears: 0,
+      principalDKK: 1_000_000,
+    });
+    const aaop = beregnAaop({
+      loanDKK: 1_000_000,
+      effectiveKurs: 100,
+      feesDKK: 0,
+      monthlyPayments: f.monthlyPayments,
+    });
+    // Ren annuitet uden ekstra omkostninger → ÅOP ≈ nominel rente
+    expect(aaop).toBeGreaterThan(4.0);
+    expect(aaop).toBeLessThan(4.1);
+  });
+
+  it("bidrag hæver ÅOP over den nominelle rente", () => {
+    const f = beregnForloeb({
+      ratePct: 4,
+      bidragPct: 0.74,
+      termYears: 30,
+      interestOnlyYears: 0,
+      principalDKK: 1_000_000,
+    });
+    const aaop = beregnAaop({
+      loanDKK: 1_000_000,
+      effectiveKurs: 100,
+      feesDKK: 0,
+      monthlyPayments: f.monthlyPayments,
+    })!;
+    expect(aaop).toBeGreaterThan(4.7);
+    expect(aaop).toBeLessThan(5.2);
+  });
+
+  it("kurstab og gebyrer hæver ÅOP yderligere", () => {
+    const f = beregnForloeb({
+      ratePct: 4,
+      bidragPct: 0.74,
+      termYears: 30,
+      interestOnlyYears: 0,
+      principalDKK: 1_000_000,
+    });
+    const udenTab = beregnAaop({
+      loanDKK: 1_000_000,
+      effectiveKurs: 100,
+      feesDKK: 0,
+      monthlyPayments: f.monthlyPayments,
+    })!;
+    const medTab = beregnAaop({
+      loanDKK: 1_000_000,
+      effectiveKurs: 97.8,
+      feesDKK: 30_000,
+      monthlyPayments: f.monthlyPayments,
+    })!;
+    expect(medTab).toBeGreaterThan(udenTab);
+  });
+
+  it("returnerer null uden ydelser eller lån", () => {
+    expect(
+      beregnAaop({ loanDKK: 0, feesDKK: 0, monthlyPayments: [] })
+    ).toBeNull();
   });
 });

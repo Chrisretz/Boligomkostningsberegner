@@ -77,6 +77,15 @@ export default function BoliglaanBeregnerPage() {
               kan der desuden være et kurstab, hvis obligationskursen er under
               100.
             </p>
+            <p>
+              <strong className="text-text-primary">ÅOP</strong> (årlige
+              omkostninger i procent) samler renten, bidraget, kurstabet og
+              gebyrerne i ét tal, så du kan sammenligne lån på tværs. ÅOP er
+              derfor højere end den nominelle rente. For variable lån antager
+              ÅOP, at den nuværende rente fortsætter hele løbetiden, hvilket
+              sjældent holder i praksis, så tallet er mest retvisende for
+              fastforrentede lån.
+            </p>
           </div>
         </section>
 
