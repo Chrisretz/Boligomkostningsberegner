@@ -6,14 +6,23 @@ import { getArticleDates } from "@/lib/article-dates";
 import { ELFORBRUG_HUSSTAND_FAQ } from "@/lib/artikel-faq/elforbrug-husstand";
 import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
 import { ArticleMeta } from "@/components/ArticleMeta";
+import { DEFAULTS } from "@/lib/constants";
+import {
+  estimateMonthlyElDKK,
+  getEstimatedYearlyKWh,
+} from "@/lib/electricity";
+import type { HouseholdSize } from "@/lib/types";
+
+/** Husstandsstørrelser i tabellen (5 = 5 eller flere). */
+const HOUSEHOLD_SIZES: readonly HouseholdSize[] = [1, 2, 3, 4, 5];
 
 const ARTICLE_PATH = "/artikler/elforbrug-husstand";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema(ELFORBRUG_HUSSTAND_FAQ);
 
-const title = "Hvad bruger en husstand i strøm?";
+const title = "Hvor meget strøm bruger en familie? Se kWh og pris";
 const description =
-  "Elforbrug i danske husstande: gennemsnit efter boligtype og personer. Kilde: Energistyrelsen m.fl.";
+  "Se gennemsnitligt elforbrug for 1-5 personer i hus og lejlighed – både i kWh om året og kroner om måneden. Tal fra Energistyrelsen og EWII.";
 
 export const metadata: Metadata = {
   title,
@@ -56,7 +65,7 @@ export default function ElforbrugHusstandPage() {
         </p>
 
         <h1 className="text-h1 text-text-primary mb-3">
-          Hvad bruger en husstand i strøm?
+          Hvor meget strøm bruger en familie?
         </h1>
         <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
@@ -70,6 +79,70 @@ export default function ElforbrugHusstandPage() {
             Energistyrelsen og andre anerkendte kilder, så du kan sætte et
             realistisk beløb ind i din boligøkonomi.
           </p>
+
+          <section>
+            <h2 className="text-h3 text-text-primary">
+              Elforbrug efter antal personer: kWh og kroner
+            </h2>
+            <p>
+              Tabellen viser det typiske elforbrug efter husstandsstørrelse og
+              boligtype, omregnet til en månedlig udgift ved en vejledende pris
+              på {String(DEFAULTS.EL_PRICE_KR_PER_KWH).replace(".", ",")} kr pr.
+              kWh inklusive tariffer og afgifter. Det er de samme tal, vores
+              boligomkostningsberegner bruger.
+            </p>
+            <div className="not-prose overflow-x-auto my-4">
+              <table className="w-full min-w-[520px] text-small text-text-secondary border-collapse">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2 pr-4 font-semibold text-text-primary">
+                      Husstand
+                    </th>
+                    <th className="text-right py-2 pr-4 font-semibold text-text-primary">
+                      Lejlighed
+                    </th>
+                    <th className="text-right py-2 pr-4 font-semibold text-text-primary">
+                      Lejlighed, kr/md
+                    </th>
+                    <th className="text-right py-2 pr-4 font-semibold text-text-primary">
+                      Hus
+                    </th>
+                    <th className="text-right py-2 font-semibold text-text-primary">
+                      Hus, kr/md
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {HOUSEHOLD_SIZES.map((size) => (
+                    <tr key={size} className="border-b border-border">
+                      <td className="py-2 pr-4">
+                        {size === 5 ? "5+ personer" : `${size} person${size === 1 ? "" : "er"}`}
+                      </td>
+                      <td className="text-right py-2 pr-4 tabular-nums">
+                        {getEstimatedYearlyKWh("apartment", size).toLocaleString("da-DK")} kWh
+                      </td>
+                      <td className="text-right py-2 pr-4 tabular-nums">
+                        {estimateMonthlyElDKK("apartment", size, DEFAULTS.EL_PRICE_KR_PER_KWH).toLocaleString("da-DK")} kr
+                      </td>
+                      <td className="text-right py-2 pr-4 tabular-nums">
+                        {getEstimatedYearlyKWh("house", size).toLocaleString("da-DK")} kWh
+                      </td>
+                      <td className="text-right py-2 tabular-nums">
+                        {estimateMonthlyElDKK("house", size, DEFAULTS.EL_PRICE_KR_PER_KWH).toLocaleString("da-DK")} kr
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p>
+              Tallene gælder en lejlighed på cirka 80 m² og et hus på cirka
+              160 m² uden elvarme og elbil. Har du varmepumpe, elvarme eller
+              elbil, kan forbruget let blive dobbelt så højt, og så skal du
+              lægge det oveni. Elprisen svinger desuden betydeligt over året og
+              mellem selskaber, så tjek din egen aftale for et præcist beløb.
+            </p>
+          </section>
 
           <section>
             <h2 className="text-h3 text-text-primary">

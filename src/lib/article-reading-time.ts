@@ -8,10 +8,10 @@ export const readingTimeByPath: Record<string, number> = {
   "/artikler/ejerskifteforsikring": 4, // ca. 788 ord
   "/artikler/ejerudgifter": 9, // ca. 1729 ord
   "/artikler/eksisterende-pantebrev": 4, // ca. 815 ord
-  "/artikler/elforbrug-husstand": 4, // ca. 795 ord
+  "/artikler/elforbrug-husstand": 5, // ca. 925 ord
   "/artikler/energimaerker-og-boligokonomi": 2, // ca. 479 ord
   "/artikler/grundskyld-og-ejendomsskat": 4, // ca. 731 ord
-  "/artikler/hvad-kan-jeg-koebe-bolig-for": 7, // ca. 1427 ord
+  "/artikler/hvad-kan-jeg-koebe-bolig-for": 7, // ca. 1413 ord
   "/artikler/indboforsikring": 3, // ca. 594 ord
   "/artikler/koeb-bolig-sammen-ugift": 4, // ca. 875 ord
   "/artikler/realkreditlan": 3, // ca. 678 ord
