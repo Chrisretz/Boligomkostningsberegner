@@ -27,7 +27,18 @@ const IO_YEARS = 10;
 const BIDRAG_MED_AFDRAG = 0.74;
 const BIDRAG_AFDRAGSFRI = 0.74 + 0.17;
 
-const LOAN_TYPES = Object.keys(LOAN_TYPE_LABELS) as LoanType[];
+/**
+ * Sorteret efter rentebinding, længst først: fast rente i 30 år, så
+ * fem, tre og ét år, og til sidst F-kort, hvor renten sættes hvert
+ * halve år. Rækkefølgen svarer til faldende forudsigelighed.
+ */
+const LOAN_TYPES: LoanType[] = [
+  "fast",
+  "renteMaxF5F10",
+  "f3f4",
+  "f1f2",
+  "fKort",
+];
 
 function kr(n: number): string {
   return n.toLocaleString("da-DK");
@@ -292,7 +303,7 @@ export function LaanetypeExplorer() {
           Årlige betalinger pr. lånt million.{" "}
           {interestOnly
             ? `Den røde streg markerer, hvor afdragsfriheden udløber efter ${IO_YEARS} år, og afdragene begynder.`
-            : "Bemærk hvordan renterne fylder mest i begyndelsen og afdragene overtager med tiden, selvom den samlede ydelse er næsten uændret."}
+            : "Renter og afdrag udgør tilsammen præcis det samme beløb hvert år, men fordelingen vender undervejs. Den samlede søjle falder alligevel lidt, fordi bidraget beregnes af restgælden og derfor skrumper, i takt med at gælden gør det."}
         </p>
       </figure>
 
