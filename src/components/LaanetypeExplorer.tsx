@@ -9,7 +9,7 @@ import {
   type LoanType,
 } from "@/lib/bidrag";
 import { LAANETYPE_INFO } from "@/lib/laanetypeInfo";
-import { beregnForloeb, LOAN_PER_MILLION } from "@/lib/laaneforloeb";
+import { beregnForloeb } from "@/lib/laaneforloeb";
 import { RATE_BY_LOAN_TYPE } from "@/lib/renter";
 import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
 
