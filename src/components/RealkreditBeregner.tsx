@@ -38,6 +38,11 @@ function pct(n: number): string {
 function parseDKK(v: string): number {
   return Number(v.replace(/\D/g, "")) || 0;
 }
+/** "3,65 %" eller "3,65" → 3.65. Tom eller ugyldig → 0. */
+function parsePctInput(v: string): number {
+  const n = Number(v.replace("%", "").replace(",", ".").trim());
+  return Number.isFinite(n) ? n : 0;
+}
 
 interface RatesResponse {
   source: "live" | "static";
@@ -57,6 +62,12 @@ export function RealkreditBeregner() {
 
   const [rateOverride, setRateOverride] = useState<number | null>(null);
   const [bidragOverride, setBidragOverride] = useState<number | null>(null);
+  // Rå indtastning mens et procentfelt er i fokus, så tal med decimaler
+  // ikke reformateres væk under tastningen.
+  const [rateFocused, setRateFocused] = useState(false);
+  const [rateRaw, setRateRaw] = useState("");
+  const [bidragFocused, setBidragFocused] = useState(false);
+  const [bidragRaw, setBidragRaw] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -305,12 +316,19 @@ export function RealkreditBeregner() {
             id="rk-rate"
             type="text"
             inputMode="decimal"
-            value={pct(ratePct)}
+            value={rateFocused ? rateRaw : pct(ratePct)}
+            onFocus={(e) => {
+              setRateFocused(true);
+              setRateRaw(ratePct.toFixed(2).replace(".", ","));
+              setTimeout(() => e.target.select(), 0);
+            }}
             onChange={(e) => {
-              const n = Number(
-                e.target.value.replace("%", "").replace(",", ".").trim()
-              );
-              setRateOverride(Number.isFinite(n) ? n : 0);
+              setRateRaw(e.target.value);
+              setRateOverride(parsePctInput(e.target.value));
+            }}
+            onBlur={() => {
+              setRateOverride(parsePctInput(rateRaw));
+              setRateFocused(false);
             }}
             className={dkkField}
           />
@@ -345,12 +363,19 @@ export function RealkreditBeregner() {
             id="rk-bidrag"
             type="text"
             inputMode="decimal"
-            value={pct(bidragPct)}
+            value={bidragFocused ? bidragRaw : pct(bidragPct)}
+            onFocus={(e) => {
+              setBidragFocused(true);
+              setBidragRaw(bidragPct.toFixed(2).replace(".", ","));
+              setTimeout(() => e.target.select(), 0);
+            }}
             onChange={(e) => {
-              const n = Number(
-                e.target.value.replace("%", "").replace(",", ".").trim()
-              );
-              setBidragOverride(Number.isFinite(n) ? n : 0);
+              setBidragRaw(e.target.value);
+              setBidragOverride(parsePctInput(e.target.value));
+            }}
+            onBlur={() => {
+              setBidragOverride(parsePctInput(bidragRaw));
+              setBidragFocused(false);
             }}
             className={dkkField}
           />
