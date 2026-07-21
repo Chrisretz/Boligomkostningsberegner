@@ -7,6 +7,12 @@ import type { ValidationErrors } from "@/lib/validation";
 import { DEFAULTS, PROPERTY_TAX } from "@/lib/constants";
 import { estimateMonthlyElDKK, getEstimatedYearlyKWh } from "@/lib/electricity";
 import { estimatePropertyTax } from "@/lib/propertyTax";
+import {
+  BIDRAG_SOURCE,
+  LOAN_TYPE_LABELS,
+  calculateBidrag,
+  type LoanType,
+} from "@/lib/bidrag";
 import { trackGaEvent } from "@/lib/trackGaEvent";
 
 interface CalculatorFormProps {
@@ -109,6 +115,9 @@ export function CalculatorForm({
   const [bidragRatePct, setBidragRatePct] = useState<number>(
     DEFAULTS.BIDRAG_RATE_PCT
   );
+  const [loanType, setLoanType] = useState<LoanType>("fast");
+  /** Så længe brugeren ikke selv har rettet satsen, følger den lånetype og belåningsgrad. */
+  const [bidragAuto, setBidragAuto] = useState(true);
   const [includePropertyTax, setIncludePropertyTax] = useState(true);
   const [propertyTaxOverrideDKK, setPropertyTaxOverrideDKK] = useState(0);
   const [isBidragFocused, setIsBidragFocused] = useState(false);
@@ -122,6 +131,20 @@ export function CalculatorForm({
 
   const loanPrincipal = Math.max(purchasePriceDKK - downPaymentDKK, 0);
   const bankLoanAmountDKK = Math.max(0, loanPrincipal - realkreditAmountDKK);
+
+  // Vejledende bidragssats ud fra belåningsgrad, lånetype og afdragsfrihed
+  const autoBidrag = calculateBidrag({
+    loanDKK: realkreditAmountDKK,
+    propertyValueDKK: purchasePriceDKK,
+    loanType,
+    interestOnly,
+  });
+
+  useEffect(() => {
+    if (bidragAuto && autoBidrag.ratePct > 0) {
+      setBidragRatePct(autoBidrag.ratePct);
+    }
+  }, [bidragAuto, autoBidrag.ratePct]);
 
   // Hold udbetaling mindst 5 % af købspris (realkredit og udbetaling er uafhængige)
   useEffect(() => {
@@ -703,12 +726,36 @@ export function CalculatorForm({
             )}
           </div>
         </div>
-        {/* Række 3: Bidragssats */}
+        {/* Række 3: Lånetype og bidragssats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div>
             <LabelWithTooltip
+              htmlFor="loanType"
+              tooltip="Lånetypen bestemmer både renten og bidragssatsen. Fast rente har den laveste bidragssats, mens kort rentebinding som F1-F2 har den højeste, fordi instituttet løber en større risiko. Vælg den type, du overvejer, så beregnes bidragssatsen automatisk."
+              className="block text-label text-text-secondary mb-1.5"
+            >
+              Lånetype
+            </LabelWithTooltip>
+            <select
+              id="loanType"
+              value={loanType}
+              onChange={(e) => setLoanType(e.target.value as LoanType)}
+              className={inputClass("loanType")}
+            >
+              {(Object.keys(LOAN_TYPE_LABELS) as LoanType[]).map((key) => (
+                <option key={key} value={key}>
+                  {LOAN_TYPE_LABELS[key]}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1.5 text-small text-text-muted">
+              Bruges til at beregne bidragssatsen automatisk.
+            </p>
+          </div>
+          <div>
+            <LabelWithTooltip
               htmlFor="bidragRatePct"
-              tooltip="Bidrag er realkreditinstituttets løbende gebyr oven i renten, beregnet som en procent pr. år af restgælden. Satsen afhænger af institut, belåningsgrad og lånetype – typisk ca. 0,5-1,0 % ved 80 % belåning. Bidraget indgår i din månedlige ydelse men påvirkes ikke af renteændringer."
+              tooltip="Bidrag er realkreditinstituttets løbende gebyr oven i renten, beregnet som en procent pr. år af restgælden. Satsen stiger med belåningsgraden, fordi hvert interval (0-40 %, 40-60 % og over 60 %) har sin egen sats. Beregneren vægter intervallerne efter dit lån og lægger tillæg til ved afdragsfrihed."
               className="block text-label text-text-secondary mb-1.5"
             >
               Bidragssats (realkredit)
@@ -725,6 +772,7 @@ export function CalculatorForm({
                     : formatRente(bidragRatePct)
               }
               onChange={(e) => {
+                setBidragAuto(false);
                 if (isBidragFocused) {
                   setBidragInputValue(e.target.value);
                 } else {
@@ -748,31 +796,44 @@ export function CalculatorForm({
               placeholder="0,75 %"
               aria-invalid={!!validationErrors.bidragRatePct}
             />
-            <div className="flex gap-2 mt-1.5">
-              {[0.5, 0.75, 1.0].map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => setBidragRatePct(r)}
-                  className={`px-3 py-1.5 text-small rounded hover:bg-border-strong ${
-                    bidragRatePct === r
-                      ? "bg-brand-primary text-white"
-                      : "bg-border text-text-secondary"
-                  }`}
-                >
-                  {formatRente(r)}
-                </button>
-              ))}
-            </div>
             {validationErrors.bidragRatePct && (
               <p className="mt-1.5 text-small text-status-danger" role="alert">
                 {validationErrors.bidragRatePct}
               </p>
             )}
-            <p className="mt-1.5 text-small text-text-muted">
-              Vejledende standard 0,75 % pr. år. Tjek din egen sats hos
-              instituttet.
-            </p>
+            {bidragAuto ? (
+              <p className="mt-1.5 text-small text-text-muted leading-relaxed">
+                Beregnet ud fra {Math.round(autoBidrag.ltvPct)} % belåning,{" "}
+                {LOAN_TYPE_LABELS[loanType].toLowerCase()}
+                {interestOnly
+                  ? ` og afdragsfrihed (tillæg ${formatRente(autoBidrag.interestOnlyAddOnPct)})`
+                  : " og afdrag"}
+                . Satser fra{" "}
+                <a
+                  href={BIDRAG_SOURCE.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-primary underline hover:no-underline"
+                >
+                  {BIDRAG_SOURCE.institute}s prisblad
+                </a>{" "}
+                pr. {BIDRAG_SOURCE.validFrom}. Andre institutter har andre
+                satser, og {BIDRAG_SOURCE.institute} giver p.t.{" "}
+                {String(BIDRAG_SOURCE.kundeKronerRabatPct).replace(".", ",")} %
+                i KundeKroner-rabat, som ikke er trukket fra her.
+              </p>
+            ) : (
+              <p className="mt-1.5 text-small text-text-muted">
+                Du bruger din egen sats.{" "}
+                <button
+                  type="button"
+                  onClick={() => setBidragAuto(true)}
+                  className="text-brand-primary underline hover:no-underline"
+                >
+                  Beregn automatisk igen
+                </button>
+              </p>
+            )}
           </div>
         </div>
         {interestOnly && (
