@@ -14,9 +14,9 @@ const ARTICLE_PATH = "/artikler/sammenligning-af-laanetyper";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema(SAMMENLIGNING_LAANETYPER_FAQ);
 
-const title = "Lånetyper: realkredit, banklån og afdragsfrihed";
+const title = "Lånetyper ved boligkøb: overblik og sammenligning";
 const description =
-  "Sammenlign realkreditlån, banklån og afdragsfrihed. Få overblik over renter, risiko og månedlig ydelse – og hvordan du tester scenarier i en boligberegner.";
+  "Alle lånetyper til boligkøb forklaret: fast rente, F1/F3/F5, afdragsfrihed og banklån. Se forskelle på ydelse og risiko – og beregn dine tal gratis.";
 
 export const metadata: Metadata = {
   title,
@@ -83,6 +83,123 @@ export default function SammenligningAfLaanetyperPage() {
             <strong className="text-text-primary">månedlige ydelse</strong> og
             de vigtigste risici på tværs af scenarier.
           </p>
+
+          <section>
+            <h2 className="text-h3 text-text-primary">
+              Hvilke lånetyper findes der til boligkøb?
+            </h2>
+            <p>
+              I Danmark er der reelt fire lånetyper i spil, når du køber bolig.
+              De kombineres næsten altid, fordi realkreditinstitutter kun må
+              låne dig op til 80 % af boligens værdi.
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>
+                <strong className="text-text-primary">
+                  Fastforrentet realkreditlån.
+                </strong>{" "}
+                Samme rente i hele løbetiden, typisk 30 år. Højest startydelse,
+                men fuld forudsigelighed og mulighed for at konvertere, hvis
+                renten falder eller stiger markant.
+              </li>
+              <li>
+                <strong className="text-text-primary">
+                  Variabelt forrentet realkreditlån (F1, F3, F5).
+                </strong>{" "}
+                Renten tilpasses med faste mellemrum. Lavere startrente, men
+                ydelsen kan ændre sig ved hver rentetilpasning.
+              </li>
+              <li>
+                <strong className="text-text-primary">
+                  Realkreditlån med renteloft.
+                </strong>{" "}
+                Variabel rente med et aftalt maksimum. Et kompromis mellem de to
+                ovenstående, som koster lidt i rente for at begrænse risikoen.
+              </li>
+              <li>
+                <strong className="text-text-primary">
+                  Banklån som tillægsfinansiering.
+                </strong>{" "}
+                Dækker typisk de 15 %, der ligger mellem realkreditlånet og din
+                udbetaling. Højere rente og kortere løbetid, ofte 10-20 år.
+              </li>
+            </ul>
+            <p>
+              Oven i selve lånetypen vælger du, om der skal være{" "}
+              <strong className="text-text-primary">afdragsfrihed</strong> i en
+              periode. Standardmodellen ved et almindeligt boligkøb er 80 %
+              realkredit, 15 % banklån og mindst 5 % egen udbetaling.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-h3 text-text-primary">
+              Lånetyper sammenlignet: ydelse mod risiko
+            </h2>
+            <p>
+              Den korte version: jo lavere ydelse i dag, jo større usikkerhed i
+              morgen. Nedenstående oversigt viser afvejningen for et typisk
+              30-årigt lån.
+            </p>
+            <div className="not-prose overflow-x-auto my-4">
+              <table className="w-full min-w-[520px] text-small text-text-secondary border-collapse">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2 pr-4 font-semibold text-text-primary">
+                      Lånetype
+                    </th>
+                    <th className="text-left py-2 pr-4 font-semibold text-text-primary">
+                      Startydelse
+                    </th>
+                    <th className="text-left py-2 pr-4 font-semibold text-text-primary">
+                      Forudsigelighed
+                    </th>
+                    <th className="text-left py-2 font-semibold text-text-primary">
+                      Passer til
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-border">
+                    <td className="py-2 pr-4">Fast rente, med afdrag</td>
+                    <td className="py-2 pr-4">Højest</td>
+                    <td className="py-2 pr-4">Høj</td>
+                    <td className="py-2">Stram økonomi, lang tidshorisont</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="py-2 pr-4">F5 / renteloft</td>
+                    <td className="py-2 pr-4">Mellem</td>
+                    <td className="py-2 pr-4">Mellem</td>
+                    <td className="py-2">Vil have lavere rente med en grænse</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="py-2 pr-4">F1 / F3</td>
+                    <td className="py-2 pr-4">Lav</td>
+                    <td className="py-2 pr-4">Lav</td>
+                    <td className="py-2">Buffer til rentestigninger</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 pr-4">Afdragsfrit (uanset rente)</td>
+                    <td className="py-2 pr-4">Lavest</td>
+                    <td className="py-2 pr-4">Lav</td>
+                    <td className="py-2">Midlertidigt pres, ikke som standard</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              Test forskellen selv i{" "}
+              <Link
+                href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
+                className="text-brand-primary hover:underline font-medium"
+              >
+                boligomkostningsberegneren
+              </Link>
+              , hvor rentestesten viser, hvad +1 og +2 procentpoint gør ved din
+              samlede månedlige udgift. Det er den øvelse, der afgør, om en
+              variabel lånetype er forsvarlig for netop din økonomi.
+            </p>
+          </section>
 
           <section>
             <h2 className="text-h3 text-text-primary">
@@ -246,6 +363,33 @@ export default function SammenligningAfLaanetyperPage() {
           </section>
 
           <section>
+            <h2 className="text-h3 text-text-primary">
+              Sådan vælger du lånetype i praksis
+            </h2>
+            <p>
+              Start med at afklare, hvor meget din månedlige ydelse må stige,
+              før det gør ondt. Kan du bære en stigning på 2.000-3.000 kr om
+              måneden uden at ændre livsstil, er en variabel lånetype
+              forsvarlig. Kan du ikke, er fast rente pengene værd, selvom
+              startydelsen er højere.
+            </p>
+            <p>
+              Se dernæst på tidshorisonten. Regner du med at sælge inden for få
+              år, betyder den langsigtede renterisiko mindre, men til gengæld
+              betyder kurstab og omkostninger ved omlægning mere. Regner du med
+              at blive boende i tyve år, er forudsigelighed typisk mere værd end
+              en lav startrente.
+            </p>
+            <p>
+              Behandl til sidst afdragsfrihed som et værktøj, ikke som en rabat.
+              Ydelsen falder, men gælden gør ikke, og når perioden udløber,
+              stiger ydelsen markant, fordi det samme beløb skal afdrages over
+              færre år. Det giver mening ved midlertidigt pres, sjældent som
+              permanent løsning.
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-h3 text-text-primary">Opsummering</h2>
             <p>
               En god sammenligning af lånetyper handler om mere end den
@@ -254,6 +398,23 @@ export default function SammenligningAfLaanetyperPage() {
               pant. Brug Boligklarheds boligomkostningsberegner til at
               oversætte valgene til konkrete tal – og spørg banken om det
               scenarie, der matcher din risikoprofil og dit boligkøb.
+            </p>
+            <p>
+              Husk, at ydelsen kun er en del af regnestykket. Læg{" "}
+              <Link
+                href="/artikler/ejerudgifter"
+                className="text-brand-primary hover:underline"
+              >
+                ejerudgifter
+              </Link>{" "}
+              og{" "}
+              <Link
+                href="/artikler/vedligehold"
+                className="text-brand-primary hover:underline"
+              >
+                vedligehold
+              </Link>{" "}
+              oveni, før du vurderer, om boligen er til at betale.
             </p>
           </section>
         </div>

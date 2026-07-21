@@ -31,7 +31,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/ejerudgifter": {
     datePublished: "2026-03-08T10:00:00+01:00",
-    dateModified: "2026-04-18T12:00:00+02:00",
+    dateModified: "2026-07-21T12:00:00+02:00",
   },
   "/artikler/elforbrug-husstand": {
     datePublished: "2026-03-09T10:00:00+01:00",
@@ -63,7 +63,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/sammenligning-af-laanetyper": {
     datePublished: "2026-04-01T14:00:00+02:00",
-    dateModified: "2026-04-18T12:00:00+02:00",
+    dateModified: "2026-07-21T12:00:00+02:00",
   },
   "/artikler/energimaerker-og-boligokonomi": {
     datePublished: "2026-04-01T14:00:00+02:00",
@@ -79,7 +79,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/vedligehold": {
     datePublished: "2026-03-18T10:00:00+01:00",
-    dateModified: "2026-04-01T12:00:00+02:00",
+    dateModified: "2026-07-21T12:00:00+02:00",
   },
   "/artikler/tvangsauktioner": {
     datePublished: "2026-04-07T10:00:00+02:00",

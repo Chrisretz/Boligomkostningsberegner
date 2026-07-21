@@ -15,9 +15,9 @@ const ARTICLE_PATH = "/artikler/ejerudgifter";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema(EJERUDGIFTER_FAQ);
 
-const title = "Hvad dækker ejerudgifter? Komplet guide til boligejere";
+const title = "Hvad dækker ejerudgifter? Guide til hus og lejlighed";
 const description =
-  "Ejerudgifter: grundskyld, ejendomsværdiskat, forsikring og ejerforening. Hus vs. lejlighed – indregn i boligomkostningsberegneren.";
+  "Ejerudgifter dækker grundskyld, ejendomsværdiskat, forsikring og ejerforening. Se forskellen på hus og lejlighed, og hvad der ikke er med i tallet.";
 
 export const metadata: Metadata = {
   title,
@@ -59,7 +59,7 @@ export default function EjerudgifterPage() {
         </p>
 
         <h1 className="text-h1 text-text-primary mb-3">
-          Hvad dækker ejerudgifter? Komplet guide til boligejere
+          Hvad dækker ejerudgifter? Guide til hus og lejlighed
         </h1>
         <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
@@ -526,6 +526,23 @@ export default function EjerudgifterPage() {
               ejerudgifter, inkluderer det typisk ejendomsskat (grundskyld),
               ejendomsværdiskat, husforsikring og for ejerlejligheder
               ejerforeningsbidrag.
+            </p>
+            <p>
+              Husk, at ejerudgifter ikke dækker vedligehold. Læs derfor også,{" "}
+              <Link
+                href="/artikler/vedligehold"
+                className="text-brand-primary hover:underline"
+              >
+                hvad vedligehold af hus og bolig koster om året
+              </Link>
+              , og hvordan de{" "}
+              <Link
+                href="/artikler/sammenligning-af-laanetyper"
+                className="text-brand-primary hover:underline"
+              >
+                forskellige lånetyper
+              </Link>{" "}
+              påvirker din samlede boligudgift.
             </p>
             <p>
               Som Danmarks online boligomkostningsberegner er det vores mission

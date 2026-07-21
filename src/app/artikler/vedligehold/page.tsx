@@ -11,9 +11,9 @@ const ARTICLE_PATH = "/artikler/vedligehold";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema(VEDLIGEHOLD_FAQ);
 
-const title = "Vedligehold af bolig: Hvor meget skal jeg sætte af?";
+const title = "Hvad koster vedligehold af hus? Se budget pr. år";
 const description =
-  "Vedligehold af bolig: hvor meget sætte af om året? Reserve, typiske poster og boligomkostninger.";
+  "Vedligeholdelse af hus koster typisk 1,5 % af boligens værdi om året, lejlighed 1 %. Se hvad beløbet dækker, og læg et realistisk vedligeholdelsesbudget.";
 
 export const metadata: Metadata = {
   title,
@@ -56,7 +56,7 @@ export default function VedligeholdPage() {
         </p>
 
         <h1 className="text-h1 text-text-primary mb-3">
-          Vedligehold af bolig: Hvor meget skal jeg sætte af?
+          Hvad koster vedligehold af hus og bolig?
         </h1>
         <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
@@ -225,6 +225,23 @@ export default function VedligeholdPage() {
               medregne vedligehold får du et mere ærligt billede af, hvad
               boligen koster, og undgår at blive overrasket af store
               reparationer.
+            </p>
+            <p>
+              Vedligehold er kun én af de løbende poster. Se også, hvad{" "}
+              <Link
+                href="/artikler/ejerudgifter"
+                className="text-brand-primary hover:underline"
+              >
+                ejerudgifter dækker
+              </Link>{" "}
+              for hus og lejlighed, og hvordan valget mellem{" "}
+              <Link
+                href="/artikler/sammenligning-af-laanetyper"
+                className="text-brand-primary hover:underline"
+              >
+                forskellige lånetyper
+              </Link>{" "}
+              påvirker den samlede månedlige udgift.
             </p>
           </section>
         </div>
