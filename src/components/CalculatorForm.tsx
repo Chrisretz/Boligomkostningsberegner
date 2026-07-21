@@ -13,6 +13,7 @@ import {
   calculateBidrag,
   type LoanType,
 } from "@/lib/bidrag";
+import { RATE_SOURCE, getSuggestedRate } from "@/lib/renter";
 import { trackGaEvent } from "@/lib/trackGaEvent";
 
 interface CalculatorFormProps {
@@ -118,6 +119,8 @@ export function CalculatorForm({
   const [loanType, setLoanType] = useState<LoanType>("fast");
   /** Så længe brugeren ikke selv har rettet satsen, følger den lånetype og belåningsgrad. */
   const [bidragAuto, setBidragAuto] = useState(true);
+  /** Samme for renten: følger lånetypen, indtil brugeren selv skriver et tal. */
+  const [renteAuto, setRenteAuto] = useState(true);
   const [includePropertyTax, setIncludePropertyTax] = useState(true);
   const [propertyTaxOverrideDKK, setPropertyTaxOverrideDKK] = useState(0);
   const [isBidragFocused, setIsBidragFocused] = useState(false);
@@ -145,6 +148,12 @@ export function CalculatorForm({
       setBidragRatePct(autoBidrag.ratePct);
     }
   }, [bidragAuto, autoBidrag.ratePct]);
+
+  useEffect(() => {
+    if (renteAuto) {
+      setInterestRateAnnualPct(getSuggestedRate(loanType));
+    }
+  }, [renteAuto, loanType]);
 
   // Hold udbetaling mindst 5 % af købspris (realkredit og udbetaling er uafhængige)
   useEffect(() => {
@@ -642,6 +651,7 @@ export function CalculatorForm({
                     : formatRente(interestRateAnnualPct)
               }
               onChange={(e) => {
+                setRenteAuto(false);
                 if (isRenteFocused) {
                   setRenteInputValue(e.target.value);
                 } else {
@@ -673,7 +683,10 @@ export function CalculatorForm({
                 <button
                   key={r}
                   type="button"
-                  onClick={() => setInterestRateAnnualPct(r)}
+                  onClick={() => {
+                    setRenteAuto(false);
+                    setInterestRateAnnualPct(r);
+                  }}
                   className={`px-3 py-1.5 text-small rounded hover:bg-border-strong ${
                     interestRateAnnualPct === r
                       ? "bg-brand-primary text-white"
@@ -691,6 +704,24 @@ export function CalculatorForm({
                 role="alert"
               >
                 {validationErrors.interestRateAnnualPct}
+              </p>
+            )}
+            {renteAuto ? (
+              <p className="mt-1.5 text-small text-text-muted leading-relaxed">
+                Vejledende niveau for{" "}
+                {LOAN_TYPE_LABELS[loanType].toLowerCase()} pr.{" "}
+                {RATE_SOURCE.updated}. {RATE_SOURCE.note}
+              </p>
+            ) : (
+              <p className="mt-1.5 text-small text-text-muted">
+                Du bruger din egen rente.{" "}
+                <button
+                  type="button"
+                  onClick={() => setRenteAuto(true)}
+                  className="text-brand-primary underline hover:no-underline"
+                >
+                  Brug vejledende niveau
+                </button>
               </p>
             )}
           </div>
