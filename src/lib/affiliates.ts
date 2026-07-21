@@ -19,6 +19,14 @@ export interface AffiliatePartner {
   network: "partner-ads" | "adtraction" | "direkte";
 }
 
+/**
+ * Bygger et Partner-ads-link, der lander på en konkret underside hos
+ * annoncøren i stedet for forsiden. Målsiden skal URL-encodes.
+ */
+function partnerAdsDeeplink(bannerId: number, targetUrl: string): string {
+  return `https://www.partner-ads.com/dk/klikbanner.php?partnerid=57153&bannerid=${bannerId}&htmlurl=${encodeURIComponent(targetUrl)}`;
+}
+
 export const AFFILIATE_PARTNERS: Record<string, AffiliatePartner> = {
   forsikring: {
     slug: "forsikring",
@@ -32,10 +40,21 @@ export const AFFILIATE_PARTNERS: Record<string, AffiliatePartner> = {
     url: "https://www.partner-ads.com/dk/klikbanner.php?partnerid=57153&bannerid=71154",
     network: "partner-ads",
   },
-  "juridiske-dokumenter": {
-    slug: "juridiske-dokumenter",
+  // Deeplinket til siden om testamente for samlevende – langt bedre
+  // konvertering end forsiden, da læseren netop har læst om arv.
+  "testamente-samlevende": {
+    slug: "testamente-samlevende",
     name: "Jura-Docs",
-    url: "https://www.partner-ads.com/dk/klikbanner.php?partnerid=57153&bannerid=99220",
+    url: partnerAdsDeeplink(
+      99220,
+      "https://jura-docs.dk/testamente/testamente-samlevende/"
+    ),
+    network: "partner-ads",
+  },
+  samejeoverenskomst: {
+    slug: "samejeoverenskomst",
+    name: "Jura-Docs",
+    url: partnerAdsDeeplink(99220, "https://jura-docs.dk/samejeoverenkomst/"),
     network: "partner-ads",
   },
 };

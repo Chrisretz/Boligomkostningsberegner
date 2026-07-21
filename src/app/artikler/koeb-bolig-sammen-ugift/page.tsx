@@ -119,11 +119,11 @@ export default function KoebBoligSammenUgiftPage() {
           </section>
 
           <PartnerCta
-            partnerSlug="juridiske-dokumenter"
-            heading="Få testamentet på plads, inden I skriver under"
-            body="Jura-Docs leverer testamente, fremtidsfuldmagt og andre juridiske dokumenter til private på e-mail. I svarer på spørgsmål online og modtager dokumentet med det samme."
-            buttonLabel="Se juridiske dokumenter"
-            placement="artikel-koeb-bolig-sammen-ugift"
+            partnerSlug="testamente-samlevende"
+            heading="Testamente for samlevende"
+            body="Jura-Docs har en færdig løsning netop til ugifte samlevende. I svarer på spørgsmål online og modtager dokumentet på e-mail, typisk inden for et kvarter. Prisen er 595 kr. for gør-det-selv, og der kan tilkøbes fuld juridisk rådgivning."
+            buttonLabel="Se testamente for samlevende"
+            placement="artikel-ugift-testamente"
           />
 
           <section>
@@ -173,6 +173,14 @@ export default function KoebBoligSammenUgiftPage() {
               lav.
             </p>
           </section>
+
+          <PartnerCta
+            partnerSlug="samejeoverenskomst"
+            heading="Færdig skabelon til samejeoverenskomst"
+            body="Vil I ikke skrive aftalen fra bunden, kan I få en samejeoverenskomst udarbejdet online hos Jura-Docs ved at svare på en række spørgsmål. Fuld juridisk rådgivning kan tilkøbes."
+            buttonLabel="Se samejeoverenskomst"
+            placement="artikel-ugift-samejeoverenskomst"
+          />
 
           <section>
             <h2 className="text-h3 text-text-primary">
