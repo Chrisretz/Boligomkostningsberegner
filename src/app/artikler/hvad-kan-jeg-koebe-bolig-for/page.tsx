@@ -16,11 +16,11 @@ const ARTICLE_PATH = "/artikler/hvad-kan-jeg-koebe-bolig-for";
 const dates = getArticleDates(ARTICLE_PATH);
 const faqSchema = getFaqPageSchema(HVAD_KAN_JEG_KOEBE_FAQ);
 
-const title = "Hvad kan jeg købe bolig for? Få klarhed over dit budget i 2026";
+const title = "Hvor meget kan jeg låne til bolig? Tommelfingerregler";
 const description =
-  "Hvad kan jeg købe bolig for i 2026? Få overblik over indkomst, gæld, udbetaling, rådighedsbeløb, ejerudgifter og månedlig boligudgift – og test din købspris.";
+  "Tommelfingerreglerne for boliglån: gældsfaktor på 3,5-5 gange indkomsten, rådighedsbeløb og udbetaling. Forstå tallene bag bankens vurdering.";
 const ogDescription =
-  "Indkomst, gæld, udbetaling, rådighedsbeløb og ejerudgifter – sådan finder du ud af, hvad du kan købe bolig for i 2026.";
+  "Gældsfaktor, rådighedsbeløb og udbetaling: sådan regner banken ud, hvor meget du kan låne til bolig.";
 
 export const metadata: Metadata = {
   title,
@@ -62,7 +62,8 @@ export default function HvadKanJegKoebeBoligForPage() {
         </p>
 
         <h1 className="text-h1 text-text-primary mb-3">
-          Hvad kan jeg købe bolig for? Få klarhed over dit budget i 2026
+          Hvor meget kan jeg låne til bolig? Tommelfingerregler og
+          rådighedsbeløb
         </h1>
         <ArticleMeta {...dates} path={ARTICLE_PATH} />
 
@@ -84,7 +85,7 @@ export default function HvadKanJegKoebeBoligForPage() {
               href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}
               className="text-brand-primary font-medium underline hover:no-underline"
             >
-              beregner til lånerum og købspris
+              beregn hvad du kan købe bolig for
             </Link>
             , der tager udgangspunkt i din indkomst, din gæld og din udbetaling
             og giver dig et realistisk billede af, hvor meget du kan låne, og
