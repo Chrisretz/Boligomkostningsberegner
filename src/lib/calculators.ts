@@ -15,7 +15,7 @@ export const calculators = [
     href: PATH_BOLIGLAAN_BEREGNER,
     title: "Boliglån beregner",
     description:
-      "Guide: hvad en boliglånsberegner gør, 80/15/5-finansiering og typiske omkostninger – med link til at beregne ydelse og boligbudget.",
+      "Vælg lånetype og se ydelse, bidrag, kurstab, ÅOP og etableringsomkostninger. Renterne hentes fra aktuelle obligationskurser.",
   },
   {
     id: "boligomkostninger",
