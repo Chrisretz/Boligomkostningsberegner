@@ -9,6 +9,7 @@ import { getArticleDates } from "@/lib/article-dates";
 import { SAMMENLIGNING_LAANETYPER_FAQ } from "@/lib/artikel-faq/sammenligning-af-laanetyper";
 import { getArticleSchema, getFaqPageSchema } from "@/lib/structured-data";
 import { ArticleMeta } from "@/components/ArticleMeta";
+import { LaanetypeExplorer } from "@/components/LaanetypeExplorer";
 
 const ARTICLE_PATH = "/artikler/sammenligning-af-laanetyper";
 const dates = getArticleDates(ARTICLE_PATH);
@@ -131,6 +132,8 @@ export default function SammenligningAfLaanetyperPage() {
               realkredit, 15 % banklån og mindst 5 % egen udbetaling.
             </p>
           </section>
+
+          <LaanetypeExplorer />
 
           <section>
             <h2 className="text-h3 text-text-primary">
