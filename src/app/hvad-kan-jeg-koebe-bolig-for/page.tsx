@@ -96,167 +96,6 @@ export default function HvadKanJegKoebeBoligForPage() {
           </p>
         </header>
 
-        <section
-          className="mb-10 max-w-3xl mx-auto rounded-md border border-border bg-brand-surface/60 p-6 md:p-8 text-left"
-          aria-labelledby="seo-lanerum-heading"
-        >
-          <h2
-            id="seo-lanerum-heading"
-            className="text-h3 text-text-primary mb-4"
-          >
-            Lånerum og boliglån – sådan forstår du resultatet
-          </h2>
-          <div className="space-y-4 text-body text-text-secondary leading-relaxed">
-            <p>
-              Mange søger efter en <strong className="font-semibold text-text-primary">boliglån beregner</strong>, når de vil vide, hvor meget de kan låne til bolig og hvilken prisklasse der er realistisk. Denne side fungerer som et hurtigt, vejledende værktøj: Den estimerer dit <strong className="font-semibold text-text-primary">lånerum</strong> ud fra din bruttoindtægt og en gængs gearing (standard 4), og trækker den gæld fra, du allerede har. Du får altså et tommelfingerbillede af, hvor meget du kan lægge i boliglån – før du bruger bankens egne modeller og dokumentation.
-            </p>
-            <p>
-              En <strong className="font-semibold text-text-primary">boliglån beregner</strong> i banken tager typisk flere forhold med (rådighedsbeløb, rente, boligens art og mere). Brug derfor resultatet her som et første pejlemærke og som supplement til vores{" "}
-              <Link
-                href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
-                className="text-brand-primary font-medium hover:underline"
-              >
-                boligomkostningsberegner
-              </Link>
-              , hvis du også vil se månedlig ydelse, bidrag og andre faste udgifter ved boligkøb.
-            </p>
-            <p>
-              Gearing og gældsfaktor er centrale begreber, men de erstatter ikke bankens kreditvurdering. Jo mere du har styr på både lånerum og månedlige omkostninger, jo lettere er det at sammenligne tilbud og forhandle boliglån på et oplyst grundlag.
-            </p>
-          </div>
-        </section>
-
-        <section
-          className="mb-10 max-w-3xl mx-auto text-left"
-          aria-labelledby="udbetaling-heading"
-        >
-          <h2 id="udbetaling-heading" className="text-h2 text-text-primary mb-4">
-            Udbetaling: hvor meget skal du selv lægge?
-          </h2>
-          <div className="space-y-4 text-body text-text-secondary leading-relaxed">
-            <p>
-              Du skal som minimum selv finansiere{" "}
-              <strong className="font-semibold text-text-primary">5 % af købsprisen</strong>{" "}
-              kontant. Den del kan ikke lånes via realkredit eller banklån. Jo
-              mere du selv lægger, desto mindre skal du låne, hvilket sparer
-              renteudgifter og giver en stærkere forhandlingsposition.
-            </p>
-            <p>
-              Realkreditlånet er begrænset til 80 % af boligens værdi, og
-              banklånet dækker typisk de resterende 15 %:
-            </p>
-          </div>
-          <div className="overflow-x-auto rounded-md border border-border my-5">
-            <table className="w-full text-left text-small md:text-body">
-              <caption className="sr-only">
-                Boligpris, minimumsudbetaling 5 %, maksimalt realkreditlån 80 %
-                og restbehov til banklån.
-              </caption>
-              <thead>
-                <tr className="border-b border-border bg-brand-surface">
-                  <th scope="col" className="py-2 px-3 font-semibold text-text-primary">
-                    Boligpris
-                  </th>
-                  <th scope="col" className="py-2 px-3 font-semibold text-text-primary">
-                    Min. udbetaling (5 %)
-                  </th>
-                  <th scope="col" className="py-2 px-3 font-semibold text-text-primary">
-                    Max. realkreditlån (80 %)
-                  </th>
-                  <th scope="col" className="py-2 px-3 font-semibold text-text-primary">
-                    Restbehov (banklån)
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-text-secondary">
-                <tr className="border-b border-border">
-                  <td className="py-2 px-3">2.000.000 kr.</td>
-                  <td className="py-2 px-3">100.000 kr.</td>
-                  <td className="py-2 px-3">1.600.000 kr.</td>
-                  <td className="py-2 px-3">300.000 kr.</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-2 px-3">3.000.000 kr.</td>
-                  <td className="py-2 px-3">150.000 kr.</td>
-                  <td className="py-2 px-3">2.400.000 kr.</td>
-                  <td className="py-2 px-3">450.000 kr.</td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="py-2 px-3">4.000.000 kr.</td>
-                  <td className="py-2 px-3">200.000 kr.</td>
-                  <td className="py-2 px-3">3.200.000 kr.</td>
-                  <td className="py-2 px-3">600.000 kr.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="space-y-4 text-body text-text-secondary leading-relaxed">
-            <p>
-              Udover udbetalingen skal du selv dække engangsomkostninger til{" "}
-              <Link
-                href="/artikler/tinglysning"
-                className="text-brand-primary font-medium hover:underline"
-              >
-                tinglysning af skøde og pant
-              </Link>{" "}
-              samt en eventuel{" "}
-              <Link
-                href="/artikler/ejerskifteforsikring"
-                className="text-brand-primary font-medium hover:underline"
-              >
-                ejerskifteforsikring
-              </Link>
-              . De kan løbe op i titusindvis af kroner og indgår normalt ikke i
-              bankens lånevurdering.
-            </p>
-            <p>
-              En tommelfingerregel er, at dit samlede boliglån ikke bør
-              overstige{" "}
-              <strong className="font-semibold text-text-primary">
-                4-5 gange husstandens årlige bruttoindkomst
-              </strong>{" "}
-              før skat. Med en samlet indtægt på 600.000 kr. ligger lånerummet
-              typisk omkring 2,4-3 mio. kr. Hvordan banken vægter gældsfaktor,
-              rådighedsbeløb og kreditværdighed uddyber vi i{" "}
-              <Link
-                href="/artikler/saadan-vurderer-banken-dit-boliglan"
-                className="text-brand-primary font-medium hover:underline"
-              >
-                sådan vurderer banken dit boliglån
-              </Link>
-              .
-            </p>
-          </div>
-        </section>
-
-        <section
-          className="mb-12 max-w-3xl mx-auto text-left"
-          aria-labelledby="lanerum-faq-heading"
-        >
-          <h2 id="lanerum-faq-heading" className="text-h2 text-text-primary mb-4">
-            Ofte stillede spørgsmål
-          </h2>
-          <ul className="space-y-3">
-            {HVAD_KAN_JEG_KOEBE_FAQ.map((item) => (
-              <li key={item.question}>
-                <details className="group rounded-md border border-border bg-brand-surface px-4 py-3 shadow-soft">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
-                    <span className="text-body font-semibold text-text-primary">
-                      {item.question}
-                    </span>
-                    <span className="text-xl text-text-muted group-open:hidden">+</span>
-                    <span className="text-xl text-text-muted hidden group-open:inline">
-                      −
-                    </span>
-                  </summary>
-                  <p className="mt-2 text-body text-text-secondary leading-relaxed">
-                    {item.answer}
-                  </p>
-                </details>
-              </li>
-            ))}
-          </ul>
-        </section>
 
         <section className="bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 mb-16">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -457,6 +296,169 @@ export default function HvadKanJegKoebeBoligForPage() {
           når du indtaster den. Brug resultatet som pejlemærke og bekræft med
           din bank.
         </p>
+
+        <section
+          className="mb-10 max-w-3xl mx-auto rounded-md border border-border bg-brand-surface/60 p-6 md:p-8 text-left"
+          aria-labelledby="seo-lanerum-heading"
+        >
+          <h2
+            id="seo-lanerum-heading"
+            className="text-h3 text-text-primary mb-4"
+          >
+            Lånerum og boliglån – sådan forstår du resultatet
+          </h2>
+          <div className="space-y-4 text-body text-text-secondary leading-relaxed">
+            <p>
+              Mange søger efter en <strong className="font-semibold text-text-primary">boliglån beregner</strong>, når de vil vide, hvor meget de kan låne til bolig og hvilken prisklasse der er realistisk. Denne side fungerer som et hurtigt, vejledende værktøj: Den estimerer dit <strong className="font-semibold text-text-primary">lånerum</strong> ud fra din bruttoindtægt og en gængs gearing (standard 4), og trækker den gæld fra, du allerede har. Du får altså et tommelfingerbillede af, hvor meget du kan lægge i boliglån – før du bruger bankens egne modeller og dokumentation.
+            </p>
+            <p>
+              En <strong className="font-semibold text-text-primary">boliglån beregner</strong> i banken tager typisk flere forhold med (rådighedsbeløb, rente, boligens art og mere). Brug derfor resultatet her som et første pejlemærke og som supplement til vores{" "}
+              <Link
+                href={PATH_BOLIGOMKOSTNINGER_BEREGNER}
+                className="text-brand-primary font-medium hover:underline"
+              >
+                boligomkostningsberegner
+              </Link>
+              , hvis du også vil se månedlig ydelse, bidrag og andre faste udgifter ved boligkøb.
+            </p>
+            <p>
+              Gearing og gældsfaktor er centrale begreber, men de erstatter ikke bankens kreditvurdering. Jo mere du har styr på både lånerum og månedlige omkostninger, jo lettere er det at sammenligne tilbud og forhandle boliglån på et oplyst grundlag.
+            </p>
+          </div>
+        </section>
+
+        <section
+          className="mb-10 max-w-3xl mx-auto text-left"
+          aria-labelledby="udbetaling-heading"
+        >
+          <h2 id="udbetaling-heading" className="text-h2 text-text-primary mb-4">
+            Udbetaling: hvor meget skal du selv lægge?
+          </h2>
+          <div className="space-y-4 text-body text-text-secondary leading-relaxed">
+            <p>
+              Du skal som minimum selv finansiere{" "}
+              <strong className="font-semibold text-text-primary">5 % af købsprisen</strong>{" "}
+              kontant. Den del kan ikke lånes via realkredit eller banklån. Jo
+              mere du selv lægger, desto mindre skal du låne, hvilket sparer
+              renteudgifter og giver en stærkere forhandlingsposition.
+            </p>
+            <p>
+              Realkreditlånet er begrænset til 80 % af boligens værdi, og
+              banklånet dækker typisk de resterende 15 %:
+            </p>
+          </div>
+          <div className="overflow-x-auto rounded-md border border-border my-5">
+            <table className="w-full text-left text-small md:text-body">
+              <caption className="sr-only">
+                Boligpris, minimumsudbetaling 5 %, maksimalt realkreditlån 80 %
+                og restbehov til banklån.
+              </caption>
+              <thead>
+                <tr className="border-b border-border bg-brand-surface">
+                  <th scope="col" className="py-2 px-3 font-semibold text-text-primary">
+                    Boligpris
+                  </th>
+                  <th scope="col" className="py-2 px-3 font-semibold text-text-primary">
+                    Min. udbetaling (5 %)
+                  </th>
+                  <th scope="col" className="py-2 px-3 font-semibold text-text-primary">
+                    Max. realkreditlån (80 %)
+                  </th>
+                  <th scope="col" className="py-2 px-3 font-semibold text-text-primary">
+                    Restbehov (banklån)
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-text-secondary">
+                <tr className="border-b border-border">
+                  <td className="py-2 px-3">2.000.000 kr.</td>
+                  <td className="py-2 px-3">100.000 kr.</td>
+                  <td className="py-2 px-3">1.600.000 kr.</td>
+                  <td className="py-2 px-3">300.000 kr.</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-2 px-3">3.000.000 kr.</td>
+                  <td className="py-2 px-3">150.000 kr.</td>
+                  <td className="py-2 px-3">2.400.000 kr.</td>
+                  <td className="py-2 px-3">450.000 kr.</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <td className="py-2 px-3">4.000.000 kr.</td>
+                  <td className="py-2 px-3">200.000 kr.</td>
+                  <td className="py-2 px-3">3.200.000 kr.</td>
+                  <td className="py-2 px-3">600.000 kr.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="space-y-4 text-body text-text-secondary leading-relaxed">
+            <p>
+              Udover udbetalingen skal du selv dække engangsomkostninger til{" "}
+              <Link
+                href="/artikler/tinglysning"
+                className="text-brand-primary font-medium hover:underline"
+              >
+                tinglysning af skøde og pant
+              </Link>{" "}
+              samt en eventuel{" "}
+              <Link
+                href="/artikler/ejerskifteforsikring"
+                className="text-brand-primary font-medium hover:underline"
+              >
+                ejerskifteforsikring
+              </Link>
+              . De kan løbe op i titusindvis af kroner og indgår normalt ikke i
+              bankens lånevurdering.
+            </p>
+            <p>
+              En tommelfingerregel er, at dit samlede boliglån ikke bør
+              overstige{" "}
+              <strong className="font-semibold text-text-primary">
+                4-5 gange husstandens årlige bruttoindkomst
+              </strong>{" "}
+              før skat. Med en samlet indtægt på 600.000 kr. ligger lånerummet
+              typisk omkring 2,4-3 mio. kr. Hvordan banken vægter gældsfaktor,
+              rådighedsbeløb og kreditværdighed uddyber vi i{" "}
+              <Link
+                href="/artikler/saadan-vurderer-banken-dit-boliglan"
+                className="text-brand-primary font-medium hover:underline"
+              >
+                sådan vurderer banken dit boliglån
+              </Link>
+              .
+            </p>
+          </div>
+        </section>
+
+        <section
+          className="mb-12 max-w-3xl mx-auto text-left"
+          aria-labelledby="lanerum-faq-heading"
+        >
+          <h2 id="lanerum-faq-heading" className="text-h2 text-text-primary mb-4">
+            Ofte stillede spørgsmål
+          </h2>
+          <ul className="space-y-3">
+            {HVAD_KAN_JEG_KOEBE_FAQ.map((item) => (
+              <li key={item.question}>
+                <details className="group rounded-md border border-border bg-brand-surface px-4 py-3 shadow-soft">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+                    <span className="text-body font-semibold text-text-primary">
+                      {item.question}
+                    </span>
+                    <span className="text-xl text-text-muted group-open:hidden">+</span>
+                    <span className="text-xl text-text-muted hidden group-open:inline">
+                      −
+                    </span>
+                  </summary>
+                  <p className="mt-2 text-body text-text-secondary leading-relaxed">
+                    {item.answer}
+                  </p>
+                </details>
+              </li>
+            ))}
+          </ul>
+        </section>
+
 
         <p className="text-center">
           <Link
