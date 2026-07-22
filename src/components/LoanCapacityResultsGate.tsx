@@ -14,6 +14,10 @@ import {
   FINANCING_SHARE,
 } from "@/lib/loanCapacityConstants";
 import { bucketAnnualIncome } from "@/lib/leadBuckets";
+import {
+  PurchaseSplitChart,
+  GearingBars,
+} from "@/components/LoanCapacityCharts";
 import { trackLoanLeadSubmit } from "@/lib/track";
 import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
 
@@ -142,6 +146,8 @@ export function LoanCapacityResultsGate({
         </p>
       </div>
 
+      <PurchaseSplitChart estimatedPurchase={estimatedPurchaseDefault} />
+
       <div className="grid items-stretch grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mb-8">
         <div className="h-full bg-brand-surface rounded-md border border-border shadow-soft p-6 md:p-8 min-w-0">
           <h3 className="text-xl md:text-h3 leading-tight text-text-primary mb-2 break-words">
@@ -201,55 +207,11 @@ export function LoanCapacityResultsGate({
               Følsomhedsanalyse (gearing)
             </h3>
           </LabelWithTooltip>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[360px] text-small md:text-body text-text-secondary">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-2 font-semibold text-text-primary">
-                    Gearing
-                  </th>
-                  <th className="text-right py-2 font-semibold text-text-primary">
-                    Maks. boliglån
-                  </th>
-                  <th className="text-right py-2 font-semibold text-text-primary">
-                    Est. købspris
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {GEARING_SENSITIVITY.map((g) => {
-                  const capacity = Math.round(annualFromInput * g);
-                  const loan = Math.max(0, capacity - existingDebt);
-                  const purchase = Math.round(loan / FINANCING_SHARE);
-                  return (
-                    <tr
-                      key={g}
-                      className={`border-b border-border ${
-                        g === GEARING_DEFAULT
-                          ? "bg-brand-primary/5 font-medium"
-                          : ""
-                      }`}
-                    >
-                      <td className="py-2">
-                        {g}
-                        {g === GEARING_DEFAULT && (
-                          <span className="ml-1 text-small text-text-muted">
-                            (standard)
-                          </span>
-                        )}
-                      </td>
-                      <td className="text-right py-2">
-                        {formatKr(loan)} kr
-                      </td>
-                      <td className="text-right py-2">
-                        {formatKr(purchase)} kr
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <GearingBars
+            annualIncome={annualFromInput}
+            existingDebt={existingDebt}
+            gearings={GEARING_SENSITIVITY}
+          />
           <p className="mt-4 text-small text-text-muted">
             Jo højere gearing, jo mere kan du låne – banken vurderer din
             konkrete gældsfaktor og rådighedsbeløb.
