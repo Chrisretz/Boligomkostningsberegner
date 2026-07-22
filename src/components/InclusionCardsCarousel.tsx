@@ -184,7 +184,7 @@ export function InclusionCardsCarousel() {
                 den samlede boligudgift, hvis renten stiger – nyttigt til
                 budgettet ved kort eller variabel rente. Læs vores{" "}
                 <Link
-                  href="/artikler/realkreditlan-beregner"
+                  href="/boliglaan-beregner"
                   className="text-brand-primary underline underline-offset-2 hover:no-underline"
                 >
                   guide til boligomkostningsberegner og rentestresstest

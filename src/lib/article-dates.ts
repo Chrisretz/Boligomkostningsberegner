@@ -45,10 +45,6 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
     datePublished: "2026-03-11T10:00:00+01:00",
     dateModified: "2026-04-01T12:00:00+02:00",
   },
-  "/artikler/hvad-kan-jeg-koebe-bolig-for": {
-    datePublished: "2026-03-12T10:00:00+01:00",
-    dateModified: "2026-07-21T12:00:00+02:00",
-  },
   "/artikler/indboforsikring": {
     datePublished: "2026-03-13T10:00:00+01:00",
     dateModified: "2026-04-01T12:00:00+02:00",
@@ -56,10 +52,6 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   "/artikler/realkreditlan": {
     datePublished: "2026-03-14T10:00:00+01:00",
     dateModified: "2026-04-01T12:00:00+02:00",
-  },
-  "/artikler/realkreditlan-beregner": {
-    datePublished: "2026-04-30T10:00:00+02:00",
-    dateModified: "2026-07-21T12:00:00+02:00",
   },
   "/artikler/sammenligning-af-laanetyper": {
     datePublished: "2026-04-01T14:00:00+02:00",

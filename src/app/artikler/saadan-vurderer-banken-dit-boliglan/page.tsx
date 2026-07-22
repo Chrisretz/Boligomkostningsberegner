@@ -81,6 +81,47 @@ export default function SaadanVurdererBankenDitBoliglanPage() {
 
           <section>
             <h2 className="text-h3 text-text-primary">
+              Hvad kigger banken på?
+            </h2>
+            <p>
+              Banken laver en helhedsvurdering. Disse seks forhold vejer
+              tungest:
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>
+                <strong className="text-text-primary">Din indkomst:</strong>{" "}
+                Husstandens samlede bruttoindtægt. En højere og mere stabil
+                indkomst giver typisk et større lånerum.
+              </li>
+              <li>
+                <strong className="text-text-primary">Din gæld:</strong>{" "}
+                Eksisterende gæld som SU-lån, billån eller forbrugslån trækkes
+                fra og reducerer både gældsfaktor og rådighedsbeløb.
+              </li>
+              <li>
+                <strong className="text-text-primary">Din udbetaling:</strong>{" "}
+                Minimum 5 % af købsprisen skal komme fra egne midler. En større
+                udbetaling mindsker lånebehovet og kan give bedre vilkår.
+              </li>
+              <li>
+                <strong className="text-text-primary">Dit rådighedsbeløb:</strong>{" "}
+                Hvad du har tilbage, når alle faste udgifter er betalt.
+                Minimumskravet stiger med antallet af voksne og børn.
+              </li>
+              <li>
+                <strong className="text-text-primary">Ejendommens værdi:</strong>{" "}
+                Banken vurderer boligen, så lånet står i rimeligt forhold til
+                pantet.
+              </li>
+              <li>
+                <strong className="text-text-primary">Fremtidig økonomi:</strong>{" "}
+                Jobsikkerhed, branche og forventet indkomstudvikling kan indgå.
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-h3 text-text-primary">
               Gældsfaktoren: hvor mange gange indtægten må du låne?
             </h2>
             <p>

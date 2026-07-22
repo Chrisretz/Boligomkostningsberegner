@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { canonicalUrl, PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR } from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
+import { HVAD_KAN_JEG_KOEBE_FAQ } from "@/lib/artikel-faq/hvad-kan-jeg-koebe-bolig-for";
+import {
+  getBreadcrumbSchema,
+  getCalculatorSchema,
+  getFaqPageSchema,
+} from "@/lib/structured-data";
 
 const title = "Hvad kan jeg købe bolig for? Beregn det gratis";
 const description =
@@ -19,8 +25,37 @@ export const metadata: Metadata = {
   }),
 };
 
+const faqSchema = getFaqPageSchema([...HVAD_KAN_JEG_KOEBE_FAQ]);
+const calculatorSchema = getCalculatorSchema({
+  name: "Hvad kan jeg købe bolig for?",
+  description:
+    "Beregn dit lånerum ud fra indtægt og gæld. Se maksimal købspris ved gearing 3,5-5.",
+  path: PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
+});
+const breadcrumbSchema = getBreadcrumbSchema([
+  { name: "Forside", path: "/" },
+  { name: "Beregnere", path: "/beregnere" },
+  { name: "Hvad kan jeg købe bolig for?", path: PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR },
+]);
+
 export default function HvadKanJegKoebeBoligForLayout({
   children,
 }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      {children}
+    </>
+  );
 }

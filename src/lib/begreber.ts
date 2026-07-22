@@ -94,7 +94,7 @@ export const BEGREBER = [
       "Et nøgletal for forholdet mellem din samlede gæld og din årlige bruttoindkomst.",
     laengereForklaring:
       "Gældsfaktoren er en grov indikator for, hvor stor gæld du har i forhold til din indkomst. Bankerne bruger den som et tidligt pejlemærke og fastsætter typisk interne grænser for, hvor høj gældsfaktoren må være i relation til din økonomi. Brug den som et estimat, men husk at den konkrete kreditvurdering også tager højde for rådighedsbeløb og kreditværdighed.",
-    relatedArticleSlugs: ["hvad-kan-jeg-koebe-bolig-for"],
+    relatedArticleSlugs: ["saadan-vurderer-banken-dit-boliglan"],
   },
   {
     id: "kreditvurdering",
@@ -292,7 +292,7 @@ export const BEGREBER = [
       "Beløbet der er tilbage efter skat og faste udgifter – og som kan bruges til boligydelse.",
     laengereForklaring:
       "Rådighedsbeløbet bruges til at vurdere, om din samlede boligydelse kan rummes uden at du bliver økonomisk presset. I bankernes kreditvurdering handler det ikke kun om, hvor stort et lån du kan få, men om hvor robust din økonomi er. Derfor er det nyttigt at sammenligne rådighedsbeløb, gældsfaktor og den reelle månedlige boligudgift.",
-    relatedArticleSlugs: ["hvad-kan-jeg-koebe-bolig-for"],
+    relatedArticleSlugs: ["saadan-vurderer-banken-dit-boliglan"],
   },
   {
     id: "førstegangskøber",
@@ -335,7 +335,7 @@ export const BEGREBER = [
       "En samlet plan for dine indtægter og faste udgifter – som banken bruger til at vurdere din rådighed.",
     laengereForklaring:
       "Et budget hjælper dig med at få overblik over, hvad der faktisk er tilbage hver måned, efter at regninger og faste udgifter er betalt. Når du laver en boligberegning, er det især relevant at se på indtægt, boligydelse, ejerudgifter og andre løbende poster. Jo mere realistisk dit budget er, desto bedre kan du vurdere, om boligøkonomien hænger sammen.",
-    relatedArticleSlugs: ["hvad-kan-jeg-koebe-bolig-for"],
+    relatedArticleSlugs: ["saadan-vurderer-banken-dit-boliglan"],
   },
   {
     id: "adkomst",
@@ -410,7 +410,7 @@ export const BEGREBER = [
       "Bankens/finansieringsinstituttets dokumentation for, at du typisk kan få finansiering.",
     laengereForklaring:
       "Et finansieringsbevis (forhåndstilsagn) er ofte et vigtigt signal på boligjagten. Det viser, at banken har vurderet din økonomi og kan finansiere et boligkøb inden for en ramme. Det kan gøre din handel mere troværdig overfor sælger og mægler og kan hjælpe dig med at undgå at bruge tid på boliger, du ikke reelt kan få finansieret.",
-    relatedArticleSlugs: ["saadan-vurderer-banken-dit-boliglan", "hvad-kan-jeg-koebe-bolig-for"],
+    relatedArticleSlugs: ["saadan-vurderer-banken-dit-boliglan"],
   },
   {
     id: "formueforhold",
