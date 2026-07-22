@@ -31,7 +31,7 @@ export const articleDatesByPath: Record<string, ArticleDates> = {
   },
   "/artikler/ejerudgifter": {
     datePublished: "2026-03-08T10:00:00+01:00",
-    dateModified: "2026-07-21T12:00:00+02:00",
+    dateModified: "2026-07-22T12:00:00+02:00",
   },
   "/artikler/elforbrug-husstand": {
     datePublished: "2026-03-09T10:00:00+01:00",

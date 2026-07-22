@@ -8,7 +8,7 @@ import {
 import { socialMetadata } from "@/lib/social-metadata";
 import { calculators, type CalculatorId } from "@/lib/calculators";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
-import { BookOpen, Calculator, Wallet } from "lucide-react";
+import { BookOpen, Calculator, Clock, Wallet } from "lucide-react";
 
 const CALCULATOR_ICONS: Record<CalculatorId, React.ReactNode> = {
   "boliglaan-beregner": <BookOpen size={24} strokeWidth={2} aria-hidden />,
@@ -90,6 +90,10 @@ export default function BeregnerePage() {
                 </h2>
                 <p className="mt-1 text-small font-medium text-brand-accent">
                   Bedst {CALCULATOR_BEST_FOR[calc.id]}
+                </p>
+                <p className="mt-2 inline-flex items-center gap-1.5 text-small text-text-muted">
+                  <Clock size={14} strokeWidth={2} aria-hidden />
+                  Tager ca. {calc.minutes} {calc.minutes === 1 ? "minut" : "minutter"}
                 </p>
                 <p className="mt-3 flex-1 text-body text-text-secondary leading-relaxed">
                   {calc.description}

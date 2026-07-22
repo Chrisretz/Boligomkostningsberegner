@@ -6,11 +6,17 @@ import {
 
 /**
  * Fælles data for beregnere – bruges af /beregnere-siden og Topbar-dropdown.
+ *
+ * `minutes` er et ærligt skøn over, hvor lang tid det tager at udfylde
+ * beregneren, når man har sine tal ved hånden. Formålet er at sænke
+ * barrieren ved at sætte forventningen, så tallet skal hellere være lidt
+ * for højt end for lavt. Justér det, hvis en beregner ændrer omfang.
  */
 
 export const calculators = [
   {
     id: "boliglaan-beregner",
+    minutes: 2,
     slug: "boliglaan-beregner",
     href: PATH_BOLIGLAAN_BEREGNER,
     title: "Boliglån beregner",
@@ -19,6 +25,7 @@ export const calculators = [
   },
   {
     id: "boligomkostninger",
+    minutes: 4,
     slug: "boligomkostninger",
     href: PATH_BOLIGOMKOSTNINGER_BEREGNER,
     title: "Boligomkostningsberegner",
@@ -27,6 +34,7 @@ export const calculators = [
   },
   {
     id: "hvad-kan-jeg-koebe-bolig-for",
+    minutes: 1,
     slug: "hvad-kan-jeg-koebe-bolig-for",
     href: PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR,
     title: "Hvad kan jeg købe bolig for?",

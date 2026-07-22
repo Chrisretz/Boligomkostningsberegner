@@ -26,6 +26,16 @@ export const EJERUDGIFTER_FAQ = [
       "Ja, ejerudgifterne kan \u00e6ndre sig. Grundskyld og ejendomsv\u00e6rdiskat justeres l\u00f8bende i takt med nye ejendomsvurderinger og eventuelle \u00e6ndringer i de politiske satser. Ligeledes kan ejerforeningsbidrag for ejerlejligheder stige, hvis der skal foretages st\u00f8rre renoveringer, eller hvis foreningens driftsudgifter stiger. Det er vigtigt at v\u00e6re opm\u00e6rksom p\u00e5 disse potentielle \u00e6ndringer og budgettere med en vis fleksibilitet.",
   },
   {
+    question: "Er ejendomsskat med i ejerudgifterne?",
+    answer:
+      "Delvist. Grundskylden, altså ejendomsskatten til kommunen, indgår normalt i det ejerudgiftsbeløb, du ser i en salgsopstilling, fordi den knytter sig til grunden og er den samme uanset ejer. Ejendomsværdiskatten til staten er derimod normalt ikke med, da den afhænger af den enkelte ejers forhold. Det betyder, at ejerudgiften i salgsopstillingen som regel er lavere end din reelle månedlige udgift. Husk at lægge ejendomsværdiskatten til, når du vurderer din økonomi.",
+  },
+  {
+    question: "Hvad består ejerudgifter af?",
+    answer:
+      "Ejerudgifter består typisk af grundskyld til kommunen, husforsikring, renovation, skorstensfejer, vej- og kloakafgift for huse, samt ejerforeningsbidrag for ejerlejligheder. De dækker ikke forbrug som el, vand og varme, ikke låneydelser, og ikke vedligehold. Præcis hvilke poster der er med, fremgår af salgsopstillingen, og det varierer fra bolig til bolig.",
+  },
+  {
     question: "Er grundskyld det samme som ejendomsskat?",
     answer:
       "Nej. Grundskyld er en kommunal skat knyttet til grundens værdi. Ejendomsskat (ofte kaldet ejendomsværdiskat) er en anden skat knyttet til ejendommens samlede værdi og gælder kun over visse beløbsgrænser. Begge kan stå på din forskudsopgørelse som boligejer.",

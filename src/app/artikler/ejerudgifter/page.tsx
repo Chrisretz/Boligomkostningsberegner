@@ -271,6 +271,75 @@ export default function EjerudgifterPage() {
             </div>
           </section>
 
+          <section aria-labelledby="ejendomsskat-med-heading">
+            <h2
+              id="ejendomsskat-med-heading"
+              className="text-h2 text-text-primary mb-3"
+            >
+              Er ejendomsskat med i ejerudgifterne?
+            </h2>
+            <p>
+              Det er et af de hyppigste spørgsmål, og forvirringen skyldes, at
+              &quot;ejendomsskat&quot; i daglig tale dækker over to forskellige
+              skatter. Kort svar:{" "}
+              <strong className="text-text-primary">
+                grundskylden er normalt med, mens ejendomsværdiskatten normalt
+                ikke er det
+              </strong>
+              .
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>
+                <strong className="text-text-primary">
+                  Grundskyld (ejendomsskat til kommunen):
+                </strong>{" "}
+                Indgår som regel i det ejerudgiftsbeløb, du ser i en
+                salgsopstilling. Den knytter sig til grunden og er den samme,
+                uanset hvem der ejer boligen, så mægleren kan opgøre den på
+                forhånd.
+              </li>
+              <li>
+                <strong className="text-text-primary">
+                  Ejendomsværdiskat til staten:
+                </strong>{" "}
+                Er normalt <em>ikke</em> med. Den afhænger af den enkelte
+                ejers forhold, blandt andet eventuelle overgangsordninger og
+                rabatter, og kan derfor ikke opgøres, før man ved hvem køberen
+                er.
+              </li>
+            </ul>
+            <p>
+              Konsekvensen er værd at forstå: ejerudgiften i salgsopstillingen
+              er som regel <strong className="text-text-primary">lavere</strong>{" "}
+              end din reelle månedlige udgift, fordi ejendomsværdiskatten
+              mangler. Regn den med, når du vurderer, om du har råd til
+              boligen.
+            </p>
+            <p>
+              Bemærk også, at begge skatter siden boligskattereformen opkræves
+              via din forskudsopgørelse og årsopgørelse frem for som en separat
+              regning fra kommunen. Reglerne og satserne har ændret sig de
+              seneste år, så tjek altid det konkrete beløb i salgsopstillingen
+              og på{" "}
+              <a
+                href="https://skat.dk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary underline hover:no-underline"
+              >
+                skat.dk
+              </a>
+              . Vi går i dybden i artiklen om{" "}
+              <Link
+                href="/artikler/grundskyld-og-ejendomsskat"
+                className="text-brand-primary font-medium underline hover:no-underline"
+              >
+                grundskyld og ejendomsskat
+              </Link>
+              .
+            </p>
+          </section>
+
           <section aria-labelledby="ejerudgifter-ikke-heading">
             <h2
               id="ejerudgifter-ikke-heading"
