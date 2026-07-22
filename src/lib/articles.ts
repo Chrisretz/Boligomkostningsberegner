@@ -7,7 +7,8 @@ export const articles = [
   { slug: "ejerskifteforsikring", title: "Hvad er en ejerskifteforsikring?", description: "Få overblik over hvad ejerskifteforsikring dækker, hvad den koster og om den er nødvendig for dig." },
   { slug: "realkreditlan", title: "Realkreditlån: Sådan fungerer det", description: "Få overblik over realkreditlån, annuitetslån, F1/F3/F5 og hvordan din månedlige ydelse beregnes." },
   { slug: "sammenligning-af-laanetyper", title: "Lånetyper ved boligkøb: overblik og sammenligning", description: "Alle lånetyper forklaret: fast rente, F1/F3/F5, afdragsfrihed og banklån. Se forskellen på ydelse og risiko." },
-  { slug: "vedligehold", title: "Hvad koster vedligehold af hus og bolig?", description: "Vedligeholdelse koster typisk 1,5 % af husets værdi om året, 1 % for lejlighed. Se hvad beløbet dækker." },
+  { slug: "vedligehold", title: "Vedligehold af hus: budget, levetid og årlig reserve", description: "Typisk levetid på tag, vinduer, facade og varmeanlæg – og hvordan du regner dig frem til dit eget vedligeholdelsesbudget." },
+  { slug: "vedligeholdelsesplan", title: "Vedligeholdelsesplan for hus: sådan laver du den selv", description: "Seks trin til en vedligeholdelsesplan for parcelhus: gennemgå bygningsdelene, sæt tidshorisont og pris, og omsæt det til et årligt beløb." },
   { slug: "eksisterende-pantebrev", title: "Spar på tinglysning: Udnyt eksisterende pantebrev", description: "Lær hvordan du reducerer omkostningerne til tinglysning af pant ved at overtage eller genbruge allerede tinglyste pantebreve." },
   { slug: "saadan-vurderer-banken-dit-boliglan", title: "Sådan vurderer banken hvad du kan låne til bolig", description: "Lær hvordan banken vurderer dit lånerum: gældsfaktor, rådighedsbeløb og kreditværdighed – og hvad det betyder for dit boligkøb." },
   { slug: "ejerudgifter", title: "Hvad dækker ejerudgifter? Guide til hus og lejlighed", description: "Grundskyld, ejendomsværdiskat, forsikring og ejerforening – og hvad der ikke er med i tallet." },
@@ -30,7 +31,7 @@ export const articleCategories = [
   { id: "overblik", title: "1. Før du køber", description: "Boligtyper, førstegangskøb, fælles køb, ejendomsmægler og tvangsauktioner.", slugs: ["boligkoeb-foerste-gang", "ejerlejlighed", "koeb-bolig-sammen-ugift", "vaelg-ejendomsmaegler", "tvangsauktioner"] as const },
   { id: "finansiering", title: "2. Finansiering og lån", description: "Realkreditlån, banklån og hvad du har råd til at købe for.", slugs: ["realkreditlan", "sammenligning-af-laanetyper", "saadan-vurderer-banken-dit-boliglan"] as const },
   { id: "engangsomkostninger", title: "3. Ved købet: engangsomkostninger", description: "Tinglysning, pant, forsikring og andre omkostninger ved overtagelse.", slugs: ["tinglysning", "ejerskifteforsikring", "eksisterende-pantebrev"] as const },
-  { id: "loebende", title: "4. Når du ejer boligen", description: "Vedligehold, ejerudgifter, el, energimærker, grundskyld, skat og forsikring.", slugs: ["vedligehold", "ejerudgifter", "elforbrug-husstand", "energimaerker-og-boligokonomi", "grundskyld-og-ejendomsskat", "indboforsikring"] as const },
+  { id: "loebende", title: "4. Når du ejer boligen", description: "Vedligehold, ejerudgifter, el, energimærker, grundskyld, skat og forsikring.", slugs: ["vedligehold", "vedligeholdelsesplan", "ejerudgifter", "elforbrug-husstand", "energimaerker-og-boligokonomi", "grundskyld-og-ejendomsskat", "indboforsikring"] as const },
 ] as const;
 
 /** Artikler vi anbefaler nye besøgende at starte med. */

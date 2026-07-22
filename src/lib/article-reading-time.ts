@@ -19,7 +19,8 @@ export const readingTimeByPath: Record<string, number> = {
   "/artikler/tinglysning": 3, // ca. 505 ord
   "/artikler/tvangsauktioner": 5, // ca. 1098 ord
   "/artikler/vaelg-ejendomsmaegler": 7, // ca. 1402 ord
-  "/artikler/vedligehold": 3, // ca. 668 ord
+  "/artikler/vedligehold": 5, // ca. 1100 ord (udvidet med levetid og budget)
+  "/artikler/vedligeholdelsesplan": 6, // ca. 1250 ord
 };
 
 export function getReadingTime(path: string): number | null {
