@@ -6,6 +6,7 @@ import { BEGREBER } from "@/lib/begreber";
 import type { Begreb } from "@/lib/begreber";
 import { getArticlesBySlugs } from "@/lib/articles";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
+import { BegreberToc } from "@/components/BegreberToc";
 
 // Dansk alfabet: A-Z efterfulgt af Æ Ø Å
 const LETTERS = [
@@ -100,6 +101,7 @@ export function BegreberExplorer() {
   return (
     <div className="space-y-6">
       <ScrollToTopButton />
+      <BegreberToc letters={availableLetters} onSelect={scrollToLetter} />
 
       <div className="bg-brand-surface rounded-md border border-border shadow-soft p-5">
         <div className="flex flex-col gap-1">
@@ -158,7 +160,11 @@ export function BegreberExplorer() {
           if (items.length === 0) return null;
 
           return (
-            <section key={letter} id={`begreb-${letter}`}>
+            <section
+              key={letter}
+              id={`begreb-${letter}`}
+              className="scroll-mt-24"
+            >
               <h2 className="text-h2 text-text-primary mb-4">{letter}</h2>
 
               <div className="space-y-4">
