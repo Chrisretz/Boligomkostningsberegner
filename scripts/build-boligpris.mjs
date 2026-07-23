@@ -29,7 +29,7 @@ const MAX_KR = 300000;
 // Skånsom hentning.
 const DELAY_MS = 800;
 const MAX_RETRIES = 6;
-const MAX_CELLS = 9000; // hold under statbank-grænsen pr. kald
+const QUARTERS_PER_CALL = 24; // små kald = korte URL'er, robust
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -67,7 +67,9 @@ async function getMeta() {
     name: v.text,
     type: areaType(v.id),
   }));
-  const nameToId = new Map(areas.map((a) => [a.name, a.id]));
+  // Normalisér navne (NFC), så CSV- og metadata-navne matcher uanset
+  // hvordan æøå er kodet.
+  const nameToId = new Map(areas.map((a) => [a.name.normalize("NFC"), a.id]));
   const quarters = timeVar.values.map((v) => v.id);
   return { areas, nameToId, quarters };
 }
@@ -81,33 +83,35 @@ function chunk(arr, n) {
 
 /**
  * Henter realiseret m2-pris for én kategori for de givne kvartaler.
- * Returnerer Map<"områdeId|kvartal", kr>.
+ * Bruger OMR20=* (alle områder) og henter kvartalerne i små bidder, så
+ * URL'erne bliver korte og robuste. Returnerer Map<"områdeId|kvartal", kr>.
  */
-async function fetchCategory(catCode, areaIds, quarters, nameToId) {
+async function fetchCategory(catCode, quarters, nameToId) {
   const result = new Map();
-  const perBatch = Math.max(1, Math.floor(MAX_CELLS / quarters.length));
-  const batches = chunk(areaIds, perBatch);
-  const tid = quarters.join(",");
-  for (let i = 0; i < batches.length; i += 1) {
-    const omr = batches[i].join(",");
+  const label = Object.keys(CATEGORIES).find((k) => CATEGORIES[k] === catCode);
+  const chunks = chunk(quarters, QUARTERS_PER_CALL);
+  for (let i = 0; i < chunks.length; i += 1) {
+    const tid = chunks[i].join(",");
     const url =
-      `${API}/data/${TABLE}/CSV?OMR20=${omr}&EJKAT20=${catCode}` +
-      `&PRIS20=${PRICE}&Tid=${encodeURIComponent(tid)}`;
+      `${API}/data/${TABLE}/CSV?OMR20=*&EJKAT20=${catCode}` +
+      `&PRIS20=${PRICE}&Tid=${tid}`;
     const csv = await fetchText(url);
     const lines = csv.split(/\r?\n/).slice(1); // drop header
+    let matched = 0;
     for (const line of lines) {
       if (!line.trim()) continue;
       const cols = line.split(";");
       if (cols.length < 5) continue;
-      const areaName = cols[1];
+      const areaName = cols[1].normalize("NFC");
       const q = cols[3];
       const raw = Number((cols[4] || "").replace(/\s/g, "").replace(",", "."));
       const id = nameToId.get(areaName);
       if (!id) continue;
       if (!Number.isFinite(raw) || raw < MIN_KR || raw > MAX_KR) continue;
       result.set(`${id}|${q}`, Math.round(raw));
+      matched += 1;
     }
-    console.log(`  ${Object.keys(CATEGORIES).find((k) => CATEGORIES[k] === catCode)}: batch ${i + 1}/${batches.length} hentet`);
+    console.log(`  ${label}: kvartal-bidder ${i + 1}/${chunks.length} (${matched} tal)`);
     await sleep(DELAY_MS);
   }
   return result;
@@ -133,7 +137,12 @@ async function main() {
   console.log("Henter metadata fra Finans Danmark (BM010) ...");
   const { areas, nameToId, quarters } = await getMeta();
 
-  const existing = readExisting(path);
+  const rawExisting = readExisting(path);
+  // Kun brugbar som grundlag, hvis der faktisk er områdedata i filen.
+  const existing =
+    rawExisting && rawExisting.areas && rawExisting.areas.length > 0
+      ? rawExisting
+      : null;
   const haveQuarters = new Set(existing?.quarters ?? []);
   const missing = quarters.filter((q) => !haveQuarters.has(q));
 
@@ -148,9 +157,8 @@ async function main() {
   );
 
   const fetchQuarters = existing ? missing : quarters;
-  const areaIds = areas.map((a) => a.id);
-  const hus = await fetchCategory(CATEGORIES.hus, areaIds, fetchQuarters, nameToId);
-  const lejl = await fetchCategory(CATEGORIES.lejl, areaIds, fetchQuarters, nameToId);
+  const hus = await fetchCategory(CATEGORIES.hus, fetchQuarters, nameToId);
+  const lejl = await fetchCategory(CATEGORIES.lejl, fetchQuarters, nameToId);
 
   // Byg område-serier, aligned til den fulde kvartals-akse.
   const prevByArea = new Map(
