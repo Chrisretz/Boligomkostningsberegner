@@ -1,15 +1,16 @@
 /**
  * Bygger elprisernes månedshistorik og skriver den til en statisk fil,
- * så /elpriser-siden bare læser 36 færdige tal i stedet for at hente
+ * så /elpriser-siden bare læser færdige månedstal i stedet for at hente
  * store datamængder ved hvert sidevisning.
  *
  * Kør lokalt: `npm run elpris:history`
- * Den månedlige planlagte opgave kører den også, så historikken holdes
- * ajour. Kræver netværk (henter fra Energi Data Service).
+ * Kræver netværk (henter fra Energi Data Service).
+ *
+ * Henter PÆNT: ét kald ad gangen med pause imellem og automatisk
+ * genforsøg ved HTTP 429 (rate limit), så API'et ikke afviser os.
  *
  * Datakilder:
- * - Elspotprices (time-opløsning) for måneder før okt. 2025 (frosset,
- *   men historik intakt og let at hente).
+ * - Elspotprices (time-opløsning) for måneder før okt. 2025.
  * - DayAheadPrices (15-min) for nyere måneder.
  */
 
@@ -19,11 +20,15 @@ import { dirname, join } from "node:path";
 
 const API = "https://api.energidataservice.dk/dataset";
 const DAYAHEAD_FROM = "2025-10-01";
-const HISTORY_YEARS = 3;
+const HISTORY_YEARS = 1; // 12 måneder. Hæv til 3 for tre år.
 const MIN_MWH = -2000;
 const MAX_MWH = 20000;
 const MIN_POINTS_PER_MONTH = 100;
 const PAGE_SIZE = 5000;
+
+// Skånsom hentning for at undgå rate limit (429).
+const DELAY_MS = 1500;
+const MAX_RETRIES = 6;
 
 const MONTHS_SHORT = [
   "jan.", "feb.", "mar.", "apr.", "maj", "jun.",
@@ -32,6 +37,25 @@ const MONTHS_SHORT = [
 
 const CFG_HOURLY = { dataset: "Elspotprices", timeCol: "HourDK", priceCol: "SpotPriceDKK" };
 const CFG_QUARTER = { dataset: "DayAheadPrices", timeCol: "TimeDK", priceCol: "DayAheadPriceDKK" };
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/** Henter JSON med pause og genforsøg ved 429. */
+async function fetchJson(url) {
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
+    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    if (res.status === 429) {
+      const retryAfter =
+        Number(res.headers.get("retry-after")) || Math.min(60, 5 * (attempt + 1));
+      console.log(`  429 rate limit — venter ${retryAfter}s (forsøg ${attempt + 1}/${MAX_RETRIES}) ...`);
+      await sleep(retryAfter * 1000);
+      continue;
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+  throw new Error("Gav op efter gentagne 429. Prøv igen senere.");
+}
 
 async function accumulate(buckets, cfg, area, start, end) {
   if (start >= end) return;
@@ -42,9 +66,7 @@ async function accumulate(buckets, cfg, area, start, end) {
       `${API}/${cfg.dataset}?filter=${filter}&start=${start}&end=${end}` +
       `&columns=${cfg.timeCol},${cfg.priceCol}&sort=${cfg.timeCol}%20ASC` +
       `&offset=${offset}&limit=${PAGE_SIZE}`;
-    const res = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`${cfg.dataset} ${area}: HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchJson(url);
     const rows = data.records ?? [];
     if (rows.length === 0) break;
     for (const r of rows) {
@@ -62,6 +84,7 @@ async function accumulate(buckets, cfg, area, start, end) {
       }
     }
     offset += rows.length;
+    await sleep(DELAY_MS); // pust mellem kald
   }
 }
 
@@ -69,6 +92,7 @@ async function areaMonthly(area, start, end) {
   const buckets = new Map();
   const hourlyEnd = end < DAYAHEAD_FROM ? end : DAYAHEAD_FROM;
   const quarterStart = start > DAYAHEAD_FROM ? start : DAYAHEAD_FROM;
+  // Sekventielt, ikke parallelt, for at være skånsom mod API'et.
   await accumulate(buckets, CFG_HOURLY, area, start, hourlyEnd);
   await accumulate(buckets, CFG_QUARTER, area, quarterStart, end);
   return buckets;
@@ -81,11 +105,9 @@ async function main() {
   const start = `${year - HISTORY_YEARS}-${String(month).padStart(2, "0")}-01`;
   const end = `${year}-${String(month).padStart(2, "0")}-01`;
 
-  console.log(`Henter elprishistorik ${start} .. ${end} for DK1 og DK2 ...`);
-  const [dk1, dk2] = await Promise.all([
-    areaMonthly("DK1", start, end),
-    areaMonthly("DK2", start, end),
-  ]);
+  console.log(`Henter elprishistorik ${start} .. ${end} (skånsomt, kan tage et minut) ...`);
+  const dk1 = await areaMonthly("DK1", start, end);
+  const dk2 = await areaMonthly("DK2", start, end);
 
   const keys = [...new Set([...dk1.keys(), ...dk2.keys()])].sort();
   const rows = [];
