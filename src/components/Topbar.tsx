@@ -312,6 +312,14 @@ export function Topbar() {
                         </Link>
                       ))}
                     </div>
+                    <div className="border-t border-border mt-2 pt-2">
+                      <Link
+                        href="/realkreditrenter"
+                        className="block px-4 py-2 text-body text-text-primary hover:bg-border/50"
+                      >
+                        Aktuelle realkreditrenter
+                      </Link>
+                    </div>
                   </div>
                 </div>
               )}
@@ -551,6 +559,13 @@ export function Topbar() {
                         {calc.title}
                       </Link>
                     ))}
+                    <Link
+                      href="/realkreditrenter"
+                      onClick={() => setMenuOpen(false)}
+                      className="block py-1.5 text-small text-text-secondary hover:text-brand-primary"
+                    >
+                      Aktuelle realkreditrenter
+                    </Link>
                   </div>
                 )}
               </div>

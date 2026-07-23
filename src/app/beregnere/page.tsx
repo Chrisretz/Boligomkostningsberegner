@@ -108,6 +108,16 @@ export default function BeregnerePage() {
             ))}
           </div>
 
+          <p className="mt-6 text-body text-text-secondary">
+            Vil du bare se, hvor renterne ligger?{" "}
+            <Link
+              href="/realkreditrenter"
+              className="text-brand-primary font-medium hover:underline"
+            >
+              Se de aktuelle realkreditrenter pr. lånetype →
+            </Link>
+          </p>
+
           <p className="mt-6 rounded-xl border border-dashed border-border bg-brand-background/50 px-5 py-4 text-small text-text-secondary leading-relaxed">
             Resultaterne er vejledende og bygger på typiske regler og satser.
             Dine konkrete tal afhænger af bank, realkreditinstitut og din
