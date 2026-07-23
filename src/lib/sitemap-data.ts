@@ -18,6 +18,7 @@ const SITEMAP_PREFIX_PATHS = [
   "/data",
   "/realkreditrenter",
   "/elpriser",
+  "/boligpriser",
   "/artikler",
 ] as const;
 
