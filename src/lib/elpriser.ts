@@ -249,7 +249,18 @@ const CFG_QUARTER: DatasetCfg = {
   priceCol: "DayAheadPriceDKK",
 };
 
-/** Lægger et datasæts priser ind i månedsspande (sum + antal). */
+/**
+ * Lægger et datasæts priser ind i månedsspande (sum + antal).
+ *
+ * Henter sidevis med offset. API'et afviser meget høje limit-værdier, så
+ * vi bruger en sikker sidestørrelse. For at være robust mod, at kilden
+ * evt. returnerer færre end anmodet, rykker vi frem efter det faktiske
+ * antal rækker og stopper først ved en tom side.
+ */
+const PAGE_SIZE = 5_000;
+/** Sikkerhedsventil mod uendelig løkke, hvis offset ikke respekteres. */
+const MAX_PAGES = 200;
+
 async function accumulateMonthly(
   buckets: Map<string, { sum: number; n: number }>,
   cfg: DatasetCfg,
@@ -259,28 +270,38 @@ async function accumulateMonthly(
 ): Promise<void> {
   if (start >= end) return;
   const filter = encodeURIComponent(JSON.stringify({ PriceArea: [area] }));
-  const url =
-    `${API}/${cfg.dataset}?filter=${filter}&start=${start}&end=${end}` +
-    `&columns=${cfg.timeCol},${cfg.priceCol}&sort=${cfg.timeCol}%20ASC&limit=500000`;
-  const res = await fetch(url, {
-    next: { revalidate: 86_400 },
-    headers: { Accept: "application/json" },
-  });
-  if (!res.ok) throw new Error(`history ${cfg.dataset} ${area}: ${res.status}`);
-  const data = (await res.json()) as { records?: Record<string, unknown>[] };
-  for (const r of data.records ?? []) {
-    const time = r[cfg.timeCol];
-    const price = r[cfg.priceCol];
-    if (typeof time !== "string" || typeof price !== "number") continue;
-    if (price < MIN_MWH || price > MAX_MWH) continue;
-    const key = time.slice(0, 7); // "YYYY-MM"
-    const m = buckets.get(key);
-    if (m) {
-      m.sum += price;
-      m.n += 1;
-    } else {
-      buckets.set(key, { sum: price, n: 1 });
+
+  let offset = 0;
+  for (let page = 0; page < MAX_PAGES; page += 1) {
+    const url =
+      `${API}/${cfg.dataset}?filter=${filter}&start=${start}&end=${end}` +
+      `&columns=${cfg.timeCol},${cfg.priceCol}&sort=${cfg.timeCol}%20ASC` +
+      `&offset=${offset}&limit=${PAGE_SIZE}`;
+    const res = await fetch(url, {
+      next: { revalidate: 86_400 },
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) throw new Error(`history ${cfg.dataset} ${area}: ${res.status}`);
+    const data = (await res.json()) as { records?: Record<string, unknown>[] };
+    const rows = data.records ?? [];
+    if (rows.length === 0) break;
+    for (const r of rows) {
+      const time = r[cfg.timeCol];
+      const price = r[cfg.priceCol];
+      if (typeof time !== "string" || typeof price !== "number") continue;
+      if (price < MIN_MWH || price > MAX_MWH) continue;
+      const key = time.slice(0, 7); // "YYYY-MM"
+      const m = buckets.get(key);
+      if (m) {
+        m.sum += price;
+        m.n += 1;
+      } else {
+        buckets.set(key, { sum: price, n: 1 });
+      }
     }
+    // Ryk frem efter faktisk antal, så intet springes over hvis kilden
+    // returnerer færre end sidestørrelsen.
+    offset += rows.length;
   }
 }
 
