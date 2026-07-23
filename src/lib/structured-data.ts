@@ -22,6 +22,15 @@ export function getPersonSchema() {
     description: AUTHOR.bio.join(" "),
     ...(AUTHOR.imageUrl ? { image: `${SITE_URL}${AUTHOR.imageUrl}` } : {}),
     ...(AUTHOR.linkedinUrl ? { sameAs: [AUTHOR.linkedinUrl] } : {}),
+    ...(AUTHOR.education.length > 0
+      ? {
+          alumniOf: AUTHOR.education.map((name) => ({
+            "@type": "EducationalOrganization",
+            name,
+          })),
+        }
+      : {}),
+    ...(AUTHOR.knowsAbout.length > 0 ? { knowsAbout: [...AUTHOR.knowsAbout] } : {}),
     worksFor: { "@type": "Organization", name: "Boligklarhed", url: SITE_URL },
   } as const;
 }

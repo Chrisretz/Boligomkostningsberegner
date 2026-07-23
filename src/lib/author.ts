@@ -1,45 +1,50 @@
 /**
  * Navngiven afsender bag Boligklarheds indhold (E-E-A-T).
  *
- * ─────────────────────────────────────────────────────────────────────
- * VIGTIGT, LÆS FØR PUBLICERING:
- * Google vægter forfatterens troværdighed højt på boligøkonomi (YMYL).
- * Teksten herunder er et udkast. RET den, så den er 100 % sand for dine
- * faktiske forhold, før du pusher. Skriv ALDRIG kvalifikationer, du ikke
- * reelt har (fx en titel eller et årstal, der ikke passer). En falsk
- * ekspertprofil skader mere, end den gavner, hvis den opdages.
+ * Bygget ud fra Christoffers eget CV. Alt herunder er sandt, men tjek det
+ * gerne én gang mere, og overvej hvor meget professionel detalje du vil
+ * have offentligt på et personligt projekt (fx nuværende arbejdsgiver og
+ * transaktionsvolumen er bevidst holdt ude/generelt formuleret).
  *
- * Udfyld gerne:
- * - `credentials`: dine reelle, korte kvalifikationer/erfaringer.
- * - `imageUrl`: sti til et rigtigt portrætfoto i /public (styrker E-E-A-T).
- * - `linkedinUrl`: din personlige LinkedIn, hvis du vil linke til den.
- * ─────────────────────────────────────────────────────────────────────
+ * Tilføj gerne senere:
+ * - `imageUrl`: rigtigt portrætfoto i /public (styrker E-E-A-T mærkbart).
+ * - `linkedinUrl`: din personlige LinkedIn.
  */
 
 export const AUTHOR = {
   slug: "christoffer-retz",
   name: "Christoffer Retz",
-  /** Kort rolle vist i byline og på profilsiden. */
-  role: "Grundlægger og redaktør, Boligklarhed",
-  /** Sti til forfatterens profilside. */
+  /** Kort rolle vist på profilsiden og som jobTitle i Person-schema. */
+  role: "Grundlægger og redaktør · cand.merc. i finansiering",
   path: "/forfatter/christoffer-retz",
-  /**
-   * Bio i afsnit. Hold det ærligt og konkret. Ret til dine reelle forhold.
-   */
   bio: [
-    "Christoffer Retz er grundlægger og redaktør af Boligklarhed. Han står bag beregnerne, dataene og artiklerne på sitet.",
-    "Han har baggrund i og arbejder til daglig med finans, investering og ejendomsøkonomi, og han byggede Boligklarhed for at gøre tallene bag et boligkøb gennemskuelige for almindelige købere.",
-    "Alt indhold bygger på officielle satser og aktuelle markedsdata, og det opdateres løbende. Boligklarhed er uafhængigt og er hverken bank, mægler eller låneformidler.",
+    "Christoffer Retz er grundlægger og redaktør af Boligklarhed og står bag beregnerne, dataene og artiklerne på sitet.",
+    "Til daglig arbejder han som Investment Manager i ejendomsbranchen, hvor han vurderer ejendomsinvesteringer for institutionelle investorer og family offices. Arbejdet handler om værdiansættelse, DCF- og IRR-modellering, finansiering og risiko, og han har medvirket i ejendomstransaktioner for over 500 mio. euro. Tidligere har han været finansanalytiker hos CBRE.",
+    "Han er uddannet cand.merc. i finansiering og regnskab fra Copenhagen Business School og har en efteruddannelse i Real Estate Economics & Finance fra London School of Economics. Boligklarhed byggede han for at gøre de samme metoder, realistiske tal på omkostninger, ydelse og finansiering, tilgængelige for almindelige boligkøbere.",
+    "Alt indhold bygger på officielle satser og aktuelle markedsdata og opdateres løbende. Boligklarhed er uafhængigt og er hverken bank, mægler eller låneformidler, og sitet giver ikke personlig finansiel rådgivning.",
   ],
-  /**
-   * Korte kvalifikationer/erfaringer. RET til dine reelle. Slet linjer, du
-   * ikke kan stå inde for. Tom liste er bedre end en usand.
-   */
+  /** Korte, sande kvalifikationer. Vises på profilsiden. */
   credentials: [
-    "Grundlægger af Boligklarhed",
-    "Baggrund inden for finans, investering og ejendomsøkonomi",
+    "Investment Manager i ejendomsbranchen med 6 års erfaring (buy-side)",
+    "cand.merc. i finansiering og regnskab, Copenhagen Business School",
+    "Real Estate Economics & Finance, London School of Economics",
+    "Erfaring med DCF-/IRR-værdiansættelse og ejendomstransaktioner for 500+ mio. euro",
+    "Tidligere finansanalytiker hos CBRE",
   ] as readonly string[],
-  /** Rigtigt portrætfoto i /public styrker E-E-A-T. Tom = intet billede vises. */
+  /** Uddannelsessteder til alumniOf i Person-schema. */
+  education: [
+    "Copenhagen Business School",
+    "London School of Economics",
+  ] as readonly string[],
+  /** Emner forfatteren har indsigt i (knowsAbout i schema). */
+  knowsAbout: [
+    "Boligøkonomi",
+    "Realkreditlån",
+    "Ejendomsinvestering",
+    "Værdiansættelse",
+    "Finansiering",
+  ] as readonly string[],
+  /** Rigtigt portrætfoto i /public styrker E-E-A-T. Tom = intet billede. */
   imageUrl: "",
   /** Personlig LinkedIn (valgfri). Tom = vises ikke. */
   linkedinUrl: "",
