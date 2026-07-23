@@ -15,7 +15,12 @@
  * elafgift og moms. Se elprisEstimat() og de tydelige forbehold i UI'et.
  */
 
-const BASE = "https://api.energidataservice.dk/dataset/Elspotprices";
+/**
+ * Datasæt: DayAheadPrices (day-ahead-priser, 15-minutters opløsning).
+ * Afløste det tidligere Elspotprices-datasæt, som blev frosset i
+ * september 2025. Feltnavne: TimeDK og DayAheadPriceDKK (kr/MWh).
+ */
+const BASE = "https://api.energidataservice.dk/dataset/DayAheadPrices";
 
 /** Rimeligt interval for en dansk spotpris i kr/MWh. Uden for dette er data suspekt. */
 const MIN_MWH = -2000;
@@ -58,9 +63,9 @@ export interface ElspotResult {
 }
 
 interface Record_ {
-  HourDK?: string;
+  TimeDK?: string;
   PriceArea?: string;
-  SpotPriceDKK?: number | null;
+  DayAheadPriceDKK?: number | null;
 }
 
 function hourOf(iso: string): number {
@@ -68,31 +73,78 @@ function hourOf(iso: string): number {
   return m ? Number(m[1]) : 0;
 }
 
+/** "2026-07-23T23:45:00" → "2026-07-23T23" (times-spand som gruppenøgle). */
+function hourKey(iso: string): string {
+  return iso.slice(0, 13);
+}
+
+/**
+ * Nuværende time i dansk tid som "YYYY-MM-DDTHH". Datasættet indeholder
+ * også morgendagens day-ahead-priser, så vi skærer ved den aktuelle time
+ * for ikke at vise fremtidige timer som "seneste".
+ */
+function nowHourKeyCopenhagen(): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Copenhagen",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date());
+  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
+  const hour = get("hour") === "24" ? "00" : get("hour");
+  return `${get("year")}-${get("month")}-${get("day")}T${hour}`;
+}
+
 async function fetchArea(area: PriceArea, hours: number): Promise<HourPrice[]> {
   const filter = encodeURIComponent(JSON.stringify({ PriceArea: [area] }));
-  const url = `${BASE}?filter=${filter}&sort=HourDK%20DESC&limit=${hours}`;
+  // 15-minutters opløsning (fire kvarter pr. time). Hent ekstra buffer,
+  // fordi datasættet også rummer morgendagens priser, som vi filtrerer fra.
+  const limit = (hours + 30) * 4;
+  const url = `${BASE}?filter=${filter}&sort=TimeDK%20DESC&limit=${limit}`;
   const res = await fetch(url, {
-    // Day-ahead-priser offentliggøres én gang dagligt. Ét døgns cache er
+    // Day-ahead-priser offentliggøres én gang dagligt. Én times cache er
     // rigeligt og belaster kilden mindst muligt.
     next: { revalidate: 3600 },
     headers: { Accept: "application/json" },
   });
-  if (!res.ok) throw new Error(`elspot ${area}: ${res.status}`);
+  if (!res.ok) throw new Error(`dayahead ${area}: ${res.status}`);
   const data = (await res.json()) as { records?: Record_[] };
   const rows = data.records ?? [];
-  const out: HourPrice[] = [];
+
+  // Saml kvartererne til timepriser (gennemsnit pr. time), så grafen og
+  // tallene bliver i hele timer, som folk tænker i.
+  const buckets = new Map<string, { sum: number; n: number; iso: string }>();
   for (const r of rows) {
-    if (!r.HourDK || typeof r.SpotPriceDKK !== "number") continue;
-    if (r.SpotPriceDKK < MIN_MWH || r.SpotPriceDKK > MAX_MWH) continue;
-    out.push({
-      hourDK: r.HourDK,
-      hour: hourOf(r.HourDK),
+    if (!r.TimeDK || typeof r.DayAheadPriceDKK !== "number") continue;
+    if (r.DayAheadPriceDKK < MIN_MWH || r.DayAheadPriceDKK > MAX_MWH) continue;
+    const key = hourKey(r.TimeDK);
+    const b = buckets.get(key);
+    if (b) {
+      b.sum += r.DayAheadPriceDKK;
+      b.n += 1;
+    } else {
+      buckets.set(key, { sum: r.DayAheadPriceDKK, n: 1, iso: `${key}:00:00` });
+    }
+  }
+
+  const nowKey = nowHourKeyCopenhagen();
+  const all: HourPrice[] = [];
+  for (const { sum, n, iso } of buckets.values()) {
+    // Skær fremtidige timer fra, så "seneste time" er nu, ikke i morgen.
+    if (hourKey(iso) > nowKey) continue;
+    const mwh = sum / n;
+    all.push({
+      hourDK: iso,
+      hour: hourOf(iso),
       // MWh → kWh, afrundet til øre
-      spotKr: Math.round((r.SpotPriceDKK / 1000) * 100) / 100,
+      spotKr: Math.round((mwh / 1000) * 100) / 100,
     });
   }
-  // API'et leverer nyest først; vend til ældst først til grafen
-  return out.reverse();
+  // Ældst først, og behold kun de seneste `hours` timer
+  all.sort((a, b) => a.hourDK.localeCompare(b.hourDK));
+  return all.slice(-hours);
 }
 
 function summarize(area: PriceArea, hourly: HourPrice[]): AreaPrices | null {
