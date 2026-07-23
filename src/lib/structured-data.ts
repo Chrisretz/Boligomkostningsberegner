@@ -9,6 +9,22 @@ import {
   SOCIAL_LINKEDIN_URL,
 } from "./site";
 import { FAQ_ITEMS } from "./faq";
+import { AUTHOR } from "./author";
+
+/** Person JSON-LD til forfatterens profilside (E-E-A-T-signal). */
+export function getPersonSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: AUTHOR.name,
+    url: `${SITE_URL}${AUTHOR.path}`,
+    jobTitle: AUTHOR.role,
+    description: AUTHOR.bio.join(" "),
+    ...(AUTHOR.imageUrl ? { image: `${SITE_URL}${AUTHOR.imageUrl}` } : {}),
+    ...(AUTHOR.linkedinUrl ? { sameAs: [AUTHOR.linkedinUrl] } : {}),
+    worksFor: { "@type": "Organization", name: "Boligklarhed", url: SITE_URL },
+  } as const;
+}
 
 const organizationSameAs = [
   SOCIAL_LINKEDIN_URL,
@@ -176,9 +192,9 @@ export function getArticleSchema({
     datePublished,
     dateModified,
     author: {
-      "@type": "Organization",
-      name: "Boligklarhed",
-      url: SITE_URL,
+      "@type": "Person",
+      name: AUTHOR.name,
+      url: `${SITE_URL}${AUTHOR.path}`,
     },
     publisher: {
       "@type": "Organization",

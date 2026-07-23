@@ -8,6 +8,7 @@ import {
   PATH_KONTAKT,
 } from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
+import { AUTHOR } from "@/lib/author";
 
 const title = "Om os";
 const description =
@@ -154,6 +155,27 @@ export default function OmOsPage() {
               træffer endelige valg. Læs mere i vores{" "}
               <Link href="/disclaimer" className="text-brand-primary hover:underline">
                 ansvarsfraskrivelse
+              </Link>
+              .
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-h3 text-text-primary">Hvem står bag?</h2>
+            <p>
+              Boligklarhed er skabt og redigeret af{" "}
+              <Link
+                href={AUTHOR.path}
+                className="text-brand-primary font-medium hover:underline"
+              >
+                {AUTHOR.name}
+              </Link>
+              , {AUTHOR.role.toLowerCase()}. {AUTHOR.bio[1]} Læs mere på{" "}
+              <Link
+                href={AUTHOR.path}
+                className="text-brand-primary hover:underline"
+              >
+                forfatterprofilen
               </Link>
               .
             </p>

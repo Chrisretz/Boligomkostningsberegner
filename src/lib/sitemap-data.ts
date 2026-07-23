@@ -26,6 +26,7 @@ const SITEMAP_SUFFIX_PATHS = [
   "/cookies",
   "/disclaimer",
   "/om-os",
+  "/forfatter/christoffer-retz",
   PATH_KONTAKT,
   "/boligbegreber",
   "/sitemap",

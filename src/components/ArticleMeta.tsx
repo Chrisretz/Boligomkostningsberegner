@@ -1,8 +1,10 @@
+import Link from "next/link";
 import type { ArticleDates } from "@/lib/article-dates";
 import { formatIsoDateDa } from "@/lib/format-date";
 import { getReadingTime } from "@/lib/article-reading-time";
+import { AUTHOR } from "@/lib/author";
 
-/** Synlig publicer-/opdateringsdato (matcher JSON-LD Article i getArticleSchema). */
+/** Synlig byline + publicer-/opdateringsdato (matcher JSON-LD Article). */
 export function ArticleMeta({
   datePublished,
   dateModified,
@@ -15,6 +17,15 @@ export function ArticleMeta({
 
   return (
     <p className="text-small text-text-muted mb-6 not-prose">
+      Skrevet af{" "}
+      <Link
+        href={AUTHOR.path}
+        className="text-text-secondary font-medium hover:text-brand-primary hover:underline"
+        rel="author"
+      >
+        {AUTHOR.name}
+      </Link>
+      {" · "}
       Publiceret{" "}
       <time dateTime={pubDay}>{formatIsoDateDa(datePublished)}</time>
       {showBoth && (
@@ -29,8 +40,6 @@ export function ArticleMeta({
           {minutes} min. læsning
         </>
       )}
-      {" · "}
-      <span className="text-text-secondary">Boligklarhed</span>
     </p>
   );
 }
