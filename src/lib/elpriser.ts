@@ -227,50 +227,97 @@ function nowYearMonthCopenhagen(): { year: number; month: number } {
   return { year: get("year"), month: get("month") };
 }
 
+const API = "https://api.energidataservice.dk/dataset";
+
+/**
+ * Datasæt til historik. Det nye DayAheadPrices (15-min) dækker de seneste
+ * måneder. Det gamle Elspotprices (time-opløsning) er frosset 30. sep.
+ * 2025, men dets historik er intakt og fire gange lettere at hente. Vi
+ * bruger derfor timedata til de gamle måneder og 15-min til de nye.
+ */
+const DAYAHEAD_FROM = "2025-10-01";
+
+type DatasetCfg = { dataset: string; timeCol: string; priceCol: string };
+const CFG_HOURLY: DatasetCfg = {
+  dataset: "Elspotprices",
+  timeCol: "HourDK",
+  priceCol: "SpotPriceDKK",
+};
+const CFG_QUARTER: DatasetCfg = {
+  dataset: "DayAheadPrices",
+  timeCol: "TimeDK",
+  priceCol: "DayAheadPriceDKK",
+};
+
+/** Lægger et datasæts priser ind i månedsspande (sum + antal). */
+async function accumulateMonthly(
+  buckets: Map<string, { sum: number; n: number }>,
+  cfg: DatasetCfg,
+  area: PriceArea,
+  start: string,
+  end: string
+): Promise<void> {
+  if (start >= end) return;
+  const filter = encodeURIComponent(JSON.stringify({ PriceArea: [area] }));
+  const url =
+    `${API}/${cfg.dataset}?filter=${filter}&start=${start}&end=${end}` +
+    `&columns=${cfg.timeCol},${cfg.priceCol}&sort=${cfg.timeCol}%20ASC&limit=500000`;
+  const res = await fetch(url, {
+    next: { revalidate: 86_400 },
+    headers: { Accept: "application/json" },
+  });
+  if (!res.ok) throw new Error(`history ${cfg.dataset} ${area}: ${res.status}`);
+  const data = (await res.json()) as { records?: Record<string, unknown>[] };
+  for (const r of data.records ?? []) {
+    const time = r[cfg.timeCol];
+    const price = r[cfg.priceCol];
+    if (typeof time !== "string" || typeof price !== "number") continue;
+    if (price < MIN_MWH || price > MAX_MWH) continue;
+    const key = time.slice(0, 7); // "YYYY-MM"
+    const m = buckets.get(key);
+    if (m) {
+      m.sum += price;
+      m.n += 1;
+    } else {
+      buckets.set(key, { sum: price, n: 1 });
+    }
+  }
+}
+
+/** Månedsspande for ét område, sammensat af de to datasæt. */
 async function fetchAreaMonthly(
   area: PriceArea,
   start: string,
   end: string
 ): Promise<Map<string, { sum: number; n: number }>> {
-  const filter = encodeURIComponent(JSON.stringify({ PriceArea: [area] }));
-  const url =
-    `${BASE}?filter=${filter}&start=${start}&end=${end}` +
-    `&columns=TimeDK,DayAheadPriceDKK&sort=TimeDK%20ASC&limit=200000`;
-  const res = await fetch(url, {
-    next: { revalidate: 86_400 },
-    headers: { Accept: "application/json" },
-  });
-  if (!res.ok) throw new Error(`dayahead history ${area}: ${res.status}`);
-  const data = (await res.json()) as { records?: Record_[] };
-  const months = new Map<string, { sum: number; n: number }>();
-  for (const r of data.records ?? []) {
-    if (!r.TimeDK || typeof r.DayAheadPriceDKK !== "number") continue;
-    if (r.DayAheadPriceDKK < MIN_MWH || r.DayAheadPriceDKK > MAX_MWH) continue;
-    const key = r.TimeDK.slice(0, 7); // "YYYY-MM"
-    const m = months.get(key);
-    if (m) {
-      m.sum += r.DayAheadPriceDKK;
-      m.n += 1;
-    } else {
-      months.set(key, { sum: r.DayAheadPriceDKK, n: 1 });
-    }
-  }
-  return months;
+  const buckets = new Map<string, { sum: number; n: number }>();
+  // Gamle måneder fra timedata, nye fra 15-min. Grænsen er DAYAHEAD_FROM.
+  const hourlyEnd = end < DAYAHEAD_FROM ? end : DAYAHEAD_FROM;
+  const quarterStart = start > DAYAHEAD_FROM ? start : DAYAHEAD_FROM;
+  await Promise.all([
+    accumulateMonthly(buckets, CFG_HOURLY, area, start, hourlyEnd),
+    accumulateMonthly(buckets, CFG_QUARTER, area, quarterStart, end),
+  ]);
+  return buckets;
 }
 
 let historyCache: { data: MonthlyPrice[]; fetchedAt: number } | null = null;
 
+/** Antal års historik der vises i grafen. Kan hæves til fx 5. */
+export const HISTORY_YEARS = 3;
+
+/** En måned skal have mindst så mange datapunkter for at tælle med. */
+const MIN_POINTS_PER_MONTH = 100;
+
 /**
- * Månedligt gennemsnit af spotprisen de seneste ~12 måneder, som snit af
- * DK1 og DK2. Historik er gratis i API'et, så grafen har data fra dag ét.
- * Den indeværende måned udelades, da den kun er delvis.
+ * Månedligt gennemsnit af spotprisen de seneste HISTORY_YEARS år, som snit
+ * af DK1 og DK2. Historik er gratis i API'et, så grafen har data fra dag
+ * ét. Den indeværende måned udelades, da den kun er delvis.
  */
 export async function fetchElPriceHistory(): Promise<MonthlyPrice[] | null> {
   const { year, month } = nowYearMonthCopenhagen();
-  // Start 12 hele måneder tilbage, slut ved starten af indeværende måned.
-  const startYear = month - 12 <= 0 ? year - 1 : year;
-  const startMonth = ((month - 12 + 12 - 1) % 12) + 1;
-  const start = `${startYear}-${String(startMonth).padStart(2, "0")}-01`;
+  // Start HISTORY_YEARS hele år tilbage, slut ved starten af denne måned.
+  const start = `${year - HISTORY_YEARS}-${String(month).padStart(2, "0")}-01`;
   const end = `${year}-${String(month).padStart(2, "0")}-01`;
 
   try {
@@ -284,8 +331,9 @@ export async function fetchElPriceHistory(): Promise<MonthlyPrice[] | null> {
       const a = dk1.get(key);
       const b = dk2.get(key);
       const avgs: number[] = [];
-      if (a && a.n > 0) avgs.push(a.sum / a.n);
-      if (b && b.n > 0) avgs.push(b.sum / b.n);
+      // Kræv et minimum af datapunkter, så en halv måned ikke skævvrider
+      if (a && a.n >= MIN_POINTS_PER_MONTH) avgs.push(a.sum / a.n);
+      if (b && b.n >= MIN_POINTS_PER_MONTH) avgs.push(b.sum / b.n);
       if (avgs.length === 0) continue;
       const mwh = avgs.reduce((s, v) => s + v, 0) / avgs.length;
       const [y, m] = key.split("-");

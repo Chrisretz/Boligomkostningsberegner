@@ -19,6 +19,8 @@ const PAGE_PATH = "/elpriser";
 
 /** Day-ahead-priser offentliggøres dagligt; én times cache er rigeligt. */
 export const revalidate = 3600;
+/** Historik-hentningen kan tage lidt; giv funktionen ekstra tid. */
+export const maxDuration = 30;
 
 const title = "Elpriser i dag – aktuel spotpris pr. kWh (DK1 og DK2)";
 const description =
@@ -168,12 +170,13 @@ export default async function ElpriserPage() {
                   id="historik-heading"
                   className="text-h2 text-text-primary mb-4"
                 >
-                  Udvikling det seneste år
+                  Udvikling de seneste år
                 </h2>
                 <p className="text-body text-text-secondary mb-5 leading-relaxed">
                   Gennemsnitlig spotpris pr. måned for hele Danmark (snit af de
                   to prisområder). Elpriser svinger meget efter årstid, vejr og
-                  gaspriser, så en enkelt måned siger ikke alt om niveauet.
+                  gaspriser, så en enkelt måned siger ikke alt om niveauet, men
+                  over år kan du se de større bevægelser.
                 </p>
                 <ElpriserBarChart
                   bars={history.map((m, i) => ({
@@ -181,10 +184,9 @@ export default async function ElpriserPage() {
                     value: m.avgKr,
                     color: "#1E3A5F",
                     tooltip: `${m.label} – ${kr(m.avgKr)} kr/kWh i snit`,
-                    axisLabel:
-                      i === 0 ||
-                      i === history.length - 1 ||
-                      i === Math.floor(history.length / 2)
+                    axisLabel: m.month.endsWith("-01")
+                      ? m.month.slice(0, 4)
+                      : i === 0
                         ? m.label
                         : undefined,
                   }))}
