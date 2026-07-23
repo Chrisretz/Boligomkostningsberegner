@@ -164,6 +164,13 @@ export default function BoliglaanBeregnerPage() {
           </Link>
           {" · "}
           <Link
+            href="/realkreditrenter"
+            className="text-body text-brand-primary hover:underline"
+          >
+            Aktuelle realkreditrenter
+          </Link>
+          {" · "}
+          <Link
             href={PATH_HVAD_KAN_JEG_KOEBE_BOLIG_FOR}
             className="text-body text-brand-primary hover:underline"
           >

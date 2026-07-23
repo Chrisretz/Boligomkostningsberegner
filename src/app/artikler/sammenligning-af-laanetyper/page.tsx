@@ -403,6 +403,16 @@ export default function SammenligningAfLaanetyperPage() {
               scenarie, der matcher din risikoprofil og dit boligkøb.
             </p>
             <p>
+              Vil du se, hvor renterne ligger lige nu, kan du følge{" "}
+              <Link
+                href="/realkreditrenter"
+                className="text-brand-primary hover:underline"
+              >
+                de aktuelle realkreditrenter pr. lånetype
+              </Link>
+              .
+            </p>
+            <p>
               Husk, at ydelsen kun er en del af regnestykket. Læg{" "}
               <Link
                 href="/artikler/ejerudgifter"

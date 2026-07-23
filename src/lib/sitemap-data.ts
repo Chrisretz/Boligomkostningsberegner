@@ -15,6 +15,7 @@ const SITEMAP_PREFIX_PATHS = [
   PATH_BOLIGLAAN_BEREGNER,
   "/beregnere",
   "/hvad-kan-jeg-koebe-bolig-for",
+  "/realkreditrenter",
   "/artikler",
 ] as const;
 
