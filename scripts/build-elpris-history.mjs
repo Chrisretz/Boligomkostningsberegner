@@ -14,13 +14,13 @@
  * - DayAheadPrices (15-min) for nyere måneder.
  */
 
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const API = "https://api.energidataservice.dk/dataset";
 const DAYAHEAD_FROM = "2025-10-01";
-const HISTORY_YEARS = 1; // 12 måneder. Hæv til 3 for tre år.
+const HISTORY_YEARS = 3; // Antal års historik i grafen.
 const MIN_MWH = -2000;
 const MAX_MWH = 20000;
 const MIN_POINTS_PER_MONTH = 100;
@@ -98,36 +98,101 @@ async function areaMonthly(area, start, end) {
   return buckets;
 }
 
+/** Alle "YYYY-MM" i vinduet: fra HISTORY_YEARS år tilbage til sidste hele måned. */
+function monthKeysInWindow(year, month) {
+  const keys = [];
+  let cy = year - HISTORY_YEARS;
+  let cm = month;
+  while (cy < year || (cy === year && cm < month)) {
+    keys.push(`${cy}-${String(cm).padStart(2, "0")}`);
+    cm += 1;
+    if (cm > 12) {
+      cm = 1;
+      cy += 1;
+    }
+  }
+  return keys;
+}
+
+/** Første dag i måneden EFTER "YYYY-MM". */
+function firstDayOfNextMonth(key) {
+  const [y, m] = key.split("-").map(Number);
+  const ny = m === 12 ? y + 1 : y;
+  const nm = m === 12 ? 1 : m + 1;
+  return `${ny}-${String(nm).padStart(2, "0")}-01`;
+}
+
+/** Læser allerede-gemte måneder fra datafilen (tom hvis den ikke findes). */
+function readExisting(outPath) {
+  if (!existsSync(outPath)) return [];
+  try {
+    const text = readFileSync(outPath, "utf8");
+    const m = text.match(/ELPRIS_HISTORY_DATA:\s*MonthlyPrice\[\]\s*=\s*(\[[\s\S]*?\]);/);
+    if (!m) return [];
+    const arr = JSON.parse(m[1]);
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
+}
+
+function monthLabel(key) {
+  const [y, m] = key.split("-");
+  return `${MONTHS_SHORT[Number(m) - 1]} ${y}`;
+}
+
 async function main() {
+  const outPath = join(
+    dirname(fileURLToPath(import.meta.url)),
+    "..",
+    "src",
+    "lib",
+    "elpris-history-data.ts"
+  );
+
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
-  const start = `${year - HISTORY_YEARS}-${String(month).padStart(2, "0")}-01`;
-  const end = `${year}-${String(month).padStart(2, "0")}-01`;
 
-  console.log(`Henter elprishistorik ${start} .. ${end} (skånsomt, kan tage et minut) ...`);
-  const dk1 = await areaMonthly("DK1", start, end);
-  const dk2 = await areaMonthly("DK2", start, end);
+  const targetKeys = monthKeysInWindow(year, month);
+  const byMonth = new Map();
+  for (const r of readExisting(outPath)) byMonth.set(r.month, r);
 
-  const keys = [...new Set([...dk1.keys(), ...dk2.keys()])].sort();
-  const rows = [];
-  for (const key of keys) {
-    const a = dk1.get(key);
-    const b = dk2.get(key);
-    const avgs = [];
-    if (a && a.n >= MIN_POINTS_PER_MONTH) avgs.push(a.sum / a.n);
-    if (b && b.n >= MIN_POINTS_PER_MONTH) avgs.push(b.sum / b.n);
-    if (avgs.length === 0) continue;
-    const mwh = avgs.reduce((s, v) => s + v, 0) / avgs.length;
-    const [y, m] = key.split("-");
-    rows.push({
-      month: key,
-      label: `${MONTHS_SHORT[Number(m) - 1]} ${y}`,
-      avgKr: Math.round((mwh / 1000) * 100) / 100,
-    });
+  // Kun de måneder i vinduet, vi ikke allerede har gemt. Det er "batchen".
+  const missing = targetKeys.filter((k) => !byMonth.has(k));
+
+  if (missing.length === 0) {
+    console.log("Alle måneder i vinduet er allerede hentet. Ingen nye kald.");
+  } else {
+    const fetchStart = `${missing[0]}-01`;
+    const fetchEnd = firstDayOfNextMonth(missing[missing.length - 1]);
+    console.log(
+      `Mangler ${missing.length} måned(er). Henter ${fetchStart} .. ${fetchEnd} (skånsomt) ...`
+    );
+    const dk1 = await areaMonthly("DK1", fetchStart, fetchEnd);
+    const dk2 = await areaMonthly("DK2", fetchStart, fetchEnd);
+
+    const missingSet = new Set(missing);
+    for (const key of new Set([...dk1.keys(), ...dk2.keys()])) {
+      if (!missingSet.has(key)) continue; // rør ikke måneder vi allerede har
+      const a = dk1.get(key);
+      const b = dk2.get(key);
+      const avgs = [];
+      if (a && a.n >= MIN_POINTS_PER_MONTH) avgs.push(a.sum / a.n);
+      if (b && b.n >= MIN_POINTS_PER_MONTH) avgs.push(b.sum / b.n);
+      if (avgs.length === 0) continue;
+      const mwh = avgs.reduce((s, v) => s + v, 0) / avgs.length;
+      byMonth.set(key, {
+        month: key,
+        label: monthLabel(key),
+        avgKr: Math.round((mwh / 1000) * 100) / 100,
+      });
+    }
   }
 
-  if (rows.length === 0) throw new Error("Ingen data hentet.");
+  // Byg endeligt array: kun måneder i vinduet, ældst først.
+  const rows = targetKeys.filter((k) => byMonth.has(k)).map((k) => byMonth.get(k));
+  if (rows.length === 0) throw new Error("Ingen data at skrive.");
 
   const generated = `${year}-${String(month).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const body =
@@ -137,13 +202,6 @@ async function main() {
     `export const ELPRIS_HISTORY_GENERATED = "${generated}";\n\n` +
     `export const ELPRIS_HISTORY_DATA: MonthlyPrice[] = ${JSON.stringify(rows, null, 2)};\n`;
 
-  const outPath = join(
-    dirname(fileURLToPath(import.meta.url)),
-    "..",
-    "src",
-    "lib",
-    "elpris-history-data.ts"
-  );
   writeFileSync(outPath, body, "utf8");
   console.log(`Skrev ${rows.length} måneder til src/lib/elpris-history-data.ts`);
 }

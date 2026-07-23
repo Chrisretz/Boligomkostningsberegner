@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { articleCategories, getArticlesBySlugs } from "@/lib/articles";
 import { calculators } from "@/lib/calculators";
+import { datasets } from "@/lib/datasets";
 import { SiteSearch } from "@/components/SiteSearch";
 import { PATH_KONTAKT } from "@/lib/site";
 
@@ -83,16 +84,19 @@ export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [artiklerOpen, setArtiklerOpen] = useState(false);
   const [beregnereOpen, setBeregnereOpen] = useState(false);
+  const [dataMenuOpen, setDataMenuOpen] = useState(false);
   const [omMenuOpen, setOmMenuOpen] = useState(false);
   const [expandedCategoryId, setExpandedCategoryId] = useState<string | null>(null);
   const [mobileBeregnereOpen, setMobileBeregnereOpen] = useState(false);
   const [mobileArtiklerOpen, setMobileArtiklerOpen] = useState(false);
+  const [mobileDataOpen, setMobileDataOpen] = useState(false);
   const [mobileOmOpen, setMobileOmOpen] = useState(false);
   const [mobileExpandedCategoryId, setMobileExpandedCategoryId] = useState<string | null>(null);
   const [barHidden, setBarHidden] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(80);
   const artiklerRef = useRef<HTMLDivElement>(null);
   const beregnereRef = useRef<HTMLDivElement>(null);
+  const dataMenuRef = useRef<HTMLDivElement>(null);
   const omMenuRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
@@ -181,6 +185,13 @@ export function Topbar() {
       ) {
         setBeregnereOpen(false);
       }
+      if (
+        dataMenuOpen &&
+        dataMenuRef.current &&
+        !dataMenuRef.current.contains(target)
+      ) {
+        setDataMenuOpen(false);
+      }
       if (omMenuOpen && omMenuRef.current && !omMenuRef.current.contains(target)) {
         setOmMenuOpen(false);
       }
@@ -188,7 +199,7 @@ export function Topbar() {
 
     document.addEventListener("mousedown", onMouseDown);
     return () => document.removeEventListener("mousedown", onMouseDown);
-  }, [artiklerOpen, beregnereOpen, omMenuOpen]);
+  }, [artiklerOpen, beregnereOpen, dataMenuOpen, omMenuOpen]);
 
   useEffect(() => {
     function handleEscape(e: KeyboardEvent) {
@@ -200,6 +211,9 @@ export function Topbar() {
       if (beregnereOpen) {
         setBeregnereOpen(false);
       }
+      if (dataMenuOpen) {
+        setDataMenuOpen(false);
+      }
       if (omMenuOpen) {
         setOmMenuOpen(false);
       }
@@ -207,7 +221,7 @@ export function Topbar() {
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [artiklerOpen, beregnereOpen, omMenuOpen]);
+  }, [artiklerOpen, beregnereOpen, dataMenuOpen, omMenuOpen]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -223,6 +237,7 @@ export function Topbar() {
     if (!menuOpen) {
       setMobileBeregnereOpen(false);
       setMobileArtiklerOpen(false);
+      setMobileDataOpen(false);
       setMobileOmOpen(false);
       setMobileExpandedCategoryId(null);
     }
@@ -278,6 +293,7 @@ export function Topbar() {
                 onClick={() => {
                   setBeregnereOpen((prev) => !prev);
                   setArtiklerOpen(false);
+                  setDataMenuOpen(false);
                   setOmMenuOpen(false);
                 }}
                 className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white cursor-pointer gap-2`}
@@ -316,13 +332,61 @@ export function Topbar() {
                 </div>
               )}
             </div>
-            <Link
-              href="/data"
-              className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white`}
-            >
-              <span className="relative z-10">Data</span>
-              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-white origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
-            </Link>
+            <div ref={dataMenuRef} className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setDataMenuOpen((prev) => !prev);
+                  setBeregnereOpen(false);
+                  setArtiklerOpen(false);
+                  setOmMenuOpen(false);
+                  setExpandedCategoryId(null);
+                }}
+                className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white cursor-pointer gap-2`}
+                aria-haspopup="true"
+                aria-expanded={dataMenuOpen}
+                aria-controls="desktop-data-menu"
+              >
+                <span className="relative z-10 inline-flex items-center gap-1">
+                  <span>Data</span>
+                  <ChevronDownIcon
+                    className={`transition-transform ${dataMenuOpen ? "rotate-180" : ""}`}
+                  />
+                </span>
+                <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-white origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
+              </button>
+              {dataMenuOpen ? (
+                <div
+                  id="desktop-data-menu"
+                  className="absolute left-0 top-full pt-2 z-50 min-w-[280px]"
+                  role="menu"
+                >
+                  <div className="bg-brand-surface border border-border rounded-md shadow-card py-2">
+                    <Link
+                      href="/data"
+                      className="block px-4 py-2 text-body text-brand-primary hover:bg-border/50 font-medium"
+                      role="menuitem"
+                      onClick={() => setDataMenuOpen(false)}
+                    >
+                      Al boligdata →
+                    </Link>
+                    <div className="border-t border-border mt-2 pt-2">
+                      {datasets.map((d) => (
+                        <Link
+                          key={d.id}
+                          href={d.href}
+                          className="block px-4 py-2 text-body text-text-primary hover:bg-border/50"
+                          role="menuitem"
+                          onClick={() => setDataMenuOpen(false)}
+                        >
+                          {d.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
             <Link
               href="/boligbegreber"
               className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white`}
@@ -339,6 +403,7 @@ export function Topbar() {
                 onClick={() => {
                   setArtiklerOpen((prev) => !prev);
                   setBeregnereOpen(false);
+                  setDataMenuOpen(false);
                   setOmMenuOpen(false);
                   if (!artiklerOpen) setExpandedCategoryId(null);
                 }}
@@ -413,6 +478,7 @@ export function Topbar() {
                   setOmMenuOpen((prev) => !prev);
                   setBeregnereOpen(false);
                   setArtiklerOpen(false);
+                  setDataMenuOpen(false);
                   setExpandedCategoryId(null);
                 }}
                 className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white cursor-pointer gap-2`}
@@ -525,6 +591,7 @@ export function Topbar() {
                       const next = !prev;
                       if (next) {
                         setMobileArtiklerOpen(false);
+                        setMobileDataOpen(false);
                         setMobileOmOpen(false);
                         setMobileExpandedCategoryId(null);
                       }
@@ -561,13 +628,51 @@ export function Topbar() {
                   </div>
                 )}
               </div>
-              <Link
-                href="/data"
-                onClick={() => setMenuOpen(false)}
-                className={mobileNavItemClass}
-              >
-                Data
-              </Link>
+              <div className="rounded-md">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileDataOpen((prev) => {
+                      const next = !prev;
+                      if (next) {
+                        setMobileBeregnereOpen(false);
+                        setMobileArtiklerOpen(false);
+                        setMobileOmOpen(false);
+                        setMobileExpandedCategoryId(null);
+                      }
+                      return next;
+                    });
+                  }}
+                  className={`${mobileNavItemClass} flex w-full items-center justify-between text-left`}
+                  aria-expanded={mobileDataOpen}
+                >
+                  <span>Data</span>
+                  <ChevronDownIcon
+                    className={`transition-transform ${mobileDataOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {mobileDataOpen && (
+                  <div className="mt-1 ml-3 space-y-1 border-l-2 border-border pl-3">
+                    <Link
+                      href="/data"
+                      onClick={() => setMenuOpen(false)}
+                      className="block py-1.5 text-small font-medium text-brand-primary hover:underline"
+                    >
+                      Al boligdata →
+                    </Link>
+                    {datasets.map((d) => (
+                      <Link
+                        key={d.id}
+                        href={d.href}
+                        onClick={() => setMenuOpen(false)}
+                        className="block py-1.5 text-small text-text-secondary hover:text-brand-primary"
+                      >
+                        {d.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
               <Link
                 href="/boligbegreber"
                 onClick={() => setMenuOpen(false)}
@@ -583,6 +688,7 @@ export function Topbar() {
                       const next = !prev;
                       if (next) {
                         setMobileBeregnereOpen(false);
+                        setMobileDataOpen(false);
                         setMobileOmOpen(false);
                       } else {
                         setMobileExpandedCategoryId(null);
@@ -657,6 +763,7 @@ export function Topbar() {
                       if (next) {
                         setMobileBeregnereOpen(false);
                         setMobileArtiklerOpen(false);
+                        setMobileDataOpen(false);
                         setMobileExpandedCategoryId(null);
                       }
                       return next;
