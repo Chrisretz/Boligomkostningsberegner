@@ -92,6 +92,7 @@ export default async function RealkreditrenterPage() {
 
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Forside", path: "/" },
+    { name: "Data", path: "/data" },
     { name: "Realkreditrenter", path: PAGE_PATH },
   ]);
 
@@ -122,6 +123,10 @@ export default async function RealkreditrenterPage() {
         <nav aria-label="Sti" className="mb-4 text-small text-text-muted">
           <Link href="/" className="hover:text-brand-primary">
             Forside
+          </Link>{" "}
+          /{" "}
+          <Link href="/data" className="hover:text-brand-primary">
+            Data
           </Link>{" "}
           / <span className="text-text-secondary">Realkreditrenter</span>
         </nav>

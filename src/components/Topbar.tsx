@@ -312,18 +312,17 @@ export function Topbar() {
                         </Link>
                       ))}
                     </div>
-                    <div className="border-t border-border mt-2 pt-2">
-                      <Link
-                        href="/realkreditrenter"
-                        className="block px-4 py-2 text-body text-text-primary hover:bg-border/50"
-                      >
-                        Aktuelle realkreditrenter
-                      </Link>
-                    </div>
                   </div>
                 </div>
               )}
             </div>
+            <Link
+              href="/data"
+              className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white`}
+            >
+              <span className="relative z-10">Data</span>
+              <span className="pointer-events-none absolute left-2 right-2 bottom-1 h-0.5 bg-white origin-left scale-x-0 transition-transform duration-200 group-hover:scale-x-100" />
+            </Link>
             <Link
               href="/boligbegreber"
               className={`${topNavItemClass} text-body font-medium text-white/85 hover:text-white`}
@@ -559,16 +558,16 @@ export function Topbar() {
                         {calc.title}
                       </Link>
                     ))}
-                    <Link
-                      href="/realkreditrenter"
-                      onClick={() => setMenuOpen(false)}
-                      className="block py-1.5 text-small text-text-secondary hover:text-brand-primary"
-                    >
-                      Aktuelle realkreditrenter
-                    </Link>
                   </div>
                 )}
               </div>
+              <Link
+                href="/data"
+                onClick={() => setMenuOpen(false)}
+                className={mobileNavItemClass}
+              >
+                Data
+              </Link>
               <Link
                 href="/boligbegreber"
                 onClick={() => setMenuOpen(false)}

@@ -268,6 +268,13 @@ export default function ElforbrugHusstandPage() {
               indtaste et eget beløb under &quot;Øvrige månedlige&quot;, hvis du
               kender dit forbrug eller forventer elvarme/elbil.
             </p>
+            <p>
+              Vil du se, hvad strømmen koster lige nu, kan du følge{" "}
+              <Link href="/elpriser" className="text-brand-primary hover:underline">
+                de aktuelle elpriser pr. kWh for Vest- og Østdanmark
+              </Link>
+              .
+            </p>
           </section>
 
           <section>
