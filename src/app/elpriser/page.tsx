@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   fetchElspot,
-  fetchElPriceHistory,
+  getElPriceHistory,
   elprisEstimatKr,
   ELPRIS_TILLAEG,
   AREA_LABELS,
@@ -19,8 +19,6 @@ const PAGE_PATH = "/elpriser";
 
 /** Day-ahead-priser offentliggøres dagligt; én times cache er rigeligt. */
 export const revalidate = 3600;
-/** Historik-hentningen kan tage lidt; giv funktionen ekstra tid. */
-export const maxDuration = 30;
 
 const title = "Elpriser i dag – aktuel spotpris pr. kWh (DK1 og DK2)";
 const description =
@@ -62,10 +60,8 @@ function hourlyBars(a: AreaPrices): Bar[] {
 }
 
 export default async function ElpriserPage() {
-  const [data, history] = await Promise.all([
-    fetchElspot(24),
-    fetchElPriceHistory(),
-  ]);
+  const data = await fetchElspot(24);
+  const history = getElPriceHistory();
 
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Forside", path: "/" },

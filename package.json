@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "article:touch": "node scripts/article-date.mjs touch",
     "article:new": "node scripts/article-date.mjs new",
+    "elpris:history": "node scripts/build-elpris-history.mjs",
     "reading-time": "node scripts/reading-time.mjs"
   },
   "dependencies": {
