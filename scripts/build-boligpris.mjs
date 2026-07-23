@@ -101,15 +101,26 @@ async function fetchCategory(catCode, areaIds, quarters, nameToId) {
       `${API}/data/${TABLE}/CSV?OMR20=${omr}&EJKAT20=${catCode}` +
       `&PRIS20=${PRICE}&Tid=${tid}`;
     const csv = await fetchText(url);
-    const lines = csv.split(/\r?\n/).slice(1); // drop header
+    const allLines = csv.split(/\r?\n/);
+    // Læs header og find kolonnerne ved navn. Kolonnerækkefølgen følger
+    // parametrenes rækkefølge i URL'en, så vi må ikke antage faste indekser.
+    const header = (allLines[0] || "").replace(/^﻿/, "").split(";");
+    const iArea = header.indexOf("OMR20");
+    const iTid = header.indexOf("TID");
+    const iVal = header.indexOf("INDHOLD");
+    if (iArea < 0 || iTid < 0 || iVal < 0) {
+      throw new Error(
+        `Uventet CSV-header for '${label}': ${allLines[0]}`
+      );
+    }
     let matched = 0;
-    for (const line of lines) {
+    for (const line of allLines.slice(1)) {
       if (!line.trim()) continue;
       const cols = line.split(";");
-      if (cols.length < 5) continue;
-      const areaName = cols[1].normalize("NFC");
-      const q = cols[3];
-      const raw = Number((cols[4] || "").replace(/\s/g, "").replace(",", "."));
+      if (cols.length <= Math.max(iArea, iTid, iVal)) continue;
+      const areaName = cols[iArea].normalize("NFC");
+      const q = cols[iTid];
+      const raw = Number((cols[iVal] || "").replace(/\s/g, "").replace(",", "."));
       const id = nameToId.get(areaName);
       if (!id) continue;
       if (!Number.isFinite(raw) || raw < MIN_KR || raw > MAX_KR) continue;
