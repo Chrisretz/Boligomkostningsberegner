@@ -51,9 +51,9 @@ export function BoligprisExplorer() {
   const [status, setStatus] = useState<"loading" | "ready" | "empty" | "error">(
     "loading"
   );
-  const [areaId, setAreaId] = useState("00");
-  const [compareId, setCompareId] = useState(""); // "" = ingen
-  const [category, setCategory] = useState<Category>("hus");
+  const [areaId, setAreaId] = useState("101"); // København
+  const [compareId, setCompareId] = useState("00"); // Hele landet
+  const [category, setCategory] = useState<Category>("lejl");
   const [range, setRange] = useState<[number, number]>([0, 0]);
 
   useEffect(() => {
