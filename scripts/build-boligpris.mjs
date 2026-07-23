@@ -83,17 +83,22 @@ function chunk(arr, n) {
 
 /**
  * Henter realiseret m2-pris for én kategori for de givne kvartaler.
- * Bruger OMR20=* (alle områder) og henter kvartalerne i små bidder, så
- * URL'erne bliver korte og robuste. Returnerer Map<"områdeId|kvartal", kr>.
+ * Henter alle områder pr. kald og tager kvartalerne i små bidder.
+ *
+ * VIGTIGT: statbank-API'et kræver URL-kodede værdilister. Rå kommaer i
+ * OMR20/Tid giver et tomt svar. Derfor encodeURIComponent på begge.
+ *
+ * Returnerer Map<"områdeId|kvartal", kr>.
  */
-async function fetchCategory(catCode, quarters, nameToId) {
+async function fetchCategory(catCode, areaIds, quarters, nameToId) {
   const result = new Map();
   const label = Object.keys(CATEGORIES).find((k) => CATEGORIES[k] === catCode);
+  const omr = encodeURIComponent(areaIds.join(","));
   const chunks = chunk(quarters, QUARTERS_PER_CALL);
   for (let i = 0; i < chunks.length; i += 1) {
-    const tid = chunks[i].join(",");
+    const tid = encodeURIComponent(chunks[i].join(","));
     const url =
-      `${API}/data/${TABLE}/CSV?OMR20=*&EJKAT20=${catCode}` +
+      `${API}/data/${TABLE}/CSV?OMR20=${omr}&EJKAT20=${catCode}` +
       `&PRIS20=${PRICE}&Tid=${tid}`;
     const csv = await fetchText(url);
     const lines = csv.split(/\r?\n/).slice(1); // drop header
@@ -110,6 +115,14 @@ async function fetchCategory(catCode, quarters, nameToId) {
       if (!Number.isFinite(raw) || raw < MIN_KR || raw > MAX_KR) continue;
       result.set(`${id}|${q}`, Math.round(raw));
       matched += 1;
+    }
+    // Fejl højlydt hvis første kald ikke giver data – så vi ikke skriver
+    // en tom fil i stilhed. Vis et udklip af svaret til fejlsøgning.
+    if (i === 0 && matched === 0) {
+      throw new Error(
+        `Ingen tal i første svar for '${label}'. API-svar (start):\n` +
+          csv.slice(0, 400)
+      );
     }
     console.log(`  ${label}: kvartal-bidder ${i + 1}/${chunks.length} (${matched} tal)`);
     await sleep(DELAY_MS);
@@ -157,8 +170,9 @@ async function main() {
   );
 
   const fetchQuarters = existing ? missing : quarters;
-  const hus = await fetchCategory(CATEGORIES.hus, fetchQuarters, nameToId);
-  const lejl = await fetchCategory(CATEGORIES.lejl, fetchQuarters, nameToId);
+  const areaIds = areas.map((a) => a.id);
+  const hus = await fetchCategory(CATEGORIES.hus, areaIds, fetchQuarters, nameToId);
+  const lejl = await fetchCategory(CATEGORIES.lejl, areaIds, fetchQuarters, nameToId);
 
   // Byg område-serier, aligned til den fulde kvartals-akse.
   const prevByArea = new Map(
