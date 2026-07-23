@@ -202,6 +202,114 @@ export function __resetElspotCache(): void {
   lastGood = null;
 }
 
+const MONTHS_SHORT = [
+  "jan.", "feb.", "mar.", "apr.", "maj", "jun.",
+  "jul.", "aug.", "sep.", "okt.", "nov.", "dec.",
+];
+
+export interface MonthlyPrice {
+  /** "2026-07" */
+  month: string;
+  /** "jul. 2026" */
+  label: string;
+  /** Månedens gennemsnitlige spotpris i kr/kWh (snit af DK1 og DK2). */
+  avgKr: number;
+}
+
+/** Nuværende {år, måned} i dansk tid. */
+function nowYearMonthCopenhagen(): { year: number; month: number } {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Copenhagen",
+    year: "numeric",
+    month: "2-digit",
+  }).formatToParts(new Date());
+  const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+  return { year: get("year"), month: get("month") };
+}
+
+async function fetchAreaMonthly(
+  area: PriceArea,
+  start: string,
+  end: string
+): Promise<Map<string, { sum: number; n: number }>> {
+  const filter = encodeURIComponent(JSON.stringify({ PriceArea: [area] }));
+  const url =
+    `${BASE}?filter=${filter}&start=${start}&end=${end}` +
+    `&columns=TimeDK,DayAheadPriceDKK&sort=TimeDK%20ASC&limit=200000`;
+  const res = await fetch(url, {
+    next: { revalidate: 86_400 },
+    headers: { Accept: "application/json" },
+  });
+  if (!res.ok) throw new Error(`dayahead history ${area}: ${res.status}`);
+  const data = (await res.json()) as { records?: Record_[] };
+  const months = new Map<string, { sum: number; n: number }>();
+  for (const r of data.records ?? []) {
+    if (!r.TimeDK || typeof r.DayAheadPriceDKK !== "number") continue;
+    if (r.DayAheadPriceDKK < MIN_MWH || r.DayAheadPriceDKK > MAX_MWH) continue;
+    const key = r.TimeDK.slice(0, 7); // "YYYY-MM"
+    const m = months.get(key);
+    if (m) {
+      m.sum += r.DayAheadPriceDKK;
+      m.n += 1;
+    } else {
+      months.set(key, { sum: r.DayAheadPriceDKK, n: 1 });
+    }
+  }
+  return months;
+}
+
+let historyCache: { data: MonthlyPrice[]; fetchedAt: number } | null = null;
+
+/**
+ * Månedligt gennemsnit af spotprisen de seneste ~12 måneder, som snit af
+ * DK1 og DK2. Historik er gratis i API'et, så grafen har data fra dag ét.
+ * Den indeværende måned udelades, da den kun er delvis.
+ */
+export async function fetchElPriceHistory(): Promise<MonthlyPrice[] | null> {
+  const { year, month } = nowYearMonthCopenhagen();
+  // Start 12 hele måneder tilbage, slut ved starten af indeværende måned.
+  const startYear = month - 12 <= 0 ? year - 1 : year;
+  const startMonth = ((month - 12 + 12 - 1) % 12) + 1;
+  const start = `${startYear}-${String(startMonth).padStart(2, "0")}-01`;
+  const end = `${year}-${String(month).padStart(2, "0")}-01`;
+
+  try {
+    const [dk1, dk2] = await Promise.all([
+      fetchAreaMonthly("DK1", start, end),
+      fetchAreaMonthly("DK2", start, end),
+    ]);
+    const keys = new Set([...dk1.keys(), ...dk2.keys()]);
+    const out: MonthlyPrice[] = [];
+    for (const key of keys) {
+      const a = dk1.get(key);
+      const b = dk2.get(key);
+      const avgs: number[] = [];
+      if (a && a.n > 0) avgs.push(a.sum / a.n);
+      if (b && b.n > 0) avgs.push(b.sum / b.n);
+      if (avgs.length === 0) continue;
+      const mwh = avgs.reduce((s, v) => s + v, 0) / avgs.length;
+      const [y, m] = key.split("-");
+      out.push({
+        month: key,
+        label: `${MONTHS_SHORT[Number(m) - 1]} ${y}`,
+        avgKr: Math.round((mwh / 1000) * 100) / 100,
+      });
+    }
+    out.sort((x, y) => x.month.localeCompare(y.month));
+    if (out.length === 0) return recentHistory();
+    historyCache = { data: out, fetchedAt: Date.now() };
+    return out;
+  } catch {
+    return recentHistory();
+  }
+}
+
+function recentHistory(): MonthlyPrice[] | null {
+  if (!historyCache) return null;
+  if (Date.now() - historyCache.fetchedAt > LAST_GOOD_MAX_AGE_MS) return null;
+  return historyCache.data;
+}
+
 /**
  * Vejledende omregning fra spotpris til den samlede pris, en husstand
  * typisk betaler pr. kWh. Tallene varierer meget efter netselskab,

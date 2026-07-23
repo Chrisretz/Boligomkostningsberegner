@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   fetchElspot,
+  fetchElPriceHistory,
   elprisEstimatKr,
   ELPRIS_TILLAEG,
   AREA_LABELS,
@@ -12,6 +13,7 @@ import { canonicalUrl, SITE_URL } from "@/lib/site";
 import { socialMetadata } from "@/lib/social-metadata";
 import { getBreadcrumbSchema } from "@/lib/structured-data";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
+import { ElpriserBarChart, type Bar } from "@/components/ElpriserBarChart";
 
 const PAGE_PATH = "/elpriser";
 
@@ -45,8 +47,23 @@ function formatHour(iso: string): string {
   return `${Number(d)}. ${months[Number(mo) - 1]} ${y} kl. ${h}`;
 }
 
+/** Døgnets timepriser som søjler; billige timer (under snit) er grønne. */
+function hourlyBars(a: AreaPrices): Bar[] {
+  const labelHours = new Set([0, 6, 12, 18, 23]);
+  return a.hourly.map((h) => ({
+    key: h.hourDK,
+    value: h.spotKr,
+    color: h.spotKr < a.averageKr ? "#1D9E75" : "#1E3A5F",
+    tooltip: `Kl. ${h.hour}:00 – ${kr(h.spotKr)} kr/kWh`,
+    axisLabel: labelHours.has(h.hour) ? String(h.hour) : undefined,
+  }));
+}
+
 export default async function ElpriserPage() {
-  const data = await fetchElspot(24);
+  const [data, history] = await Promise.all([
+    fetchElspot(24),
+    fetchElPriceHistory(),
+  ]);
 
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Forside", path: "/" },
@@ -132,10 +149,53 @@ export default async function ElpriserPage() {
               </p>
               <div className="space-y-6">
                 {(["DK1", "DK2"] as PriceArea[]).map((area) => (
-                  <HourlyChart key={area} a={data.areas[area]} />
+                  <figure key={area}>
+                    <figcaption className="text-body font-medium text-text-primary mb-2">
+                      {AREA_LABELS[area]}
+                    </figcaption>
+                    <ElpriserBarChart
+                      bars={hourlyBars(data.areas[area])}
+                      ariaLabel={`Elspotpris time for time i ${AREA_LABELS[area]}. Gennemsnit ${kr(data.areas[area].averageKr)} kr pr. kWh, billigst ${kr(data.areas[area].min.spotKr)} kr kl. ${data.areas[area].min.hour}, dyrest ${kr(data.areas[area].max.spotKr)} kr kl. ${data.areas[area].max.hour}.`}
+                    />
+                  </figure>
                 ))}
               </div>
             </section>
+
+            {history && history.length >= 2 && (
+              <section aria-labelledby="historik-heading" className="mb-10">
+                <h2
+                  id="historik-heading"
+                  className="text-h2 text-text-primary mb-4"
+                >
+                  Udvikling det seneste år
+                </h2>
+                <p className="text-body text-text-secondary mb-5 leading-relaxed">
+                  Gennemsnitlig spotpris pr. måned for hele Danmark (snit af de
+                  to prisområder). Elpriser svinger meget efter årstid, vejr og
+                  gaspriser, så en enkelt måned siger ikke alt om niveauet.
+                </p>
+                <ElpriserBarChart
+                  bars={history.map((m, i) => ({
+                    key: m.month,
+                    value: m.avgKr,
+                    color: "#1E3A5F",
+                    tooltip: `${m.label} – ${kr(m.avgKr)} kr/kWh i snit`,
+                    axisLabel:
+                      i === 0 ||
+                      i === history.length - 1 ||
+                      i === Math.floor(history.length / 2)
+                        ? m.label
+                        : undefined,
+                  }))}
+                  ariaLabel={`Gennemsnitlig elspotpris pr. måned fra ${history[0].label} til ${history[history.length - 1].label}.`}
+                />
+                <p className="mt-2 text-small text-text-muted">
+                  Månedligt gennemsnit af spotprisen, ekskl. transport, afgift
+                  og moms. Kilde: Energi Data Service.
+                </p>
+              </section>
+            )}
 
             <section aria-labelledby="regning-heading" className="mb-10 max-w-2xl">
               <h2 id="regning-heading" className="text-h2 text-text-primary mb-4">
@@ -290,84 +350,5 @@ function AreaCard({ a }: { a: AreaPrices }) {
         </div>
       </dl>
     </div>
-  );
-}
-
-/** 24-timers søjlegraf. Søjler under døgnets gennemsnit er grønne. */
-function HourlyChart({ a }: { a: AreaPrices }) {
-  const W = 640;
-  const H = 180;
-  const PAD = { left: 8, right: 8, top: 10, bottom: 22 };
-  const plotW = W - PAD.left - PAD.right;
-  const plotH = H - PAD.top - PAD.bottom;
-
-  const hours = a.hourly;
-  const maxVal = Math.max(...hours.map((h) => h.spotKr), 0.01);
-  const minVal = Math.min(...hours.map((h) => h.spotKr), 0);
-  const span = maxVal - minVal || 1;
-  const zeroY = PAD.top + plotH - ((0 - minVal) / span) * plotH;
-
-  const gap = 2;
-  const barW = plotW / hours.length - gap;
-
-  return (
-    <figure>
-      <figcaption className="text-body font-medium text-text-primary mb-2">
-        {AREA_LABELS[a.area]}
-      </figcaption>
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="w-full h-auto"
-        role="img"
-        aria-label={`Elspotpris time for time i ${AREA_LABELS[a.area]}. Gennemsnit ${kr(a.averageKr)} kr pr. kWh, billigst ${kr(a.min.spotKr)} kr kl. ${a.min.hour}, dyrest ${kr(a.max.spotKr)} kr kl. ${a.max.hour}.`}
-      >
-        <line
-          x1={PAD.left}
-          x2={W - PAD.right}
-          y1={zeroY}
-          y2={zeroY}
-          stroke="#D7E1EC"
-          strokeWidth={1}
-        />
-        {hours.map((h, i) => {
-          const x = PAD.left + i * (barW + gap);
-          // Søjlen går fra nul-linjen til prisens niveau. Positive priser
-          // tegnes opad, negative nedad.
-          const valueY = PAD.top + plotH - ((h.spotKr - minVal) / span) * plotH;
-          const y = Math.min(valueY, zeroY);
-          const barHeight = Math.max(1, Math.abs(valueY - zeroY));
-          const isCheap = h.spotKr < a.averageKr;
-          return (
-            <rect
-              key={h.hourDK}
-              x={x}
-              y={y}
-              width={barW}
-              height={barHeight}
-              fill={isCheap ? "#1D9E75" : "#1E3A5F"}
-            >
-              <title>{`${h.hour}:00 – ${kr(h.spotKr)} kr/kWh`}</title>
-            </rect>
-          );
-        })}
-        {[0, 6, 12, 18, 23].map((hr) => {
-          const idx = hours.findIndex((h) => h.hour === hr);
-          if (idx < 0) return null;
-          const x = PAD.left + idx * (barW + gap) + barW / 2;
-          return (
-            <text
-              key={hr}
-              x={x}
-              y={H - 6}
-              textAnchor="middle"
-              className="fill-text-muted"
-              style={{ fontSize: 11 }}
-            >
-              {hr}
-            </text>
-          );
-        })}
-      </svg>
-    </figure>
   );
 }
