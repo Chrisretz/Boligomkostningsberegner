@@ -1,6 +1,7 @@
 "use client";
 
 import type { CalcOutput } from "@/lib/types";
+import { useChartTooltip } from "@/components/useChartTooltip";
 
 function formatKr(val: number): string {
   return val.toLocaleString("da-DK");
@@ -24,6 +25,7 @@ type Segment = { label: string; value: number };
  * med tilhørende forklaring. Ren CSS – ingen chart-libraries.
  */
 export function MonthlyBreakdownChart({ output }: { output: CalcOutput }) {
+  const { containerRef, bind, tooltip } = useChartTooltip();
   const b = output.breakdownMonthly;
   const loanMonthly = output.base.monthlyPaymentDKK;
 
@@ -57,18 +59,26 @@ export function MonthlyBreakdownChart({ output }: { output: CalcOutput }) {
       <p className="text-small text-text-muted mb-5">
         I alt ca. {formatKr(total)} kr pr. måned
       </p>
-      <div className="bar-grow flex h-5 w-full overflow-hidden rounded-full">
-        {segments.map((s, i) => (
-          <div
-            key={s.label}
-            className="h-full"
-            style={{
-              width: `${(s.value / total) * 100}%`,
-              backgroundColor: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
-            }}
-            title={`${s.label}: ${formatKr(s.value)} kr`}
-          />
-        ))}
+      <div ref={containerRef} className="relative">
+        <div className="bar-grow flex h-5 w-full overflow-hidden rounded-full">
+          {segments.map((s, i) => (
+            <div
+              key={s.label}
+              className="h-full cursor-default outline-none"
+              style={{
+                width: `${(s.value / total) * 100}%`,
+                backgroundColor: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
+              }}
+              aria-label={`${s.label}: ${formatKr(s.value)} kr`}
+              {...bind(
+                <span>
+                  {s.label}: {formatKr(s.value)} kr
+                </span>
+              )}
+            />
+          ))}
+        </div>
+        {tooltip}
       </div>
       <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2 text-small text-text-secondary">
         {segments.map((s, i) => (
@@ -98,6 +108,7 @@ export function MonthlyBreakdownChart({ output }: { output: CalcOutput }) {
  * skaleret mod det højeste scenarie.
  */
 export function RateStressBars({ output }: { output: CalcOutput }) {
+  const { containerRef, bind, tooltip } = useChartTooltip();
   const rows = [
     {
       label: `Ved ${String(output.base.interestRateAnnualPct).replace(".", ",")} % (din rente)`,
@@ -119,28 +130,37 @@ export function RateStressBars({ output }: { output: CalcOutput }) {
   if (max <= 0) return null;
 
   return (
-    <ul className="space-y-4">
-      {rows.map((r) => (
-        <li key={r.label}>
-          <div className="flex items-baseline justify-between gap-3 mb-1">
-            <span className="text-small font-medium text-text-primary min-w-0">
-              {r.label}
-            </span>
-            <span className="text-body font-bold text-text-primary shrink-0 whitespace-nowrap tabular-nums">
-              {formatKr(r.value)} kr/md
-            </span>
-          </div>
-          <div className="h-2.5 w-full rounded-full bg-border/50 overflow-hidden">
-            <div
-              className="bar-grow h-full rounded-full"
-              style={{
-                width: `${(r.value / max) * 100}%`,
-                backgroundColor: r.color,
-              }}
-            />
-          </div>
-        </li>
-      ))}
-    </ul>
+    <div ref={containerRef} className="relative">
+      <ul className="space-y-4">
+        {rows.map((r) => (
+          <li key={r.label}>
+            <div className="flex items-baseline justify-between gap-3 mb-1">
+              <span className="text-small font-medium text-text-primary min-w-0">
+                {r.label}
+              </span>
+              <span className="text-body font-bold text-text-primary shrink-0 whitespace-nowrap tabular-nums">
+                {formatKr(r.value)} kr/md
+              </span>
+            </div>
+            <div className="h-2.5 w-full rounded-full bg-border/50 overflow-hidden">
+              <div
+                className="bar-grow h-full rounded-full cursor-default outline-none"
+                style={{
+                  width: `${(r.value / max) * 100}%`,
+                  backgroundColor: r.color,
+                }}
+                aria-label={`${r.label}: ${formatKr(r.value)} kr/md`}
+                {...bind(
+                  <span>
+                    {r.label}: {formatKr(r.value)} kr/md
+                  </span>
+                )}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+      {tooltip}
+    </div>
   );
 }

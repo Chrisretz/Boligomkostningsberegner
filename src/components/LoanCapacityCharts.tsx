@@ -1,6 +1,7 @@
 "use client";
 
 import { GEARING_DEFAULT, FINANCING_SHARE } from "@/lib/loanCapacityConstants";
+import { useChartTooltip } from "@/components/useChartTooltip";
 
 /**
  * Grafik til lånerumsberegneren. Ren CSS som i ResultsCharts, ingen
@@ -31,6 +32,8 @@ export function PurchaseSplitChart({
 }: {
   estimatedPurchase: number;
 }) {
+  const { containerRef, bind, tooltip } = useChartTooltip();
+
   if (estimatedPurchase <= 0) return null;
 
   const segments = [
@@ -73,15 +76,23 @@ export function PurchaseSplitChart({
         Købspris ca. {formatKr(estimatedPurchase)} kr
       </p>
 
-      <div className="bar-grow flex h-5 w-full overflow-hidden rounded-full">
-        {segments.map((s) => (
-          <div
-            key={s.key}
-            className="h-full"
-            style={{ width: `${s.share * 100}%`, backgroundColor: s.color }}
-            title={`${s.label}: ${formatKr(s.value)} kr`}
-          />
-        ))}
+      <div ref={containerRef} className="relative">
+        <div className="bar-grow flex h-5 w-full overflow-hidden rounded-full">
+          {segments.map((s) => (
+            <div
+              key={s.key}
+              className="h-full cursor-default outline-none"
+              style={{ width: `${s.share * 100}%`, backgroundColor: s.color }}
+              aria-label={`${s.label}: ${formatKr(s.value)} kr`}
+              {...bind(
+                <span>
+                  {s.label}: {formatKr(s.value)} kr
+                </span>
+              )}
+            />
+          ))}
+        </div>
+        {tooltip}
       </div>
 
       <ul className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-3 text-small">
@@ -124,6 +135,8 @@ export function GearingBars({
   existingDebt: number;
   gearings: readonly number[];
 }) {
+  const { containerRef, bind, tooltip } = useChartTooltip();
+
   const rows = gearings.map((g) => {
     const capacity = Math.round(annualIncome * g);
     const loan = Math.max(0, capacity - existingDebt);
@@ -139,7 +152,8 @@ export function GearingBars({
   if (max <= 0) return null;
 
   return (
-    <ul className="space-y-4">
+    <div ref={containerRef} className="relative">
+      <ul className="space-y-4">
       {rows.map((r) => (
         <li key={r.gearing}>
           <div className="flex items-baseline justify-between gap-3 mb-1">
@@ -157,11 +171,17 @@ export function GearingBars({
           </div>
           <div className="h-2.5 w-full rounded-full bg-border/50 overflow-hidden">
             <div
-              className="bar-grow h-full rounded-full"
+              className="bar-grow h-full rounded-full cursor-default outline-none"
               style={{
                 width: `${(r.purchase / max) * 100}%`,
                 backgroundColor: r.isDefault ? "#1E3A5F" : "#94AECC",
               }}
+              aria-label={`Gearing ${String(r.gearing).replace(".", ",")}: købspris ${formatKr(r.purchase)} kr, maks. boliglån ${formatKr(r.loan)} kr`}
+              {...bind(
+                <span>
+                  Købspris {formatKr(r.purchase)} kr · lån {formatKr(r.loan)} kr
+                </span>
+              )}
             />
           </div>
           <p className="mt-1 text-small text-text-muted tabular-nums">
@@ -169,6 +189,8 @@ export function GearingBars({
           </p>
         </li>
       ))}
-    </ul>
+      </ul>
+      {tooltip}
+    </div>
   );
 }

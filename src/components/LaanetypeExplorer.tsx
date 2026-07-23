@@ -12,6 +12,7 @@ import { LAANETYPE_INFO } from "@/lib/laanetypeInfo";
 import { beregnForloeb } from "@/lib/laaneforloeb";
 import { RATE_BY_LOAN_TYPE } from "@/lib/renter";
 import { PATH_BOLIGOMKOSTNINGER_BEREGNER } from "@/lib/site";
+import { useChartTooltip } from "@/components/useChartTooltip";
 
 /**
  * Interaktiv sammenligning af lånetyper pr. lånt million.
@@ -134,6 +135,8 @@ export function LaanetypeExplorer() {
     { key: "bidragDKK" as const, label: "Bidrag", color: "#6F91BA" },
   ];
 
+  const { containerRef, bind, tooltip } = useChartTooltip();
+
   return (
     <div className="not-prose my-8 rounded-xl border border-border bg-white shadow-soft p-5 md:p-7">
       <p className="text-small font-semibold uppercase tracking-[0.15em] text-brand-accent mb-1">
@@ -255,6 +258,7 @@ export function LaanetypeExplorer() {
             </span>
           ))}
         </figcaption>
+        <div ref={containerRef} className="relative">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="w-full h-auto"
@@ -278,14 +282,38 @@ export function LaanetypeExplorer() {
                       width={barW}
                       height={h}
                       fill={s.color}
-                    >
-                      <title>{`År ${yr.year}: ${s.label} ${kr(yr[s.key])} kr`}</title>
-                    </rect>
+                    />
                   );
                 })}
               </g>
             );
           })}
+          {result.yearly.map((yr) => (
+            <rect
+              key={`hit-${yr.year}`}
+              x={barX(yr.year) - barGap / 2}
+              y={PAD.top}
+              width={barW + barGap}
+              height={plotH}
+              fill="transparent"
+              className="cursor-default outline-none"
+              aria-label={`År ${yr.year}: afdrag ${kr(yr.principalDKK)} kr, renter ${kr(yr.interestDKK)} kr, bidrag ${kr(yr.bidragDKK)} kr`}
+              {...bind(
+                <span className="block text-left">
+                  <span className="block font-semibold mb-0.5">År {yr.year}</span>
+                  {SEGMENTS.map((s) => (
+                    <span key={s.key} className="flex items-center gap-1.5">
+                      <span
+                        className="inline-block h-2 w-2 rounded-sm"
+                        style={{ backgroundColor: s.color }}
+                      />
+                      {s.label}: {kr(yr[s.key])} kr
+                    </span>
+                  ))}
+                </span>
+              )}
+            />
+          ))}
           {/* Markering af hvor afdragsfriheden slutter */}
           {interestOnly && (
             <line
@@ -311,6 +339,8 @@ export function LaanetypeExplorer() {
             </text>
           ))}
         </svg>
+        {tooltip}
+        </div>
         <p className="text-small text-text-muted mt-2 leading-relaxed">
           Årlige betalinger pr. lånt million.{" "}
           {interestOnly
